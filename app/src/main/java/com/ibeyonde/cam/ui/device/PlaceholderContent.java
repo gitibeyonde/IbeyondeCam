@@ -1,4 +1,4 @@
-package com.ibeyonde.cam.ui.device.placeholder;
+package com.ibeyonde.cam.ui.device;
 
 import java.util.ArrayList;
 import java.util.HashMap;

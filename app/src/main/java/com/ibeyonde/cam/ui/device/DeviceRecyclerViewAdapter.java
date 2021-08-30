@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceBinding;
-import com.ibeyonde.cam.ui.device.placeholder.PlaceholderContent.PlaceholderItem;
+import com.ibeyonde.cam.ui.device.PlaceholderContent.PlaceholderItem;
 
 import java.util.List;
 

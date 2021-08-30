@@ -9,7 +9,7 @@
         android:id="@+id/navigation_device"
         android:name="com.ibeyonde.cam.ui.device.DeviceFragment"
         android:label="@string/title_device"
-        tools:layout="@layout/fragment_device" />
+        tools:layout="@layout/fragment_device_list" />
 
     <fragment
         android:id="@+id/navigation_notifications"
