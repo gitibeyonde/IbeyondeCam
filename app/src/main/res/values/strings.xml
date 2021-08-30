@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Ibeyonde</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_splash">ibeyonde</string>
+
+    <string name="title_activity_ibeyonde">Ibeyonde Activity</string>
+    <string name="title_device">Device List</string>
+    <string name="title_home">Cameras</string>
+    <string name="title_camera">Camera Live</string>
+    <string name="title_history">Motion History</string>
+    <string name="title_setting">Setting</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_bluetooth">Configure</string>
+
+    <string name="messages_header">Message Header</string>
+    <string name="signature_title">Message Header</string>
+    <string name="reply_title">Message Header</string>
+    <string name="sync_header">Message Header</string>
+    <string name="sync_title">Message Header</string>
+    <string name="attachment_summary_off">Message Header</string>
+    <string name="attachment_summary_on">Message Header</string>
+    <string name="attachment_title">Message Header</string>
+
+    <string name="devices">ibeyonde Devices</string>
+    <string name="title_activity_login2">LoginActivity2</string>
+</resources>
