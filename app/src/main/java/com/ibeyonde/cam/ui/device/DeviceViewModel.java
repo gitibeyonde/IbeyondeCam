@@ -22,8 +22,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
 
 public class DeviceViewModel extends ViewModel {
@@ -34,6 +36,15 @@ public class DeviceViewModel extends ViewModel {
     public Camera getCamera(String uuid){
         Hashtable<String, Camera> cl = _deviceList.getValue();
         return cl.get(uuid);
+    }
+
+    public boolean isAllCameraWithHistory(){
+        Hashtable<String, Camera> cl = _deviceList.getValue();
+        Iterator<Camera> e = cl.values().iterator();
+        while (e.hasNext()) {
+            if (!e.next().isHistorySet()) return true;
+        }
+        return true;
     }
 
     public void deviceList(Context ctx){

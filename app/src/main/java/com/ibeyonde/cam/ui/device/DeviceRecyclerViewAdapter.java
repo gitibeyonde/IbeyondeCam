@@ -33,7 +33,6 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         HistoryItem hi  = _history_list.get(position);
         Log.d(TAG, "onBindViewHolder  position = " + position + " hv size = " + _history_list.size());
         Log.d(TAG, "onBindViewHolder  id = " + hi._id + " uuid = " + hi._uuid );
-        holder.index.setText(hi._id);
         holder.uuid.setText(hi._uuid);
         holder.picture.setContentDescription(hi._uuid);
         new ImageLoadTask(hi._history.getCurrentURL(), holder.picture).execute();
@@ -45,13 +44,11 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView index;
         public final TextView uuid;
         public final ImageView picture;
 
         public ViewHolder(FragmentDeviceBinding binding) {
             super(binding.getRoot());
-            index = binding.deviceIndex;
             uuid = binding.deviceUuid;
             picture = binding.deviceView;
         }

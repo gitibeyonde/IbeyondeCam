@@ -13,11 +13,14 @@ import java.util.Map;
 public class HistoryContent {
     private static final String TAG= HistoryContent.class.getCanonicalName();
 
-    public static final List<HistoryItem> _item_list = new ArrayList<HistoryItem>();
+    public static List<HistoryItem> _item_list;
 
-    public static final Map<String, HistoryItem> _item_map = new HashMap<String, HistoryItem>();
+    public static Map<String, HistoryItem> _item_map;
 
     public static void initialize(Hashtable<String, Camera> ch){
+        _item_list = new ArrayList<HistoryItem>();
+        _item_map = new HashMap<String, HistoryItem>();
+
         if (ch == null) return;
         Enumeration<String> e = ch.keys();
         while (e.hasMoreElements()) {

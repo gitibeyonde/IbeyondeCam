@@ -22,6 +22,8 @@ import com.ibeyonde.cam.utils.Camera;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A fragment representing a list of Items.
@@ -29,6 +31,7 @@ import java.util.Hashtable;
 public class DeviceFragment extends Fragment {
     private static final String TAG= DeviceFragment.class.getCanonicalName();
     private DeviceViewModel deviceViewModel;
+    private int device_count=0;
 
     public DeviceFragment() {
     }
@@ -55,6 +58,7 @@ public class DeviceFragment extends Fragment {
                     Activity activity = getActivity();
                     if (isAdded() && activity != null) {
                         deviceViewModel.getHistory(activity.getApplicationContext(), uuid);
+                        device_count++;
                     }
                 }
             }
@@ -66,20 +70,15 @@ public class DeviceFragment extends Fragment {
                 Hashtable<String, Camera> ch = deviceViewModel._deviceList.getValue();
                 if (ch != null) {
                     HistoryContent.initialize(ch);
-                    // Set the adapter
-                    if (view instanceof RecyclerView) {
-                        Context context = view.getContext();
+                    if (deviceViewModel.isAllCameraWithHistory()){
                         RecyclerView recyclerView = (RecyclerView) view;
-                        if (ch.size() <= 1) {
-                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                        } else {
-                            recyclerView.setLayoutManager(new GridLayoutManager(context, ch.size()));
-                        }
                         recyclerView.setAdapter(new DeviceRecyclerViewAdapter(HistoryContent._item_list));
                     }
                 }
             }
         });
+
+
         return view;
     }
 

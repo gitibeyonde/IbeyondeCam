@@ -39,4 +39,8 @@ public class Camera {
     public void setHistory(String imgList) throws JSONException {
         _history = new History(imgList);
     }
+
+    public boolean isHistorySet(){
+        return _history != null;
+    }
 }

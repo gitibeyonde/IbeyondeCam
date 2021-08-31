@@ -2,33 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-    <TextView
-        android:id="@+id/deviceIndex"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+    android:background="#64DD17"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/deviceUuid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
         android:layout_margin="@dimen/text_margin"
+        android:background="#AEEA00"
         android:textAppearance="?attr/textAppearanceListItem" />
-
 
     <ImageView
         android:id="@+id/deviceView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:adjustViewBounds="true"
+        android:background="#64DD17"
         android:clickable="true"
-        android:contentDescription="last captured camera images"
         tools:ignore="TouchTargetSizeCheck" />
+
 
 </LinearLayout>
