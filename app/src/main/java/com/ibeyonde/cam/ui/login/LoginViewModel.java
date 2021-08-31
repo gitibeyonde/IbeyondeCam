@@ -1,4 +1,4 @@
-package com.ibeyonde.cam32.ui.login;
+package com.ibeyonde.cam.ui.login;
 
 import android.content.Context;
 import android.util.Base64;
@@ -65,6 +65,7 @@ public class LoginViewModel extends ViewModel {
                         } catch (JSONException e) {
                             Log.d(TAG, "Login failed 2 " + e.getMessage());
                             LoginViewModel._token.setValue("FAILED");
+                            throw new RuntimeException("Login failed");
                         }
                     }
                 }, new Response.ErrorListener() {

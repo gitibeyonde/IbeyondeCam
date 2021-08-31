@@ -15,6 +15,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.Camera;
 
 import org.json.JSONArray;
@@ -30,12 +31,15 @@ public class DeviceViewModel extends ViewModel {
     public static final MutableLiveData<Hashtable<String, Camera>> _deviceList = new MutableLiveData<>();
     public static final MutableLiveData<Short> _update = new MutableLiveData<>();
 
+    public Camera getCamera(String uuid){
+        Hashtable<String, Camera> cl = _deviceList.getValue();
+        return cl.get(uuid);
+    }
+
     public void deviceList(Context ctx){
-        // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(ctx);
         String url ="https://ping.ibeyonde.com/api/iot.php?view=devicelist";
 
-        // Request a string response from the provided URL.
         JsonArrayRequest stringRequest = new JsonArrayRequest(JsonObjectRequest.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -46,39 +50,35 @@ public class DeviceViewModel extends ViewModel {
                             Camera._total = 0;
                             for(int i=0;i< jsonArray.length();i++) {
                                 JSONObject json = jsonArray.getJSONObject(i);
-                                Log.d(TAG, "Device = " + json.toString());
+                                Log.d(TAG, "deviceList Device = " + json.toString());
                                 Camera c = new Camera(json);
                                 jl.put(c._uuid, c);
                             }
                             _deviceList.setValue(jl);
                         } catch (JSONException e) {
-                            Log.i(TAG, "Device List" + e.getMessage());
+                            Log.i(TAG, "deviceList Device List" + e.getMessage());
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Request failed ," + error.getMessage());
+                Log.d(TAG, "deviceList Request failed ," + error.getMessage());
             }
         }){
-
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", com.ibeyonde.cam32.ui.login.LoginViewModel._email, com.ibeyonde.cam32.ui.login.LoginViewModel._pass);
+                String creds = String.format("%s:%s", LoginViewModel._email, LoginViewModel._pass);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 params.put("Authorization", auth);
                 return params;
             }
-
         };
-        // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
 
     public void getHistory(Context ctx, String uuid){
-        // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(ctx);
         String url ="https://ping.ibeyonde.com/api/iot.php?view=lastalerts&uuid=" + uuid;
         Hashtable<String, Camera> deviceList = _deviceList.getValue();
@@ -88,26 +88,27 @@ public class DeviceViewModel extends ViewModel {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String imageList) {
-                        Log.d(TAG, "History img list "+ imageList);
+                        Log.d(TAG, "deviceList History img list "+ imageList);
                         Camera c = deviceList.get(uuid);
                         try {
                             c.setHistory(imageList);
                             _update.postValue((short)1);
                         } catch (JSONException e) {
+                            Log.d(TAG, "getHistory JSON Exception ," + e.getMessage());
                             e.printStackTrace();
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Request failed ," + error.getMessage());
+                Log.d(TAG, "getHistory Request failed ," + error.getMessage());
             }
         }){
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", com.ibeyonde.cam32.ui.login.LoginViewModel._email, com.ibeyonde.cam32.ui.login.LoginViewModel._pass);
+                String creds = String.format("%s:%s", LoginViewModel._email, LoginViewModel._pass);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 params.put("Authorization", auth);
                 return params;
@@ -117,5 +118,6 @@ public class DeviceViewModel extends ViewModel {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
+
 }
 

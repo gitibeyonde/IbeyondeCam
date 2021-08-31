@@ -25,7 +25,7 @@ import java.util.TimerTask;
 public class SplashActivity extends AppCompatActivity {
     private static final String TAG= SplashActivity.class.getCanonicalName();
     private ActivitySplashBinding binding;
-    private com.ibeyonde.cam32.ui.login.LoginViewModel loginViewModel;
+    private LoginViewModel loginViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
         binding = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        loginViewModel = new ViewModelProvider(this).get(com.ibeyonde.cam32.ui.login.LoginViewModel.class);
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         File file = new File(getApplicationContext().getFilesDir(), ".cred");
         Log.i(TAG, "Getting creds in " + file.getAbsoluteFile());
 
@@ -65,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
             finish();
         }
 
-        com.ibeyonde.cam32.ui.login.LoginViewModel._token.observe(this, new Observer<String>() {
+        LoginViewModel._token.observe(this, new Observer<String>() {
             public void onChanged(@Nullable String s) {
                 Log.i(TAG, "token changed Value = " + s);
                 if ("FAILED".equals(s)){

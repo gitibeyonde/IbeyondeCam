@@ -30,37 +30,10 @@ import java.util.Hashtable;
 public class DeviceFragment extends Fragment {
     private static final String TAG= DeviceFragment.class.getCanonicalName();
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mDeviceCount = 1;
-
+    private int mDeviceCount = 0;
     private DeviceViewModel deviceViewModel;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public DeviceFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static DeviceFragment newInstance(int columnCount) {
-        DeviceFragment fragment = new DeviceFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
-        if (getArguments() != null) {
-            mDeviceCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -71,7 +44,6 @@ public class DeviceFragment extends Fragment {
         deviceViewModel =
                 new ViewModelProvider(this).get(DeviceViewModel.class);
         com.ibeyonde.cam.databinding.FragmentDeviceBinding binding = FragmentDeviceBinding.inflate(inflater, container, false);
-
 
         deviceViewModel.deviceList(getActivity().getApplicationContext());
 
@@ -86,10 +58,23 @@ public class DeviceFragment extends Fragment {
                     Activity activity = getActivity();
                     if (isAdded() && activity != null) {
                         deviceViewModel.getHistory(activity.getApplicationContext(), uuid);
+                        mDeviceCount++;
                     }
                 }
             }
         });
+
+        // Set the adapter
+        if (view instanceof RecyclerView) {
+            Context context = view.getContext();
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (mDeviceCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mDeviceCount));
+            }
+            recyclerView.setAdapter(new DeviceRecyclerViewAdapter(HistoryContent._history));
+        }
 
         deviceViewModel._update.observe(this.getActivity(), new Observer<Short>() {
             public void onChanged(@Nullable Short s) {
@@ -101,6 +86,8 @@ public class DeviceFragment extends Fragment {
                     Camera c = ch.get(uuid);
                     History h = c._history;
                     if (h != null) {
+                        HistoryContent.createPlaceholderItem(c._index, uuid, h);
+
                         /**try {
 
                             historyViews[c._index].setContentDescription(uuid);
@@ -112,18 +99,6 @@ public class DeviceFragment extends Fragment {
                 }
             }
         });
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mDeviceCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mDeviceCount));
-            }
-            recyclerView.setAdapter(new DeviceRecyclerViewAdapter(PlaceholderContent.ITEMS));
-        }
-
         return view;
     }
 

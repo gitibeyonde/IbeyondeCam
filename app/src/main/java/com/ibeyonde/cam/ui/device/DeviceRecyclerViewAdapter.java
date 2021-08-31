@@ -7,27 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceBinding;
-import com.ibeyonde.cam.ui.device.PlaceholderContent.PlaceholderItem;
+import com.ibeyonde.cam.ui.device.HistoryContent.HistoryItem;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecyclerViewAdapter.ViewHolder> {
+    private static final String TAG= DeviceRecyclerViewAdapter.class.getCanonicalName();
 
-    private final List<PlaceholderItem> mValues;
+    private final List<HistoryItem> mValues;
 
-    public DeviceRecyclerViewAdapter(List<PlaceholderItem> items) {
+    public DeviceRecyclerViewAdapter(List<HistoryItem> items) {
         mValues = items;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         return new ViewHolder(FragmentDeviceBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-
     }
 
     @Override
@@ -45,7 +40,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mIdView;
         public final TextView mContentView;
-        public PlaceholderItem mItem;
+        public HistoryItem mItem;
 
         public ViewHolder(FragmentDeviceBinding binding) {
             super(binding.getRoot());

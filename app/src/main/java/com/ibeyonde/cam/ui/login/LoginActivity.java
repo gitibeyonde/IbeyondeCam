@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG=LoginActivity.class.getCanonicalName();
 
 
-    private com.ibeyonde.cam32.ui.login.LoginViewModel loginViewModel;
+    private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
 
     @Override
@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        loginViewModel =  new ViewModelProvider(this).get(com.ibeyonde.cam32.ui.login.LoginViewModel.class);
+        loginViewModel =  new ViewModelProvider(this).get(LoginViewModel.class);
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
