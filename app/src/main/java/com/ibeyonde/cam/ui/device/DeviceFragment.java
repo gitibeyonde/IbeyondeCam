@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.databinding.FragmentDeviceBinding;
 import com.ibeyonde.cam.utils.Camera;
-import com.ibeyonde.cam.utils.History;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -29,8 +28,6 @@ import java.util.Hashtable;
  */
 public class DeviceFragment extends Fragment {
     private static final String TAG= DeviceFragment.class.getCanonicalName();
-
-    private int mDeviceCount = 0;
     private DeviceViewModel deviceViewModel;
 
     public DeviceFragment() {
@@ -58,43 +55,27 @@ public class DeviceFragment extends Fragment {
                     Activity activity = getActivity();
                     if (isAdded() && activity != null) {
                         deviceViewModel.getHistory(activity.getApplicationContext(), uuid);
-                        mDeviceCount++;
                     }
                 }
             }
         });
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mDeviceCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mDeviceCount));
-            }
-            recyclerView.setAdapter(new DeviceRecyclerViewAdapter(HistoryContent._history));
-        }
 
         deviceViewModel._update.observe(this.getActivity(), new Observer<Short>() {
             public void onChanged(@Nullable Short s) {
                 Hashtable<String, Camera> ch = deviceViewModel._deviceList.getValue();
-                if (ch == null) return;
-                Enumeration<String> e = ch.keys();
-                while (e.hasMoreElements()) {
-                    String uuid = e.nextElement();
-                    Camera c = ch.get(uuid);
-                    History h = c._history;
-                    if (h != null) {
-                        HistoryContent.createPlaceholderItem(c._index, uuid, h);
-
-                        /**try {
-
-                            historyViews[c._index].setContentDescription(uuid);
-                            new ImageLoadTask(h.getCurrentURL(), historyViews[c._index]).execute();
-                        } catch (JSONException jsonException) {
-                            Log.w(TAG, "Image load failed " + jsonException.getMessage());
-                        }**/
+                if (ch != null) {
+                    HistoryContent.initialize(ch);
+                    // Set the adapter
+                    if (view instanceof RecyclerView) {
+                        Context context = view.getContext();
+                        RecyclerView recyclerView = (RecyclerView) view;
+                        if (ch.size() <= 1) {
+                            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                        } else {
+                            recyclerView.setLayoutManager(new GridLayoutManager(context, ch.size()));
+                        }
+                        recyclerView.setAdapter(new DeviceRecyclerViewAdapter(HistoryContent._item_list));
                     }
                 }
             }
