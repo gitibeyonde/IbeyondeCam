@@ -36,6 +36,9 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         holder.uuid.setText(hi._uuid);
         holder.picture.setContentDescription(hi._uuid);
         new ImageLoadTask(hi._history.getCurrentURL(), holder.picture).execute();
+        if (position == _history_list.size() - 1){
+            holder.picture.setPadding(0, 0, 0 , 400);
+        }
     }
 
     @Override
