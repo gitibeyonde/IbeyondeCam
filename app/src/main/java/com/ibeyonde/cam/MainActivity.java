@@ -3,6 +3,7 @@ package com.ibeyonde.cam;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.Callback;
@@ -16,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -23,6 +25,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ibeyonde.cam.databinding.ActivityMainBinding;
+import com.ibeyonde.cam.ui.device.CameraFragment;
 import com.ibeyonde.cam.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -86,6 +89,20 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+
+
+    public void cameraClick(View view) {
+        CameraFragment._cameraId = view.getContentDescription().toString();
+        Log.i(TAG, "Camera On Click =  " + view.getContentDescription());
+
+        Fragment fragment = new CameraFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, fragment, "live")
+                .setReorderingAllowed(true)
+                .addToBackStack(null)
+                .commit();
+
     }
 
 }

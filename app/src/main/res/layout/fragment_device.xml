@@ -22,7 +22,8 @@
         android:adjustViewBounds="true"
         android:background="#64DD17"
         android:clickable="true"
-        tools:ignore="TouchTargetSizeCheck" />
+        tools:ignore="TouchTargetSizeCheck"
+        android:onClick="cameraClick" />
 
 
 </LinearLayout>
