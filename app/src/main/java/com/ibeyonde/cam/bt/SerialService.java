@@ -16,7 +16,7 @@ import android.os.Looper;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.ibeyonde.cam32.R;
+import com.ibeyonde.cam.R;
 
 import java.io.IOException;
 import java.util.LinkedList;

@@ -1,6 +1,6 @@
 package com.ibeyonde.cam.bt;
 
-import com.ibeyonde.cam32.BuildConfig;
+import com.ibeyonde.cam.BuildConfig;
 
 class Constants {
 

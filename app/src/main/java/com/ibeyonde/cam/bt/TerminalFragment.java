@@ -28,8 +28,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.ibeyonde.cam32.R;
-import com.ibeyonde.cam32.databinding.FragmentTerminalBinding;
+import com.ibeyonde.cam.R;
+import com.ibeyonde.cam.databinding.FragmentTerminalBinding;
 
 public class TerminalFragment extends Fragment implements ServiceConnection, SerialListener {
 

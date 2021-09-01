@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 
-import com.ibeyonde.cam32.R;
+import com.ibeyonde.cam.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -112,7 +112,7 @@ public class BluetoothFragment extends ListFragment {
         args.putString("device", device.getAddress());
         Fragment fragment = new TerminalFragment();
         fragment.setArguments(args);
-        getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_camera, fragment, "terminal").addToBackStack(null).commit();
+        getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment, "terminal").addToBackStack(null).commit();
     }
 
     /**
