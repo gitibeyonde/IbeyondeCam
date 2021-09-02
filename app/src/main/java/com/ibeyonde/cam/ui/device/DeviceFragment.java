@@ -31,7 +31,6 @@ import java.util.TimerTask;
 public class DeviceFragment extends Fragment {
     private static final String TAG= DeviceFragment.class.getCanonicalName();
     private DeviceViewModel deviceViewModel;
-    private int device_count=0;
 
     public DeviceFragment() {
     }
@@ -58,7 +57,6 @@ public class DeviceFragment extends Fragment {
                     Activity activity = getActivity();
                     if (isAdded() && activity != null) {
                         deviceViewModel.getHistory(activity.getApplicationContext(), uuid);
-                        device_count++;
                     }
                 }
             }

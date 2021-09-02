@@ -13,6 +13,8 @@ import com.ibeyonde.cam.ui.device.HistoryContent.HistoryItem;
 import com.ibeyonde.cam.utils.ImageLoadTask;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecyclerViewAdapter.ViewHolder> {
     private static final String TAG= DeviceRecyclerViewAdapter.class.getCanonicalName();
@@ -35,10 +37,16 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         Log.d(TAG, "onBindViewHolder  id = " + hi._id + " uuid = " + hi._uuid );
         holder.uuid.setText(hi._uuid);
         holder.picture.setContentDescription(hi._uuid);
-        new ImageLoadTask(hi._history.getCurrentURL(), holder.picture).execute();
-        if (position == _history_list.size() - 1){
-            holder.picture.setPadding(0, 0, 0 , 400);
-        }
+
+        TimerTask imgRefresh = new TimerTask()
+        {
+            @Override
+            public void run() {
+                new ImageLoadTask(hi._history.getCurrentURL(), holder.picture).execute();
+            }
+        };
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(imgRefresh, 0, 1000);
     }
 
     @Override
