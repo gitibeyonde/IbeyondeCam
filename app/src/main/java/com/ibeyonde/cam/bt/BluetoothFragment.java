@@ -41,7 +41,7 @@ public class BluetoothFragment extends ListFragment {
             public View getView(int position, View view, @NonNull ViewGroup parent) {
                 BluetoothDevice device = listItems.get(position);
                 if (view == null)
-                    view = getActivity().getLayoutInflater().inflate(R.layout.device_list_item, parent, false);
+                    view = getActivity().getLayoutInflater().inflate(R.layout.fragment_bt_list_item, parent, false);
                 TextView text1 = view.findViewById(R.id.text1);
                 TextView text2 = view.findViewById(R.id.text2);
                 text1.setText(device.getName());
@@ -55,7 +55,7 @@ public class BluetoothFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setListAdapter(null);
-        View header = getActivity().getLayoutInflater().inflate(R.layout.device_list_header, null, false);
+        View header = getActivity().getLayoutInflater().inflate(R.layout.fragment_bt_list_header, null, false);
         getListView().addHeaderView(header, null, false);
         setEmptyText("initializing...");
         ((TextView) getListView().getEmptyView()).setTextSize(18);

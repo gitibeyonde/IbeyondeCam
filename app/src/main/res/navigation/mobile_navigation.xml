@@ -19,9 +19,9 @@
 
     <fragment
         android:id="@+id/navigation_bluetooth"
-        android:name="com.ibeyonde.cam.ui.bluetooth.BluetoothFragment"
+        android:name="com.ibeyonde.cam.bt.BluetoothFragment"
         android:label="@string/title_bluetooth"
-        tools:layout="@layout/fragment_bluetooth" />
+        tools:layout="@layout/fragment_bt_list_item" />
 
     <fragment
         android:id="@+id/navigation_setting"
