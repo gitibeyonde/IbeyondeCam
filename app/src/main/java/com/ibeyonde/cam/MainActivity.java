@@ -17,7 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -26,7 +26,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ibeyonde.cam.databinding.ActivityMainBinding;
 import com.ibeyonde.cam.ui.device.CameraFragment;
-import com.ibeyonde.cam.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG= MainActivity.class.getCanonicalName();
@@ -95,10 +94,11 @@ public class MainActivity extends AppCompatActivity {
     public void cameraClick(View view) {
         CameraFragment._cameraId = view.getContentDescription().toString();
         Log.i(TAG, "Camera On Click =  " + view.getContentDescription());
+        FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
 
-        Fragment fragment = new CameraFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, fragment, "live")
+        CameraFragment cameraFragment = new CameraFragment();
+        fragmentManager.beginTransaction()
+                .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), cameraFragment, "live")
                 .setReorderingAllowed(true)
                 .addToBackStack(null)
                 .commit();

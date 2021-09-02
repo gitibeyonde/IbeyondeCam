@@ -23,7 +23,8 @@
         android:background="#64DD17"
         android:clickable="true"
         tools:ignore="TouchTargetSizeCheck"
-        android:onClick="cameraClick" />
+        android:onClick="cameraClick"
+        android:src="@drawable/loading"/>
 
 
 </LinearLayout>

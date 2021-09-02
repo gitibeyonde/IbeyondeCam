@@ -23,8 +23,7 @@ public class CameraFragment extends Fragment {
 
     private CameraViewModel cameraViewModel;
     private FragmentCameraBinding binding;
-
-    int TIMEOUT = 5; //seconds
+    Mjpeg _mjpeg;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -37,17 +36,22 @@ public class CameraFragment extends Fragment {
         binding.cameraLabel.setText(_cameraId);
         cameraViewModel.getLiveUrl(getContext(), _cameraId);
 
-
+        _mjpeg = Mjpeg.newInstance();
         cameraViewModel._url.observe(this.getActivity(), new Observer<String>() {
             public void onChanged(@Nullable String url) {
                 Log.d(TAG, "Live URL = " + url);
-                Mjpeg.newInstance()
-                        .open(url, TIMEOUT)
-                        .subscribe(inputStream -> {
-                            binding.cameraLive.setSource(inputStream);
-                            binding.cameraLive.setDisplayMode(DisplayMode.BEST_FIT);
-                            //mjpegView.showFps(true);
-                        });
+                try {
+                    _mjpeg
+                            .open(url)
+                            .subscribe(inputStream -> {
+                                binding.cameraLive.setSource(inputStream);
+                                binding.cameraLive.setDisplayMode(DisplayMode.BEST_FIT);
+                                //mjpegView.showFps(true);
+                            });
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -57,6 +61,7 @@ public class CameraFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        _mjpeg.sendConnectionCloseHeader();
     }
 
 }

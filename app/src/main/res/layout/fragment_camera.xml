@@ -5,23 +5,16 @@
     android:id="@+id/camera_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="64dp"
-    android:orientation="vertical"
     android:background="?android:windowBackground"
+    android:orientation="vertical"
+    android:paddingBottom="60dp"
     tools:context=".ui.device.CameraFragment">
-
-    <com.github.niqdev.mjpeg.MjpegSurfaceView
-        android:id="@+id/cameraLive"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:adjustViewBounds="true"
-        stream:type="stream_default" />
 
     <TextView
         android:id="@+id/cameraLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#64DD17"
         android:fontFamily="sans-serif"
         android:paddingStart="20dp"
         android:paddingTop="20dp"
@@ -33,6 +26,14 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:typeface="normal" />
+
+    <com.github.niqdev.mjpeg.MjpegSurfaceView
+        android:id="@+id/cameraLive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        stream:type="stream_default" />
 
     <Button
         android:id="@+id/buttonHistory"
