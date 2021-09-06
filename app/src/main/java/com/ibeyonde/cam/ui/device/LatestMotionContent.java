@@ -10,16 +10,16 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-public class HistoryContent {
-    private static final String TAG= HistoryContent.class.getCanonicalName();
+public class LatestMotionContent {
+    private static final String TAG= LatestMotionContent.class.getCanonicalName();
 
-    public static List<HistoryItem> _item_list;
+    public static List<ViewHolder> _item_list;
 
-    public static Map<String, HistoryItem> _item_map;
+    public static Map<String, ViewHolder> _item_map;
 
     public static void initialize(Hashtable<String, Camera> ch){
-        _item_list = new ArrayList<HistoryItem>();
-        _item_map = new HashMap<String, HistoryItem>();
+        _item_list = new ArrayList<ViewHolder>();
+        _item_map = new HashMap<String, ViewHolder>();
 
         if (ch == null) return;
         Enumeration<String> e = ch.keys();
@@ -28,19 +28,19 @@ public class HistoryContent {
             Camera c = ch.get(uuid);
             History h = c._history;
             if (h != null) {
-                HistoryItem hi = new HistoryItem(c._index, uuid, h);
+                ViewHolder hi = new ViewHolder(c._index, uuid, h);
                 _item_list.add(hi);
                 _item_map.put(uuid, hi);
             }
         }
     }
 
-    public static class HistoryItem {
+    public static class ViewHolder {
         public final String _id;
         public final String _uuid;
         public final History _history;
 
-        public HistoryItem(int id, String uuid, History history) {
+        public ViewHolder(int id, String uuid, History history) {
             this._id = Integer.toString(id);
             this._uuid = uuid;
             this._history = history;

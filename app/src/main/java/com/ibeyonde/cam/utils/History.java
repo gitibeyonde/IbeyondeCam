@@ -14,6 +14,9 @@ public class History {
     public int _total;
     public int _current;
 
+
+    public ArrayList<JSONObject> _history_list = new ArrayList<>();
+
     public History(String imgList) throws JSONException {
         JSONArray jr = new JSONArray(imgList);
         Log.d(TAG, jr.toString());
@@ -21,9 +24,18 @@ public class History {
         _current = 0;
         for(int i=0;i< jr.length();i++){
             JSONArray jo = jr.getJSONArray(i);
-            Log.d(TAG, jo.getString(0));
-            Log.d(TAG, jo.getString(1));
             _history.add(jo);
+        }
+    }
+
+
+    public History(JSONArray jr) throws JSONException {
+        Log.d(TAG, jr.toString());
+        _total = jr.length();
+        _current = 0;
+        for(int i=0;i< jr.length();i++){
+            JSONObject jo = jr.getJSONObject(i);
+            _history_list.add(jo);
         }
     }
 
@@ -36,5 +48,9 @@ public class History {
             e.printStackTrace();
             return "http://udp1.ibeyonde.com/img/error.jpg";
         }
+    }
+
+    public ArrayList<JSONObject> getHistory(){
+        return _history_list;
     }
 }

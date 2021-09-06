@@ -5,11 +5,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceBinding;
-import com.ibeyonde.cam.ui.device.HistoryContent.HistoryItem;
 import com.ibeyonde.cam.utils.ImageLoadTask;
 
 import java.util.List;
@@ -19,9 +19,9 @@ import java.util.TimerTask;
 public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecyclerViewAdapter.ViewHolder> {
     private static final String TAG= DeviceRecyclerViewAdapter.class.getCanonicalName();
 
-    private final List<HistoryItem> _history_list;
+    private final List<LatestMotionContent.ViewHolder> _history_list;
 
-    public DeviceRecyclerViewAdapter(List<HistoryItem> items) {
+    public DeviceRecyclerViewAdapter(List<LatestMotionContent.ViewHolder> items) {
         _history_list = items;
     }
 
@@ -32,11 +32,13 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        HistoryItem hi  = _history_list.get(position);
+        LatestMotionContent.ViewHolder hi  = _history_list.get(position);
         Log.d(TAG, "onBindViewHolder  position = " + position + " hv size = " + _history_list.size());
         Log.d(TAG, "onBindViewHolder  id = " + hi._id + " uuid = " + hi._uuid );
         holder.uuid.setText(hi._uuid);
         holder.picture.setContentDescription(hi._uuid);
+        holder.live.setContentDescription(hi._uuid);
+        holder.history.setContentDescription(hi._uuid);
 
         TimerTask imgRefresh = new TimerTask()
         {
@@ -57,11 +59,15 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView uuid;
         public final ImageView picture;
+        public final Button live;
+        public final Button history;
 
         public ViewHolder(FragmentDeviceBinding binding) {
             super(binding.getRoot());
             uuid = binding.deviceUuid;
             picture = binding.deviceView;
+            live = binding.deviceLive;
+            history = binding.deviceHistory;
         }
 
         @Override

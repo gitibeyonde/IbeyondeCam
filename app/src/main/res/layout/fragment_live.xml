@@ -36,10 +36,11 @@
         stream:type="stream_default" />
 
     <Button
-        android:id="@+id/buttonHistory"
+        android:id="@+id/buttonCameraBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Motion History" />
+        android:onClick="deviceListClick"
+        android:text="Back" />
 
 
 </LinearLayout>

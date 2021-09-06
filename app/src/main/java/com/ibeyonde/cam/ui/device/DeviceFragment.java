@@ -1,7 +1,6 @@
 package com.ibeyonde.cam.ui.device;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ibeyonde.cam.R;
@@ -22,8 +19,6 @@ import com.ibeyonde.cam.utils.Camera;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * A fragment representing a list of Items.
@@ -46,8 +41,6 @@ public class DeviceFragment extends Fragment {
 
         deviceViewModel.deviceList(getActivity().getApplicationContext());
 
-        Log.d(TAG, "onCreateView");
-
         deviceViewModel._deviceList.observe(this.getActivity(), new Observer<Hashtable<String, Camera>>() {
             public void onChanged(@Nullable Hashtable<String, Camera> c) {
                 Log.i(TAG, "Device List = " + c.size());
@@ -67,10 +60,10 @@ public class DeviceFragment extends Fragment {
             public void onChanged(@Nullable Short s) {
                 Hashtable<String, Camera> ch = deviceViewModel._deviceList.getValue();
                 if (ch != null) {
-                    HistoryContent.initialize(ch);
+                    LatestMotionContent.initialize(ch);
                     if (deviceViewModel.isAllCameraWithHistory()){
                         RecyclerView recyclerView = (RecyclerView) view;
-                        recyclerView.setAdapter(new DeviceRecyclerViewAdapter(HistoryContent._item_list));
+                        recyclerView.setAdapter(new DeviceRecyclerViewAdapter(LatestMotionContent._item_list));
                     }
                 }
             }

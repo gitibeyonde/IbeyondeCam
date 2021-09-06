@@ -26,6 +26,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ibeyonde.cam.databinding.ActivityMainBinding;
 import com.ibeyonde.cam.ui.device.CameraFragment;
+import com.ibeyonde.cam.ui.device.HistoryFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG= MainActivity.class.getCanonicalName();
@@ -90,19 +91,37 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
+    public void deviceListClick(View view) {
+        FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
+        fragmentManager.popBackStack();
+        getSupportActionBar().setTitle( "Device List");
+    }
 
-    public void cameraClick(View view) {
-        CameraFragment._cameraId = view.getContentDescription().toString();
-        Log.i(TAG, "Camera On Click =  " + view.getContentDescription());
+    public void cameraLiveClick(View view) {
+        Log.i(TAG, "cameraLiveClick On Click =  " + view.getContentDescription());
         FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
 
         CameraFragment cameraFragment = new CameraFragment();
+        cameraFragment._cameraId = view.getContentDescription().toString();
         fragmentManager.beginTransaction()
                 .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), cameraFragment, "live")
                 .setReorderingAllowed(true)
                 .addToBackStack(null)
                 .commit();
-
+        getSupportActionBar().setTitle(cameraFragment._cameraId + " Live ");
     }
 
+    public void cameraHistoryClick(View view) {
+        Log.i(TAG, "cameraHistoryClick On Click =  " + view.getContentDescription());
+        FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
+
+        HistoryFragment historyFragment = new HistoryFragment();
+        historyFragment._cameraId = view.getContentDescription().toString();
+        fragmentManager.beginTransaction()
+                .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), historyFragment, "history")
+                .setReorderingAllowed(true)
+                .addToBackStack(null)
+                .commit();
+        getSupportActionBar().setTitle(historyFragment._cameraId  + " History ");
+    }
 }

@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.github.niqdev.mjpeg.DisplayMode;
 import com.github.niqdev.mjpeg.Mjpeg;
-import com.ibeyonde.cam.databinding.FragmentCameraBinding;
+import com.ibeyonde.cam.databinding.FragmentLiveBinding;
 
 public class CameraFragment extends Fragment {
     private static final String TAG= CameraFragment.class.getCanonicalName();
@@ -22,7 +22,7 @@ public class CameraFragment extends Fragment {
     public static String _cameraId;
 
     private CameraViewModel cameraViewModel;
-    private FragmentCameraBinding binding;
+    private FragmentLiveBinding binding;
     Mjpeg _mjpeg;
 
     @Override
@@ -30,7 +30,7 @@ public class CameraFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         cameraViewModel =
                 new ViewModelProvider(this).get(CameraViewModel.class);
-        binding = FragmentCameraBinding.inflate(inflater, container, false);
+        binding = FragmentLiveBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         binding.cameraLabel.setText(_cameraId);
