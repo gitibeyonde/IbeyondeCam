@@ -1,25 +1,20 @@
-package com.ibeyonde.cam.ui.device;
+package com.ibeyonde.cam.ui.device.lastalerts;
 
 import com.ibeyonde.cam.utils.Camera;
 import com.ibeyonde.cam.utils.History;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
-public class LatestMotionContent {
-    private static final String TAG= LatestMotionContent.class.getCanonicalName();
+public class DeviceMotionContent {
+    private static final String TAG= DeviceMotionContent.class.getCanonicalName();
 
-    public static List<ViewHolder> _item_list;
-
-    public static Map<String, ViewHolder> _item_map;
+    public static List<PlaceHolder> _item_list;
 
     public static void initialize(Hashtable<String, Camera> ch){
-        _item_list = new ArrayList<ViewHolder>();
-        _item_map = new HashMap<String, ViewHolder>();
+        _item_list = new ArrayList<PlaceHolder>();
 
         if (ch == null) return;
         Enumeration<String> e = ch.keys();
@@ -28,19 +23,18 @@ public class LatestMotionContent {
             Camera c = ch.get(uuid);
             History h = c._history;
             if (h != null) {
-                ViewHolder hi = new ViewHolder(c._index, uuid, h);
+                PlaceHolder hi = new PlaceHolder(c._index, uuid, h);
                 _item_list.add(hi);
-                _item_map.put(uuid, hi);
             }
         }
     }
 
-    public static class ViewHolder {
+    public static class PlaceHolder {
         public final String _id;
         public final String _uuid;
         public final History _history;
 
-        public ViewHolder(int id, String uuid, History history) {
+        public PlaceHolder(int id, String uuid, History history) {
             this._id = Integer.toString(id);
             this._uuid = uuid;
             this._history = history;

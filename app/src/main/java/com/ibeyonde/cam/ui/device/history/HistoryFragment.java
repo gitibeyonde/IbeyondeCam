@@ -1,10 +1,8 @@
-package com.ibeyonde.cam.ui.device;
+package com.ibeyonde.cam.ui.device.history;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,20 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ibeyonde.cam.R;
-import com.ibeyonde.cam.databinding.FragmentDeviceBinding;
-import com.ibeyonde.cam.databinding.FragmentHistoryItemBinding;
 import com.ibeyonde.cam.databinding.FragmentHistoryItemListBinding;
-import com.ibeyonde.cam.ui.device.placeholder.PlaceholderContent;
-import com.ibeyonde.cam.utils.Camera;
 import com.ibeyonde.cam.utils.History;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -63,18 +49,15 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onChanged(History h) {
                 Log.i(TAG, "Device List = " + h._total);
+                HistoryMotionContent.initialize(h.getHistory());
                 // Set the adapter
                 if (view instanceof RecyclerView) {
                     Context context = view.getContext();
                     RecyclerView recyclerView = (RecyclerView) view;
-                    if (  h._total <= 1) {
-                        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    } else {
-                        recyclerView.setLayoutManager(new GridLayoutManager(context,   h._total));
-                    }
-                    recyclerView.setAdapter(new HistoryRecyclerViewAdapter(h.getHistory()));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    recyclerView.setAdapter(new HistoryRecyclerViewAdapter(HistoryMotionContent._item_list));
                 }
-                binding.progressBarHistory.setVisibility(View.GONE);
+                //binding.progressBarHistory.setVisibility(View.GONE);
             }
         });
 

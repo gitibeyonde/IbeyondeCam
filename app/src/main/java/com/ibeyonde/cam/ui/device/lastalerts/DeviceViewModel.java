@@ -1,4 +1,4 @@
-package com.ibeyonde.cam.ui.device;
+package com.ibeyonde.cam.ui.device.lastalerts;
 
 import android.content.Context;
 import android.util.Base64;
@@ -22,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;

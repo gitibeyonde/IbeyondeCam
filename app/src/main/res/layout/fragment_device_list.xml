@@ -9,5 +9,5 @@
     android:layout_marginRight="5dp"
     android:paddingBottom="60dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.device.DeviceFragment"
+    tools:context=".ui.device.lastalerts.DeviceFragment"
     tools:listitem="@layout/fragment_device" />

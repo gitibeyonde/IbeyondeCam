@@ -1,4 +1,4 @@
-package com.ibeyonde.cam.ui.device;
+package com.ibeyonde.cam.ui.device.lastalerts;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,9 +19,9 @@ import java.util.TimerTask;
 public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecyclerViewAdapter.ViewHolder> {
     private static final String TAG= DeviceRecyclerViewAdapter.class.getCanonicalName();
 
-    private final List<LatestMotionContent.ViewHolder> _history_list;
+    private final List<DeviceMotionContent.PlaceHolder> _history_list;
 
-    public DeviceRecyclerViewAdapter(List<LatestMotionContent.ViewHolder> items) {
+    public DeviceRecyclerViewAdapter(List<DeviceMotionContent.PlaceHolder> items) {
         _history_list = items;
     }
 
@@ -32,7 +32,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        LatestMotionContent.ViewHolder hi  = _history_list.get(position);
+        DeviceMotionContent.PlaceHolder hi  = _history_list.get(position);
         Log.d(TAG, "onBindViewHolder  position = " + position + " hv size = " + _history_list.size());
         Log.d(TAG, "onBindViewHolder  id = " + hi._id + " uuid = " + hi._uuid );
         holder.uuid.setText(hi._uuid);

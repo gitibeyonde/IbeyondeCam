@@ -1,4 +1,4 @@
-package com.ibeyonde.cam.ui.device;
+package com.ibeyonde.cam.ui.device.lastalerts;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -60,10 +60,10 @@ public class DeviceFragment extends Fragment {
             public void onChanged(@Nullable Short s) {
                 Hashtable<String, Camera> ch = deviceViewModel._deviceList.getValue();
                 if (ch != null) {
-                    LatestMotionContent.initialize(ch);
+                    DeviceMotionContent.initialize(ch);
                     if (deviceViewModel.isAllCameraWithHistory()){
                         RecyclerView recyclerView = (RecyclerView) view;
-                        recyclerView.setAdapter(new DeviceRecyclerViewAdapter(LatestMotionContent._item_list));
+                        recyclerView.setAdapter(new DeviceRecyclerViewAdapter(DeviceMotionContent._item_list));
                     }
                 }
             }
@@ -76,5 +76,6 @@ public class DeviceFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
     }
 }

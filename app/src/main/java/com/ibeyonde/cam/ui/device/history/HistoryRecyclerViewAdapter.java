@@ -1,31 +1,29 @@
-package com.ibeyonde.cam.ui.device;
+package com.ibeyonde.cam.ui.device.history;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ibeyonde.cam.databinding.FragmentHistoryItemBinding;
-import com.ibeyonde.cam.ui.device.placeholder.PlaceholderContent.PlaceholderItem;
-import com.ibeyonde.cam.utils.History;
+import com.ibeyonde.cam.ui.device.history.HistoryMotionContent.PlaceHolder;
 import com.ibeyonde.cam.utils.ImageLoadTask;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
+ * {@link RecyclerView.Adapter} that can display a {@link PlaceHolder}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
+    private static final String TAG= HistoryRecyclerViewAdapter.class.getCanonicalName();
 
-    private final List<JSONObject> _history_list;
+    private final List<HistoryMotionContent.PlaceHolder> _history_list;
 
-    public HistoryRecyclerViewAdapter(List<JSONObject> items) {
+    public HistoryRecyclerViewAdapter(List<HistoryMotionContent.PlaceHolder> items) {
         _history_list = items;
     }
     @Override
@@ -35,13 +33,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        JSONObject hi  = _history_list.get(position);
-        try {
-            holder.timestamp.setText(hi.getString("datetime"));
-            new ImageLoadTask(hi.getString("url"), holder.picture).execute();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        PlaceHolder hi  = _history_list.get(position);
+        Log.d(TAG, hi.toString());
+        holder.timestamp.setText(hi.timestamp);
+        new ImageLoadTask(hi.url, holder.picture).execute();
     }
 
     @Override

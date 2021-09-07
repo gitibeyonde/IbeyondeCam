@@ -18,8 +18,8 @@ import com.ibeyonde.cam.ui.login.LoginViewModel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CameraViewModel extends ViewModel {
-    private static final String TAG= CameraViewModel.class.getCanonicalName();
+public class LiveViewModel extends ViewModel {
+    private static final String TAG= LiveViewModel.class.getCanonicalName();
 
     public static final MutableLiveData<String> _url = new MutableLiveData<>();
 

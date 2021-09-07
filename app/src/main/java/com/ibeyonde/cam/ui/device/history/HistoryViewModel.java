@@ -1,4 +1,4 @@
-package com.ibeyonde.cam.ui.device;
+package com.ibeyonde.cam.ui.device.history;
 
 import android.content.Context;
 import android.util.Base64;
@@ -8,25 +8,20 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
-import com.ibeyonde.cam.utils.Camera;
 import com.ibeyonde.cam.utils.History;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 public class HistoryViewModel extends ViewModel {
@@ -67,6 +62,11 @@ public class HistoryViewModel extends ViewModel {
             }
 
         };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                120000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }

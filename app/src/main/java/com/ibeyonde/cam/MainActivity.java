@@ -25,8 +25,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.ibeyonde.cam.databinding.ActivityMainBinding;
-import com.ibeyonde.cam.ui.device.CameraFragment;
-import com.ibeyonde.cam.ui.device.HistoryFragment;
+import com.ibeyonde.cam.ui.device.LiveFragment;
+import com.ibeyonde.cam.ui.device.history.HistoryFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG= MainActivity.class.getCanonicalName();
@@ -101,14 +101,14 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "cameraLiveClick On Click =  " + view.getContentDescription());
         FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
 
-        CameraFragment cameraFragment = new CameraFragment();
-        cameraFragment._cameraId = view.getContentDescription().toString();
+        LiveFragment liveFragment = new LiveFragment();
+        liveFragment._cameraId = view.getContentDescription().toString();
         fragmentManager.beginTransaction()
-                .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), cameraFragment, "live")
+                .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), liveFragment, "live")
                 .setReorderingAllowed(true)
                 .addToBackStack(null)
                 .commit();
-        getSupportActionBar().setTitle(cameraFragment._cameraId + " Live ");
+        getSupportActionBar().setTitle(liveFragment._cameraId + " Live ");
     }
 
     public void cameraHistoryClick(View view) {

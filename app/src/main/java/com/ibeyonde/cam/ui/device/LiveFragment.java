@@ -16,28 +16,28 @@ import com.github.niqdev.mjpeg.DisplayMode;
 import com.github.niqdev.mjpeg.Mjpeg;
 import com.ibeyonde.cam.databinding.FragmentLiveBinding;
 
-public class CameraFragment extends Fragment {
-    private static final String TAG= CameraFragment.class.getCanonicalName();
+public class LiveFragment extends Fragment {
+    private static final String TAG= LiveFragment.class.getCanonicalName();
 
     public static String _cameraId;
 
-    private CameraViewModel cameraViewModel;
+    private LiveViewModel liveViewModel;
     private FragmentLiveBinding binding;
     Mjpeg _mjpeg;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        cameraViewModel =
-                new ViewModelProvider(this).get(CameraViewModel.class);
+        liveViewModel =
+                new ViewModelProvider(this).get(LiveViewModel.class);
         binding = FragmentLiveBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         binding.cameraLabel.setText(_cameraId);
-        cameraViewModel.getLiveUrl(getContext(), _cameraId);
+        liveViewModel.getLiveUrl(getContext(), _cameraId);
 
         _mjpeg = Mjpeg.newInstance();
-        cameraViewModel._url.observe(this.getActivity(), new Observer<String>() {
+        liveViewModel._url.observe(this.getActivity(), new Observer<String>() {
             public void onChanged(@Nullable String url) {
                 Log.d(TAG, "Live URL = " + url);
                 try {
