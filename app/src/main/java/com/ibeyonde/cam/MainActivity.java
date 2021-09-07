@@ -24,6 +24,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.ibeyonde.cam.databinding.ActivityMainBinding;
 import com.ibeyonde.cam.ui.device.LiveFragment;
 import com.ibeyonde.cam.ui.device.history.HistoryFragment;
+import com.ibeyonde.cam.utils.CCFirebaseMessagingService;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        FirebaseApp.initializeApp(getApplicationContext());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        FirebaseApp.initializeApp(this);
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                         // Log and toast
                         String msg = getString(R.string.msg_token_fmt, token);
                         Log.d(TAG, msg);
+                        CCFirebaseMessagingService.registerToken(token, getApplicationContext());
                         Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });

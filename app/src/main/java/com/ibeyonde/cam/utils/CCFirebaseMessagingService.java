@@ -61,19 +61,22 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
         @Override
         public void onNewToken(String token) {
             Log.d(TAG, "Refreshed token: " + token);
-
             Context ctx = getApplicationContext();
+            this.registerToken(token, ctx);
+        }
+
+        public static void registerToken(String token, Context ctx){
             //username, phoneid, token, system, system_type, language, country
-            String android_id = Settings.Secure.getString(this.getContentResolver(),Settings.Secure.ANDROID_ID);
+            String android_id = Settings.Secure.getString(ctx.getContentResolver(),Settings.Secure.ANDROID_ID);
             Log.d("Android","Android ID : "+android_id);
-            String locale = ctx.getResources().getConfiguration().getLocales().get(0).getCountry();
+            String locale = ctx.getResources().getConfiguration().getLocales().get(0).getLanguage();
             Log.d("Android","Android Locale : "+locale);
-            String country = ctx.getResources().getConfiguration().getLocales().get(0).getDisplayCountry();
+            String country = ctx.getResources().getConfiguration().getLocales().get(0).getCountry();
             Log.d("Android","Android Country : "+locale);
 
             RequestQueue queue = Volley.newRequestQueue(ctx);
             String url ="https://ping.ibeyonde.com/api/iot.php?view=token&token=" + token + "&username=" + LoginViewModel._email
-                    + "&phoneid=" + android_id + "&system=android&system_type=android&language=";
+                    + "&phone_id=" + android_id + "&system=android&system_type=android&language=" + locale + "&country=" + country;
 
             StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, url,
                     new Response.Listener<String>() {
@@ -98,12 +101,6 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
                 }
 
             };
-
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    120000,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            // Add the request to the RequestQueue.
             queue.add(stringRequest);
         }
         /**
