@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "524484730347",
+    "project_id": "ibeyonde",
+    "storage_bucket": "ibeyonde.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524484730347:android:252f6642e8896478f60dae",
+        "android_client_info": {
+          "package_name": "com.ibeyonde.cam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "524484730347-dt1h2pl00cmqphrq4fst9orh0qr0aafm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkfGWyd7vIIn-flz3L_mxXvvoj36IBrT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "524484730347-dt1h2pl00cmqphrq4fst9orh0qr0aafm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+  ],
+  "configuration_version": "1"
+}
+

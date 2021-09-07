@@ -53,6 +53,4 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
     implementation platform('com.google.firebase:firebase-bom:28.2.1')
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
-    implementation 'com.amazonaws:aws-android-sdk-pinpoint:2.25.+'
-    implementation ('com.amazonaws:aws-android-sdk-mobile-client:2.26.+@aar') { transitive = true }
 }
