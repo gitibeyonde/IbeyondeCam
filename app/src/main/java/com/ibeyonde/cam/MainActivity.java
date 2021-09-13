@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -43,19 +44,37 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_device, R.id.navigation_bluetooth, R.id.navigation_notifications, R.id.navigation_setting)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String uuid = extras.getString("uuid");
+            String view = extras.getString("view");
+
+            if (uuid != null) {
+                Log.i(TAG, "Bell Alert =  " + uuid);
+                HistoryFragment._cameraId = uuid;
+                HistoryFragment._list_size = 10;
+                NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
+                navGraph.setStartDestination(R.id.navigation_history);
+                navController.setGraph(navGraph);
+                NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+                getSupportActionBar().setTitle( "Bell Alert");
+            }
+            else {
+                NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            }
+        }
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         FirebaseApp.initializeApp(this);
-
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -100,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         HistoryFragment historyFragment = new HistoryFragment();
         historyFragment._cameraId = view.getContentDescription().toString();
+        historyFragment._list_size = 20;
         fragmentManager.beginTransaction()
                 .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), historyFragment, "history")
                 .setReorderingAllowed(true)

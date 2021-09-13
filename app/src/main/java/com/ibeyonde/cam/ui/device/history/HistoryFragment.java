@@ -26,6 +26,7 @@ public class HistoryFragment extends Fragment {
     private static final String TAG= HistoryFragment.class.getCanonicalName();
 
     public static String _cameraId;
+    public static int _list_size=20;
     private HistoryViewModel historyViewModel;
 
     public HistoryFragment() {
@@ -41,7 +42,7 @@ public class HistoryFragment extends Fragment {
                 new ViewModelProvider(this).get(HistoryViewModel.class);
         com.ibeyonde.cam.databinding.FragmentHistoryItemListBinding binding = FragmentHistoryItemListBinding.inflate(inflater, container, false);
 
-        historyViewModel.getHistoryOn(getActivity().getApplicationContext(), _cameraId, "", 0);
+        historyViewModel.getHistoryOn(getActivity().getApplicationContext(), _cameraId, "", 0, _list_size);
 
         Log.d(TAG, "onCreateView");
 
@@ -57,7 +58,6 @@ public class HistoryFragment extends Fragment {
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
                     recyclerView.setAdapter(new HistoryRecyclerViewAdapter(HistoryMotionContent._item_list));
                 }
-                //binding.progressBarHistory.setVisibility(View.GONE);
             }
         });
 

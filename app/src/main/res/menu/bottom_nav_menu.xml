@@ -7,6 +7,12 @@
         android:title="@string/title_device" />
 
     <item
+        android:id="@+id/navigation_history"
+        android:icon="@android:drawable/ic_dialog_alert"
+        android:title="@string/title_history"
+        android:visible="false"/>
+
+    <item
         android:id="@+id/navigation_notifications"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="@string/title_notifications" />

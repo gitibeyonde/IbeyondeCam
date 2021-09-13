@@ -29,9 +29,9 @@ public class HistoryViewModel extends ViewModel {
 
     public static final MutableLiveData<History> _historyList = new MutableLiveData<>();
 
-    public void getHistoryOn(Context ctx, String uuid, String date, int hour){
+    public void getHistoryOn(Context ctx, String uuid, String date, int hour, int size){
         RequestQueue queue = Volley.newRequestQueue(ctx);
-        String url ="https://ping.ibeyonde.com/api/iot.php?view=history&uuid=" + uuid;//&date=" + date + "&hour=" + hour;
+        String url ="https://ping.ibeyonde.com/api/iot.php?view=history&uuid=" + uuid + "&cnt=" + size;//&date=" + date + "&hour=" + hour;
 
         JsonArrayRequest stringRequest = new JsonArrayRequest(JsonObjectRequest.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {

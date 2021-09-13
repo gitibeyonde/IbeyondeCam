@@ -60,7 +60,7 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
                 JSONObject json = new JSONObject(remoteMessage.getData());
                 try {
                     Log.d(TAG, "id: " + json.getString("id"));
-                    sendNotification(Integer.parseInt(json.getString("id")), json.getString("title") + " at " + json.getString("created"), json.getString("image"));
+                    sendNotification(Integer.parseInt(json.getString("id")), json.getString("uuid"), json.getString("title") + " at " + json.getString("created"), json.getString("image"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -126,9 +126,11 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
          *
          * @param messageBody FCM message body received.
          */
-        private void sendNotification(int messageId, String messageBody, String url) {
+        private void sendNotification(int messageId, String uuid, String messageBody, String url) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("uuid", uuid);
+            intent.putExtra("view", "history");
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                     PendingIntent.FLAG_ONE_SHOT);
 
