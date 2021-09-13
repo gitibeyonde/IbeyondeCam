@@ -1,6 +1,9 @@
 package com.ibeyonde.cam;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -63,13 +66,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                         // Get new FCM registration token
                         String token = task.getResult();
-                        // Log and toast
-                        String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d(TAG, msg);
+                        Log.d(TAG, "FCM Token Initialized " + token);
                         CCFirebaseMessagingService.registerToken(token, getApplicationContext());
-                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "FCM Token Initialized", Toast.LENGTH_SHORT).show();
                     }
                 });
+        //createNotificationChannel();
     }
 
     public void deviceListClick(View view) {
@@ -137,5 +139,19 @@ public class MainActivity extends AppCompatActivity {
                 .build());
         // [END fcm_send_upstream]
     }
-
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(getString(R.string.default_notification_channel_id), name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 }
