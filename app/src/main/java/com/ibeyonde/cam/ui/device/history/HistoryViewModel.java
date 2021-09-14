@@ -27,7 +27,7 @@ import java.util.Map;
 public class HistoryViewModel extends ViewModel {
     private static final String TAG= HistoryViewModel.class.getCanonicalName();
 
-    public static final MutableLiveData<History> _historyList = new MutableLiveData<>();
+    public static final MutableLiveData<History> _history = new MutableLiveData<>();
 
     public void getHistoryOn(Context ctx, String uuid, String date, int hour, int size){
         RequestQueue queue = Volley.newRequestQueue(ctx);
@@ -40,7 +40,7 @@ public class HistoryViewModel extends ViewModel {
                         Log.d(TAG, "History list json " + jsonArray.toString());
                         try {
                             History c = new History(jsonArray);
-                            _historyList.postValue(c);
+                            _history.postValue(c);
                         } catch (JSONException e) {
                             Log.i(TAG, "FATAL JSON Exception: deviceList Device List " + e.getMessage());
                         }

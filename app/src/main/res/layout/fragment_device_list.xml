@@ -10,4 +10,4 @@
     android:paddingBottom="60dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".ui.device.lastalerts.DeviceFragment"
-    tools:listitem="@layout/fragment_device" />
+    tools:listitem="@layout/fragment_device_item" />

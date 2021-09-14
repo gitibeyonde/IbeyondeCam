@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ibeyonde.cam.R;
-import com.ibeyonde.cam.databinding.FragmentHistoryItemListBinding;
+import com.ibeyonde.cam.databinding.FragmentHistoryListBinding;
 import com.ibeyonde.cam.utils.History;
 
 /**
@@ -36,17 +35,15 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_history_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_history_list, container, false);
 
         historyViewModel =
                 new ViewModelProvider(this).get(HistoryViewModel.class);
-        com.ibeyonde.cam.databinding.FragmentHistoryItemListBinding binding = FragmentHistoryItemListBinding.inflate(inflater, container, false);
+        FragmentHistoryListBinding binding = FragmentHistoryListBinding.inflate(inflater, container, false);
 
         historyViewModel.getHistoryOn(getActivity().getApplicationContext(), _cameraId, "", 0, _list_size);
 
-        Log.d(TAG, "onCreateView");
-
-        historyViewModel._historyList.observe(this.getActivity(), new Observer<History>() {
+        historyViewModel._history.observe(this.getActivity(), new Observer<History>() {
             @Override
             public void onChanged(History h) {
                 Log.i(TAG, "Device List = " + h._total);
@@ -62,6 +59,16 @@ public class HistoryFragment extends Fragment {
         });
 
         getActivity().setTitle( _cameraId + " History ");
+
+        /**OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Log.d(TAG, "Back button pressed");
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);**/
+
+
         return view;
     }
 }

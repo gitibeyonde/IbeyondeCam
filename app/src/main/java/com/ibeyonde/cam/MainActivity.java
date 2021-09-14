@@ -3,6 +3,8 @@ package com.ibeyonde.cam;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,11 +49,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_device, R.id.navigation_bluetooth, R.id.navigation_notifications, R.id.navigation_setting)
+                R.id.navigation_device, R.id.navigation_bluetooth, R.id.navigation_history, R.id.navigation_notifications, R.id.navigation_setting)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
 
@@ -65,13 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
                 navGraph.setStartDestination(R.id.navigation_history);
                 navController.setGraph(navGraph);
-                NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-                getSupportActionBar().setTitle( "Bell Alert");
-            }
-            else {
-                NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
             }
         }
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         FirebaseApp.initializeApp(this);
@@ -87,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         String token = task.getResult();
                         Log.d(TAG, "FCM Token Initialized " + token);
                         CCFirebaseMessagingService.registerToken(token, getApplicationContext());
-                        Toast.makeText(MainActivity.this, "FCM Token Initialized", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "CleverCam", Toast.LENGTH_SHORT).show();
                     }
                 });
         //createNotificationChannel();

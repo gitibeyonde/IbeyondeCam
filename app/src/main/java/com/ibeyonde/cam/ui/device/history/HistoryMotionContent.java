@@ -13,7 +13,7 @@ public class HistoryMotionContent {
     public static List<HistoryMotionContent.PlaceHolder> _item_list;
 
     public static void initialize(ArrayList<JSONObject> hl){
-        _item_list = new ArrayList<HistoryMotionContent.PlaceHolder>();
+        _item_list = new ArrayList<>();
 
         if (hl == null) return;
         Iterator<JSONObject> e = hl.iterator();

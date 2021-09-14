@@ -120,18 +120,12 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
             queue.add(stringRequest);
         }
 
-
-        /**
-         * Create and show a simple notification containing the received FCM message.
-         *
-         * @param messageBody FCM message body received.
-         */
         private void sendNotification(int messageId, String uuid, String messageBody, String url) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("uuid", uuid);
             intent.putExtra("view", "history");
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, messageId, intent,
                     PendingIntent.FLAG_ONE_SHOT);
 
             String channelId = getString(R.string.default_notification_channel_id);
@@ -147,7 +141,8 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
                 InputStream input = connection.getInputStream();
                 myBitmap = BitmapFactory.decodeStream(input);
             } catch (Exception e) {
-                e.printStackTrace();
+                myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.error);
+                Log.w(TAG, "Failed do download the alert image");
             }
 
             NotificationCompat.Builder notificationBuilder;

@@ -16,6 +16,7 @@
     <string name="title_home">Cameras</string>
     <string name="title_camera">Camera Live</string>
     <string name="title_history">Motion History</string>
+    <string name="title_alert">Bell Press</string>
     <string name="title_setting">Setting</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_bluetooth">Configure</string>

@@ -74,7 +74,7 @@ public class SplashActivity extends AppCompatActivity {
                     finish();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Welcome to Ibeyonde CleverCam", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Welcome to Ibeyonde", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(getApplication(), MainActivity.class);
                     startActivity(i);
                     finish();

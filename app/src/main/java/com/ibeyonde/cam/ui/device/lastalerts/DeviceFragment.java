@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ibeyonde.cam.R;
-import com.ibeyonde.cam.databinding.FragmentDeviceBinding;
+import com.ibeyonde.cam.databinding.FragmentDeviceListBinding;
 import com.ibeyonde.cam.utils.Camera;
 
 import java.util.Enumeration;
@@ -37,7 +37,7 @@ public class DeviceFragment extends Fragment {
 
         deviceViewModel =
                 new ViewModelProvider(this).get(DeviceViewModel.class);
-        com.ibeyonde.cam.databinding.FragmentDeviceBinding binding = FragmentDeviceBinding.inflate(inflater, container, false);
+        FragmentDeviceListBinding binding = FragmentDeviceListBinding.inflate(inflater, container, false);
 
         deviceViewModel.deviceList(getActivity().getApplicationContext());
 

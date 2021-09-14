@@ -9,7 +9,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ibeyonde.cam.databinding.FragmentDeviceBinding;
+import com.ibeyonde.cam.databinding.FragmentDeviceItemBinding;
+import com.ibeyonde.cam.databinding.FragmentDeviceListBinding;
 import com.ibeyonde.cam.utils.ImageLoadTask;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(FragmentDeviceBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ViewHolder(FragmentDeviceItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         public final Button live;
         public final Button history;
 
-        public ViewHolder(FragmentDeviceBinding binding) {
+        public ViewHolder(FragmentDeviceItemBinding binding) {
             super(binding.getRoot());
             uuid = binding.deviceUuid;
             picture = binding.deviceView;
