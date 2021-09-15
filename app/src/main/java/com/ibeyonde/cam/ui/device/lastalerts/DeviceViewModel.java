@@ -32,7 +32,7 @@ public class DeviceViewModel extends ViewModel {
     public static final MutableLiveData<Hashtable<String, Camera>> _deviceList = new MutableLiveData<>();
     public static final MutableLiveData<Short> _update = new MutableLiveData<>();
 
-    public Camera getCamera(String uuid){
+    public static Camera getCamera(String uuid){
         Hashtable<String, Camera> cl = _deviceList.getValue();
         return cl.get(uuid);
     }

@@ -34,7 +34,8 @@ public class LiveFragment extends Fragment {
         View root = binding.getRoot();
 
         binding.cameraLabel.setText(_cameraId);
-        liveViewModel.getLiveUrl(getContext(), _cameraId);
+
+        liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
 
         _mjpeg = Mjpeg.newInstance();
         liveViewModel._url.observe(this.getActivity(), new Observer<String>() {
