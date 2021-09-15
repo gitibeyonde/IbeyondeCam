@@ -1,4 +1,4 @@
-package com.ibeyonde.cam.ui.device;
+package com.ibeyonde.cam.ui.device.live;
 
 import android.content.Context;
 import android.util.Base64;
@@ -13,7 +13,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.common.util.IOUtils;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.Camera;

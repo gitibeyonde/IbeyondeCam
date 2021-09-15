@@ -8,13 +8,13 @@
     android:background="?android:windowBackground"
     android:orientation="vertical"
     android:paddingBottom="60dp"
-    tools:context=".ui.device.LiveFragment">
+    tools:context=".ui.device.live.LiveFragment">
 
     <TextView
         android:id="@+id/cameraLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#64DD17"
+        android:background="#FFFFFF"
         android:fontFamily="sans-serif"
         android:paddingStart="20dp"
         android:paddingTop="20dp"
@@ -27,20 +27,13 @@
         android:textStyle="bold"
         android:typeface="normal" />
 
-    <com.github.niqdev.mjpeg.MjpegSurfaceView
+    <SurfaceView
         android:id="@+id/cameraLive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:adjustViewBounds="true"
-        stream:type="stream_default" />
-
-    <Button
-        android:id="@+id/buttonCameraBack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="deviceListClick"
-        android:text="Back" />
+        android:foreground="@drawable/loading"
+        tools:ignore="TouchTargetSizeCheck" />
 
 
 </LinearLayout>

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.EOFException;
 import java.io.IOException;
 
 /*
@@ -467,8 +468,13 @@ public class MjpegViewDefault extends AbstractMjpegView {
                                         ovl = makeFpsOverlay(overlayPaint, fps);
                                     }
                                 }
-                            } catch (IOException e) {
+                            }
+                            catch (IOException e) {
                                 Log.e(TAG, "encountered exception during render", e);
+                            }
+                            catch (UnknownError e) {
+                                Log.e(TAG, "unknown error", e);
+                                break;
                             }
                         }
                     } finally {

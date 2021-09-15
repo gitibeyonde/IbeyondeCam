@@ -2,10 +2,12 @@ package com.github.niqdev.mjpeg;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.renderscript.RSInvalidStateException;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -27,18 +29,23 @@ public class MjpegInputStreamDefault extends MjpegInputStream {
     private int getEndOfSeqeunce(DataInputStream in, byte[] sequence) throws IOException {
         int seqIndex = 0;
         byte c;
-        for (int i = 0; i < FRAME_MAX_LENGTH; i++) {
-            c = (byte) in.readUnsignedByte();
-            if (c == sequence[seqIndex]) {
-                seqIndex++;
-                if (seqIndex == sequence.length) {
-                    return i + 1;
+        try {
+            for (int i = 0; i < FRAME_MAX_LENGTH; i++) {
+                c = (byte) in.readUnsignedByte();
+                if (c == sequence[seqIndex]) {
+                    seqIndex++;
+                    if (seqIndex == sequence.length) {
+                        return i + 1;
+                    }
+                } else {
+                    seqIndex = 0;
                 }
-            } else {
-                seqIndex = 0;
             }
         }
-        throw new IOException("Bad getEndOfSeqeunce");
+        catch(EOFException e) {
+            throw new UnknownError("getEndOfSeqeunce readUnsignedByte failed");
+        }
+        throw new UnknownError("getEndOfSeqeunce failed");
     }
 
     private int getStartOfSequence(DataInputStream in, byte[] sequence) throws IOException {

@@ -2,9 +2,6 @@ package com.ibeyonde.cam;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +12,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -29,7 +25,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ibeyonde.cam.databinding.ActivityMainBinding;
-import com.ibeyonde.cam.ui.device.LiveFragment;
+import com.ibeyonde.cam.ui.device.live.LiveFragment;
 import com.ibeyonde.cam.ui.device.history.HistoryFragment;
 import com.ibeyonde.cam.utils.CCFirebaseMessagingService;
 
