@@ -80,10 +80,25 @@ public class MainActivity extends AppCompatActivity {
                         String token = task.getResult();
                         Log.d(TAG, "FCM Token Initialized " + token);
                         CCFirebaseMessagingService.registerToken(token, getApplicationContext());
-                        Toast.makeText(MainActivity.this, "CleverCam", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "CleverCam", Toast.LENGTH_SHORT).show();
                     }
                 });
         //createNotificationChannel();
+    }
+
+    public void alertClick(View view) {
+        Log.i(TAG, "cameraHistoryClick On Click =  " + view.getContentDescription());
+        FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
+
+        HistoryFragment historyFragment = new HistoryFragment();
+        historyFragment._cameraId = view.getContentDescription().toString();
+        historyFragment._list_size = 10;
+        fragmentManager.beginTransaction()
+                .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), historyFragment, "history")
+                .setReorderingAllowed(true)
+                .addToBackStack("home")
+                .commit();
+        getSupportActionBar().setTitle(historyFragment._cameraId  + " History ");
     }
 
     public void deviceListClick(View view) {
@@ -101,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), liveFragment, "live")
                 .setReorderingAllowed(true)
-                .addToBackStack(null)
+                .addToBackStack("home")
                 .commit();
         getSupportActionBar().setTitle(liveFragment._cameraId + " Live ");
     }
@@ -116,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), historyFragment, "history")
                 .setReorderingAllowed(true)
-                .addToBackStack(null)
+                .addToBackStack("home")
                 .commit();
         getSupportActionBar().setTitle(historyFragment._cameraId  + " History ");
     }

@@ -34,7 +34,8 @@ public class LiveViewModel extends ViewModel {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        if (response.indexOf("Ibeyonde") > 0) {
+                        Log.d(TAG, response);
+                        if (response.contains("Ibeyonde")) {
                             _url.setValue(localUrl + "stream");
                         }
                         else {

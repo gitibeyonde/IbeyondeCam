@@ -10,27 +10,17 @@
 
     <TextView
         android:id="@+id/cameraLabel"
+        style="@style/LabelStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:fontFamily="sans-serif"
-        android:paddingStart="20dp"
-        android:paddingTop="20dp"
-        android:text="Camera UUID"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#304FFE"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:typeface="normal" />
+        android:text="Camera UUID" />
 
     <ImageView
         android:id="@+id/cameraLive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/loading"
-        android:adjustViewBounds="true" />
+        android:adjustViewBounds="true"
+        android:src="@drawable/loading" />
 
 
 </LinearLayout>

@@ -31,7 +31,9 @@ public class NotificationRecyclerViewAdapter  extends RecyclerView.Adapter<Notif
         NotificationContent.PlaceHolder hi  = _alerts.get(position);
         Log.d(TAG, hi.toString());
         holder.timestamp.setText(hi.timestamp);
+        holder.uuid.setText(hi.uuid);
         Log.d(TAG, hi.id + " id");
+        holder.picture.setContentDescription(hi.uuid);
         new ImageLoadTask(hi.url, holder.picture).execute();
     }
 
@@ -41,6 +43,7 @@ public class NotificationRecyclerViewAdapter  extends RecyclerView.Adapter<Notif
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        public final TextView uuid;
         public final TextView timestamp;
         public final ImageView picture;
 
@@ -48,6 +51,7 @@ public class NotificationRecyclerViewAdapter  extends RecyclerView.Adapter<Notif
             super(binding.getRoot());
             timestamp = binding.notificationTimestamp;
             picture = binding.notificationImage;
+            uuid = binding.notificationUuid;
         }
 
         @Override

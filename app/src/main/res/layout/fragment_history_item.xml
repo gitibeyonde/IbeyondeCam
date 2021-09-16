@@ -15,11 +15,10 @@
 
     <TextView
         android:id="@+id/historyTimestamp"
+        style="@style/TimestampStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+        android:text="2021-09-15 03:22:30" />
 
 </LinearLayout>

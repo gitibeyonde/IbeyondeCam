@@ -39,10 +39,10 @@ public class MjpegRunner implements Runnable {
         this.url = url;
         this.handler = handler;
         this.binding = binding;
-        while(start() == false);
+        while(start(2000) == false);
     }
 
-    private boolean start() {
+    private boolean start(int wait) {
         if (isRunning == false)return true;
         URLConnection urlConn = null;
         try {
@@ -53,7 +53,7 @@ public class MjpegRunner implements Runnable {
             Log.d(TAG, "Starting mjpeg");
         } catch (IOException e) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(wait);
             } catch (InterruptedException interruptedException) {
                 interruptedException.printStackTrace();
             }
@@ -77,15 +77,21 @@ public class MjpegRunner implements Runnable {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ImageView imageView = binding.cameraLive;
-                        imageView.setImageBitmap(bmp);
+                        binding.cameraLive.setImageBitmap(bmp);
                     }
                 });
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 Log.e(TAG, "failed stream read: " + e);
                 e.printStackTrace();
                 //reinitialize
-                while(start() == false);
+                while(start(2000) == false);
+            }
+            catch (NumberFormatException e) {
+                Log.e(TAG, "failed stream read: " + e);
+                e.printStackTrace();
+                //reinitialize
+                while(start(10000) == false);
             }
         }
         try {
@@ -97,7 +103,7 @@ public class MjpegRunner implements Runnable {
     }
 
 
-    private byte[] retrieveNextImage() throws IOException {
+    private byte[] retrieveNextImage() throws IOException, NumberFormatException {
         int currByte = -1;
 
         StringWriter headerWriter = new StringWriter(128);
@@ -111,26 +117,28 @@ public class MjpegRunner implements Runnable {
             }
         }
         //skip headers
-        int i=0;
-        while (urlStream.read() > -1) {
-            if (++i >= SKIP_HEADER) break;
+        byte[] skipBytes = new byte[SKIP_HEADER];
+        int offset = 0;
+        int numRead = 0;
+        while (offset < SKIP_HEADER
+                && (numRead = urlStream.read(skipBytes, offset, SKIP_HEADER - offset)) >= 0) {
+            offset += numRead;
         }
 
         while ((currByte = urlStream.read()) > -1) {
             if (currByte == '\n')break;
             headerWriter.write(currByte);
         }
-        //skip carriage return
-        while (urlStream.read() > -1) {
-            break;
-        }
+
+        while (urlStream.read() > -1) break;
+
         int content_length = Integer.parseInt(headerWriter.toString().trim());
         System.out.println("Content length = " + content_length);
 
         // rest is the buffer
         byte[] imageBytes = new byte[content_length];
-        int offset = 0;
-        int numRead = 0;
+        offset = 0;
+        numRead = 0;
         while (offset < imageBytes.length
                 && (numRead = urlStream.read(imageBytes, offset, imageBytes.length - offset)) >= 0) {
             offset += numRead;
