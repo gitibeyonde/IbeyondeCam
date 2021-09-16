@@ -4,10 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/live_fragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?android:windowBackground"
+    android:layout_height="400dp"
     android:orientation="vertical"
-    android:paddingBottom="60dp"
     tools:context=".ui.device.live.LiveFragment">
 
     <TextView
@@ -27,13 +25,12 @@
         android:textStyle="bold"
         android:typeface="normal" />
 
-    <SurfaceView
+    <ImageView
         android:id="@+id/cameraLive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:foreground="@drawable/loading"
-        tools:ignore="TouchTargetSizeCheck" />
+        android:src="@drawable/loading"
+        android:adjustViewBounds="true" />
 
 
 </LinearLayout>

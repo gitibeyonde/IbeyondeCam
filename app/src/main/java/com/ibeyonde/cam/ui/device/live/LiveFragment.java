@@ -3,6 +3,11 @@ package com.ibeyonde.cam.ui.device.live;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +15,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,7 +38,9 @@ public class LiveFragment extends Fragment {
 
     private LiveViewModel liveViewModel;
     private FragmentLiveBinding binding;
-    private static final ArrayBlockingQueue<Bitmap> queue = new ArrayBlockingQueue<Bitmap>(100);
+
+    Handler handler;
+    static MjpegRunner rc;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -50,55 +59,34 @@ public class LiveFragment extends Fragment {
         }
         liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
 
-        SurfaceView viewer = binding.cameraLive;
-        viewer.setZOrderOnTop(true);
-        SurfaceHolder surface = viewer.getHolder();
         liveViewModel._url.observe(this.getActivity(), new Observer<String>() {
             public void onChanged(@Nullable String url) {
                 Log.d(TAG, "Live URL = " + url);
-                try {
-                    MjpegRunner rc = new MjpegRunner(new URL(url), queue);
-                    Thread t = new Thread(rc);
-                    t.start();
-
-                    new Thread() {
-                        public void run() {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Bitmap bmp = null;
-                                try {
-                                    Log.d(TAG, "Start Setting image view");
-                                    bmp = queue.poll(5, TimeUnit.SECONDS);
-                                    int i=0;
-                                    while(bmp != null) {
-                                        Log.d(TAG, "Set image to view " + i++);
-                                        Canvas c = surface.lockCanvas();
-                                        c.setBitmap(bmp);
-                                        surface.unlockCanvasAndPost(c);
-                                        bmp = queue.poll(5, TimeUnit.SECONDS);
-                                    }
-                                    Log.d(TAG, "Exiting while loop");
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                        }
-                    }.start();
+                if (url.toString().length() > 10) {
+                    try {
+                        handler = new Handler(getContext().getMainLooper());
+                        rc = new MjpegRunner(new URL(url), handler, binding);
+                        Thread t = new Thread(rc);
+                        t.start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-                catch(Exception e){
-                    e.printStackTrace();
+                else {
+                    if (rc != null)rc.stop();
                 }
             }
         });
         Log.d(TAG, "Live view created");
+
         return root;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        liveViewModel._url.setValue("");
+        if (rc != null)rc.stop();
     }
 
 }
