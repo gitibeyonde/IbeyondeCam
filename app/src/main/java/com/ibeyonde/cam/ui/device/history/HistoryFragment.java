@@ -28,10 +28,6 @@ public class HistoryFragment extends Fragment {
     public static int _list_size=20;
     private HistoryViewModel historyViewModel;
 
-    public HistoryFragment() {
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

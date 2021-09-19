@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bt_terminal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:windowBackground"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="2dp"
+    android:paddingBottom="60dp">
 
     <TextView
         android:id="@+id/receive_text"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_weight="50"
+        android:background="#B9F6CA"
         android:freezesText="true"
         android:gravity="bottom"
         android:scrollbars="vertical"
+        android:windowSoftInputMode="adjustResize"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <View
         android:layout_width="match_parent"
-        android:background="?android:attr/listDivider"
-        android:layout_height="2dp" />
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <EditText
@@ -32,13 +35,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="#F4FF81"
             android:inputType="text|textNoSuggestions"
             android:singleLine="true" />
 
         <ImageButton
             android:id="@+id/send_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#FFE57F"
             app:srcCompat="@drawable/ic_send_white_24dp" />
     </LinearLayout>
 

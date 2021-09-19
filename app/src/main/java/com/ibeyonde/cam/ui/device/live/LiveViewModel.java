@@ -34,14 +34,15 @@ public class LiveViewModel extends ViewModel {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d(TAG, response);
+                        Log.i(TAG, "checking local url " + response);
                         if (response.contains("Ibeyonde")) {
                             _url.setValue(localUrl + "stream");
+                            //stopStream(ctx, uuid);
                         }
                         else {
                             getLiveUrl(ctx, uuid);
                         }
-                        Log.d(TAG, "URL value set to " + _url.getValue());
+                        Log.i(TAG, "URL value set to " + _url.getValue());
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -49,18 +50,7 @@ public class LiveViewModel extends ViewModel {
                 Log.d(TAG, "Local Live Request failed ," + error.getMessage());
                 getLiveUrl(ctx, uuid);
             }
-        }){
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", LoginViewModel._email,LoginViewModel._pass);
-                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
-                params.put("Authorization", auth);
-                return params;
-            }
-
-        };
+        });
         queue.add(stringRequest);
     }
 
@@ -73,11 +63,11 @@ public class LiveViewModel extends ViewModel {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String url) {
-                        Log.d(TAG, "URL value ?? " + _url.getValue());
+                        Log.i(TAG, "URL value ?? " + _url.getValue());
                         url = url.replaceAll("^\"|\"$", "");
                         url = url.replaceAll("\\\\", "");
                         _url.setValue(url);
-                        Log.d(TAG, "URL value set to " + _url.getValue());
+                        Log.i(TAG, "URL value set to " + _url.getValue());
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -97,6 +87,28 @@ public class LiveViewModel extends ViewModel {
 
         };
         // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
+    public void stopStream(Context ctx, String uuid){
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        Camera c = DeviceViewModel.getCamera(uuid);
+        String localUrl ="http://" + c._localIp + ":81/stop";
+
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "stopStream Request failed ," + error.getMessage());
+                getLiveUrl(ctx, uuid);
+            }
+        });
         queue.add(stringRequest);
     }
 }

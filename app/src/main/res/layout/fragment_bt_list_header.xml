@@ -9,9 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:gravity="center"
+        style="@style/LabelStyle"
         android:text="@string/devices"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 </LinearLayout>

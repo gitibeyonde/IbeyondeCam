@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), liveFragment, "live")
                 .setReorderingAllowed(true)
-                .addToBackStack("home")
+                .addToBackStack(null)
                 .commit();
         getSupportActionBar().setTitle(liveFragment._cameraId + " Live ");
     }

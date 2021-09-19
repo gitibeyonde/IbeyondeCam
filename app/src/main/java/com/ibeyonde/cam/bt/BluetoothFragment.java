@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.ListFragment;
 
 import com.ibeyonde.cam.R;
@@ -24,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class BluetoothFragment extends ListFragment {
+    private static final String TAG= BluetoothFragment.class.getCanonicalName();
+
 
     private BluetoothAdapter bluetoothAdapter;
     private final ArrayList<BluetoothDevice> listItems = new ArrayList<>();
@@ -42,8 +46,8 @@ public class BluetoothFragment extends ListFragment {
                 BluetoothDevice device = listItems.get(position);
                 if (view == null)
                     view = getActivity().getLayoutInflater().inflate(R.layout.fragment_bt_list_item, parent, false);
-                TextView text1 = view.findViewById(R.id.text1);
-                TextView text2 = view.findViewById(R.id.text2);
+                TextView text1 = view.findViewById(R.id.btName);
+                TextView text2 = view.findViewById(R.id.btAddress);
                 text1.setText(device.getName());
                 text2.setText(device.getAddress());
                 return view;
@@ -77,7 +81,7 @@ public class BluetoothFragment extends ListFragment {
         else if(!bluetoothAdapter.isEnabled())
             setEmptyText("<bluetooth is disabled>");
         else
-            setEmptyText("<no bluetooth devices found>");
+            setEmptyText("<no bluetooth devices found, please use your device's bluetooth to pair with CleverCam devices>");
         refresh();
     }
 
@@ -108,11 +112,13 @@ public class BluetoothFragment extends ListFragment {
     @Override
     public void onListItemClick(@NonNull ListView l, @NonNull View v, int position, long id) {
         BluetoothDevice device = listItems.get(position-1);
+        Log.i(TAG, "device = " + device.getName());
         Bundle args = new Bundle();
         args.putString("device", device.getAddress());
         Fragment fragment = new TerminalFragment();
         fragment.setArguments(args);
-        getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment, "terminal").addToBackStack(null).commit();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment_activity_main, fragment, "terminal").addToBackStack("list").commit();
     }
 
     /**

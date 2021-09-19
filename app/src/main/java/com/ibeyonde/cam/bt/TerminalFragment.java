@@ -1,6 +1,5 @@
 package com.ibeyonde.cam.bt;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -15,12 +14,14 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,9 +30,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.ibeyonde.cam.R;
-import com.ibeyonde.cam.databinding.FragmentTerminalBinding;
+import com.ibeyonde.cam.databinding.FragmentBtTerminalBinding;
 
 public class TerminalFragment extends Fragment implements ServiceConnection, SerialListener {
+    private static final String TAG= TerminalFragment.class.getCanonicalName();
+
 
     private enum Connected { False, Pending, True }
 
@@ -48,7 +51,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private boolean pendingNewline = false;
     private String newline = TextUtil.newline_crlf;
 
-    private FragmentTerminalBinding binding;
+    private FragmentBtTerminalBinding binding;
 
     /*
      * Lifecycle
@@ -57,8 +60,8 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        setRetainInstance(true);
         deviceAddress = getArguments().getString("device");
+        Log.i(TAG, "Terminal frag created " + deviceAddress);
     }
 
     @Override
@@ -72,6 +75,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     @Override
     public void onStart() {
         super.onStart();
+        Log.i(TAG, "onStart");
         if(service != null)
             service.attach(this);
         else
@@ -85,11 +89,13 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         super.onStop();
     }
 
-    @SuppressWarnings("deprecation") // onAttach(context) was added with API 23. onAttach(activity) works for all API versions
+    // onAttach(context) was added with API 23. onAttach(activity) works for all API versions
     @Override
-    public void onAttach(@NonNull Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.i(TAG, "onAttach create intent");
         getActivity().bindService(new Intent(getActivity(), SerialService.class), this, Context.BIND_AUTO_CREATE);
+        Log.i(TAG, "onAttach done");
     }
 
     @Override
@@ -122,12 +128,11 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         service = null;
     }
 
-    /*
-     * UI
-     */
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentTerminalBinding.inflate(inflater, container, false);
+        Log.i(TAG, "onCreateView start");
+        binding = FragmentBtTerminalBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         receiveText = binding.receiveText;
@@ -139,8 +144,9 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         sendText.addTextChangedListener(hexWatcher);
         sendText.setHint(hexEnabled ? "HEX mode" : "");
 
-        View sendBtn = binding.sendBtn;
+        ImageButton sendBtn = binding.sendBtn;
         sendBtn.setOnClickListener(v -> send(sendText.getText().toString()));
+
         return root;
     }
 
@@ -153,7 +159,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        Log.i(TAG, "onOptionsItemSelected");
         if (id == R.id.clear) {
             receiveText.setText("");
             return true;
@@ -207,6 +213,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             Toast.makeText(getActivity(), "not connected", Toast.LENGTH_SHORT).show();
             return;
         }
+        Log.i(TAG, "Send text " + str);
         try {
             String msg;
             byte[] data;
@@ -231,9 +238,11 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
     private void receive(byte[] data) {
         if(hexEnabled) {
+            Log.i(TAG, "receive hex " + TextUtil.toHexString(data) );
             receiveText.append(TextUtil.toHexString(data) + '\n');
         } else {
             String msg = new String(data);
+            Log.i(TAG, "receive " + msg );
             if(newline.equals(TextUtil.newline_crlf) && msg.length() > 0) {
                 // don't show CR as ^M if directly before LF
                 msg = msg.replace(TextUtil.newline_crlf, TextUtil.newline_lf);
@@ -245,6 +254,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                 }
                 pendingNewline = msg.charAt(msg.length() - 1) == '\r';
             }
+            sendText.setText("");
             receiveText.append(TextUtil.toCaretString(msg, newline.length() != 0));
         }
     }
@@ -253,6 +263,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         SpannableStringBuilder spn = new SpannableStringBuilder(str + '\n');
         spn.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorStatusText)), 0, spn.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         receiveText.append(spn);
+        Log.i(TAG, spn.toString());
     }
 
     /*

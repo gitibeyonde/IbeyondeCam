@@ -61,7 +61,7 @@ public class LiveFragment extends Fragment {
 
         liveViewModel._url.observe(this.getActivity(), new Observer<String>() {
             public void onChanged(@Nullable String url) {
-                Log.d(TAG, "Live URL = " + url);
+                Log.i(TAG, "Live URL = " + url);
                 if (url.toString().length() > 10) {
                     try {
                         handler = new Handler(getContext().getMainLooper());
@@ -70,6 +70,7 @@ public class LiveFragment extends Fragment {
                         t.start();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        if (rc != null)rc.stop();
                     }
                 }
                 else {
@@ -77,7 +78,7 @@ public class LiveFragment extends Fragment {
                 }
             }
         });
-        Log.d(TAG, "Live view created");
+        Log.i(TAG, "Live view created");
 
         return root;
     }

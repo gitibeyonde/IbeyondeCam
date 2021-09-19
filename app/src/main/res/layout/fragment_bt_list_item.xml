@@ -6,21 +6,19 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/text1"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
+        android:id="@+id/btName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/UUIDStyle"
+        android:text="Cam123dfg345"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
-        android:id="@+id/text2"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="12dp"
+        android:id="@+id/btAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/TimestampStyle"
+        android:text="23:gp:78:90:78"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
 </LinearLayout>

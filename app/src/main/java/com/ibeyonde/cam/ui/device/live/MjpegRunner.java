@@ -31,7 +31,8 @@ public class MjpegRunner implements Runnable {
     private InputStream urlStream;
     private Handler handler;
     private FragmentLiveBinding binding;
-    public boolean isRunning = true;
+    public static boolean isRunning = true;
+    private static int _timout_count=0;
 
     private static final int SKIP_HEADER = "Content-Type: image/jpeg\nContent-Length: ".length();
 
@@ -39,21 +40,21 @@ public class MjpegRunner implements Runnable {
         this.url = url;
         this.handler = handler;
         this.binding = binding;
-        while(start(2000) == false);
+        while(start() == false);
     }
 
-    private boolean start(int wait) {
+    private boolean start() {
         if (isRunning == false)return true;
         URLConnection urlConn = null;
         try {
             urlConn = url.openConnection();
-            urlConn.setReadTimeout(10000);
+            urlConn.setReadTimeout(5000);
             urlConn.connect();
             urlStream = urlConn.getInputStream();
-            Log.d(TAG, "Starting mjpeg");
+            Log.i(TAG, "Starting mjpeg");
         } catch (IOException e) {
             try {
-                Thread.sleep(wait);
+                Thread.sleep((_timout_count < 1000 ? _timout_count++ : _timout_count) * 128);
             } catch (InterruptedException interruptedException) {
                 interruptedException.printStackTrace();
             }
@@ -62,7 +63,7 @@ public class MjpegRunner implements Runnable {
         return true;
     }
 
-    public synchronized void stop() {
+    public synchronized static void stop() {
         isRunning = false;
     }
 
@@ -85,17 +86,18 @@ public class MjpegRunner implements Runnable {
                 Log.e(TAG, "failed stream read: " + e);
                 e.printStackTrace();
                 //reinitialize
-                while(start(2000) == false);
+                while(start() == false);
             }
             catch (NumberFormatException e) {
                 Log.e(TAG, "failed stream read: " + e);
                 e.printStackTrace();
                 //reinitialize
-                while(start(10000) == false);
+                while(start() == false);
             }
         }
         try {
-            urlStream.close();
+            if (urlStream != null)
+                urlStream.close();
         } catch (IOException ioe) {
             Log.e(TAG, "Failed to close the stream: " + ioe);
             ioe.printStackTrace();
