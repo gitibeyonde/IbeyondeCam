@@ -27,6 +27,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.ibeyonde.cam.databinding.ActivityMainBinding;
 import com.ibeyonde.cam.ui.device.live.LiveFragment;
 import com.ibeyonde.cam.ui.device.history.HistoryFragment;
+import com.ibeyonde.cam.ui.device.setting.DeviceSettingFragment;
 import com.ibeyonde.cam.utils.CCFirebaseMessagingService;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -136,6 +137,20 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(historyFragment._cameraId  + " History ");
     }
 
+
+    public void deviceSettingClick(View view) {
+        Log.i(TAG, "deviceSettingClick On Click =  " + view.getContentDescription());
+        FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
+
+        DeviceSettingFragment settingFragment = new DeviceSettingFragment();
+        settingFragment._cameraId = view.getContentDescription().toString();
+        fragmentManager.beginTransaction()
+                .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), settingFragment, "history")
+                .setReorderingAllowed(true)
+                .addToBackStack("home")
+                .commit();
+        getSupportActionBar().setTitle(settingFragment._cameraId  + " Setting ");
+    }
 
 
     public void runtimeEnableAutoInit() {

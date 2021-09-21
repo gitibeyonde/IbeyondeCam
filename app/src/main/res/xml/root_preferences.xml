@@ -1,11 +1,23 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="@string/app_settings">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="local"
+            app:title="@string/local_title"
+            app:summary="If you are subscribing to cloud package set it to true. If true the app will connect to cloud and use it for history and streaming."/>
+
+        <SwitchPreferenceCompat
+            app:key="internet"
+            app:title="@string/internet_title"
+            app:summary="If your internet connection where you will be using this app and the device is very good then set it. This will affect the quality of streaming over cloud."/>
+
+      <!--  <EditTextPreference
+            app:key="local"
+            app:title="@string/local_title"
+            app:useSimpleSummaryProvider="true"
+            app:summary="If you are subscribing to cloud package set it to true. If true the app will connect to cloud and use it for history and streaming."/>
 
         <ListPreference
             app:defaultValue="reply"
@@ -13,7 +25,7 @@
             app:entryValues="@array/reply_values"
             app:key="reply"
             app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true" /> -->
 
     </PreferenceCategory>
 

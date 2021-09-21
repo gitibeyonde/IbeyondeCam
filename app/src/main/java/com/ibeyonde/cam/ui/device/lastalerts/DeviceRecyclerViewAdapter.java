@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         holder.picture.setContentDescription(hi._uuid);
         holder.live.setContentDescription(hi._uuid);
         holder.history.setContentDescription(hi._uuid);
+        holder.setting.setContentDescription(hi._uuid);
 
         TimerTask imgRefresh = new TimerTask()
         {
@@ -62,6 +64,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         public final ImageView picture;
         public final Button live;
         public final Button history;
+        public final ImageButton setting;
 
         public ViewHolder(FragmentDeviceItemBinding binding) {
             super(binding.getRoot());
@@ -69,6 +72,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
             picture = binding.deviceView;
             live = binding.deviceLive;
             history = binding.deviceHistory;
+            setting = binding.deviceSetting;
         }
 
         @Override

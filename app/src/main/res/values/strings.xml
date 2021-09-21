@@ -21,11 +21,12 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_bluetooth">Configure</string>
 
-    <string name="messages_header">Message Header</string>
-    <string name="signature_title">Message Header</string>
+    <string name="app_settings">Application Settings</string>
+    <string name="local_title">Cloud Connect</string>
     <string name="reply_title">Message Header</string>
-    <string name="sync_header">Message Header</string>
     <string name="sync_title">Message Header</string>
+    <string name="sync_header">Message Header</string>
+    <string name="internet_title">Internet Connection</string>
     <string name="attachment_summary_off">Message Header</string>
     <string name="attachment_summary_on">Message Header</string>
     <string name="attachment_title">Message Header</string>
