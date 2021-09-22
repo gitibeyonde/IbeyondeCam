@@ -92,20 +92,28 @@ public class DeviceViewModel extends ViewModel {
         RequestQueue queue = Volley.newRequestQueue(ctx);
         String url ="https://ping.ibeyonde.com/api/iot.php?view=lastalerts&uuid=" + uuid;
         Hashtable<String, Camera> deviceList = _deviceList.getValue();
-
+//["https:\/\/s3-us-west-2.amazonaws.com\/e","22\/09\/2021 - 14:10:41"],
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String imageList) {
-                        Log.d(TAG, "deviceList History img list "+ imageList);
+                        Log.d(TAG, "deviceList History img list " + imageList);
                         Camera c = deviceList.get(uuid);
-                        try {
-                            c.setHistory(imageList);
-                            _update.postValue((short)1);
-                        } catch (JSONException e) {
-                            Log.d(TAG, "getHistory JSON Exception ," + e.getMessage());
-                            e.printStackTrace();
+                        if (imageList.indexOf("No alerts found for this device") == -1) {
+                            try {
+                                c.setHistory(imageList);
+                                _update.postValue((short) 1);
+                            } catch (JSONException e) {
+                                Log.d(TAG, "getHistory JSON Exception ," + e.getMessage());
+                                e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                c.setHistory("[[\"https://udp1.ibeyonde.com/img/no_signal.jpg\", \"22\\/09\\/2021 - 14:10:41\"]]");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }, new Response.ErrorListener() {
