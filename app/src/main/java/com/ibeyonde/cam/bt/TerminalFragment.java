@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.Editable;
 import android.text.Spannable;
@@ -28,9 +29,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.databinding.FragmentBtTerminalBinding;
+import com.ibeyonde.cam.ui.device.setting.DeviceSettingFragment;
+import com.ibeyonde.cam.ui.login.LoginViewModel;
 
 public class TerminalFragment extends Fragment implements ServiceConnection, SerialListener {
     private static final String TAG= TerminalFragment.class.getCanonicalName();
@@ -50,6 +54,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private boolean hexEnabled = false;
     private boolean pendingNewline = false;
     private String newline = TextUtil.newline_crlf;
+    Handler handler;
 
     private FragmentBtTerminalBinding binding;
 
@@ -147,6 +152,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         ImageButton sendBtn = binding.sendBtn;
         sendBtn.setOnClickListener(v -> send(sendText.getText().toString()));
 
+        handler = new Handler(getContext().getMainLooper());
         return root;
     }
 
@@ -256,6 +262,9 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             }
             sendText.setText("");
             receiveText.append(TextUtil.toCaretString(msg, newline.length() != 0));
+            if (msg.contains("Initializing device...")){
+                send(String.format("%s%%%s", LoginViewModel._email,LoginViewModel._pass));
+            }
         }
     }
 
@@ -290,6 +299,27 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     public void onSerialIoError(Exception e) {
         status("connection lost: " + e.getMessage());
         disconnect();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getContext(), "Device disconnected successfully.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "Bluetooth Main");
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
+
+                BluetoothFragment bluetoothFragment = new BluetoothFragment();
+                fragmentManager.beginTransaction()
+                        .replace(getActivity().getSupportFragmentManager().getPrimaryNavigationFragment().getId(), bluetoothFragment, "bluetooth")
+                        .setReorderingAllowed(true)
+                        .addToBackStack("home")
+                        .commit();
+                //getSupportActionBar().setTitle(settingFragment._cameraId  + " Setting ");
+            }
+        }, 4000);
     }
 
 }

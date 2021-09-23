@@ -40,6 +40,7 @@ public class MjpegRunner implements Runnable {
         this.url = url;
         this.handler = handler;
         this.binding = binding;
+        isRunning = true;
         while(start() == false);
     }
 
@@ -53,6 +54,7 @@ public class MjpegRunner implements Runnable {
             urlStream = urlConn.getInputStream();
             Log.i(TAG, "Starting mjpeg");
         } catch (IOException e) {
+            e.printStackTrace();
             try {
                 Thread.sleep((_timout_count < 1000 ? _timout_count++ : _timout_count) * 128);
             } catch (InterruptedException interruptedException) {
