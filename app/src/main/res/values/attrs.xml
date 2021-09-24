@@ -10,5 +10,9 @@
         <enum name="stream_default" value="0"/>
         <enum name="stream_native" value="1"/>
     </attr>
+    <declare-styleable name="FullscreenAttrs">
+        <attr name="fullscreenBackgroundColor" format="color" />
+        <attr name="fullscreenTextColor" format="color" />
+    </declare-styleable>
 
 </resources>

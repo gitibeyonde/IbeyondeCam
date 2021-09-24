@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    android:paddingBottom="60dp"
+    tools:context=".ui.notifications.BellAlertFragment">
+
+
+    <ImageView
+        android:id="@+id/historyImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:src="@drawable/loading"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/histNav0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+
+        <ImageButton
+            android:id="@+id/histNav1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+
+        <ImageButton
+            android:id="@+id/histNav2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+        <ImageButton
+            android:id="@+id/histNav3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+        <ImageButton
+            android:id="@+id/histNav4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+        <ImageButton
+            android:id="@+id/histNav5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+        <ImageButton
+            android:id="@+id/histNav6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+        <ImageButton
+            android:id="@+id/histNav7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+        <ImageButton
+            android:id="@+id/histNav8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+        <ImageButton
+            android:id="@+id/histNav9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:src="@android:drawable/presence_invisible" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/cameraLive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:adjustViewBounds="true"
+        android:src="@drawable/loading"
+        tools:ignore="TouchTargetSizeCheck" />
+
+</LinearLayout>

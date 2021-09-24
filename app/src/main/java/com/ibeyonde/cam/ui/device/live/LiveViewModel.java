@@ -28,7 +28,7 @@ public class LiveViewModel extends ViewModel {
     public void getLocalLiveUrl(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/";
+        String localUrl ="http://" + c._localIp + ":81/stop";
 
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
@@ -36,7 +36,7 @@ public class LiveViewModel extends ViewModel {
                     public void onResponse(String response) {
                         Log.i(TAG, "checking local url " + response);
                         if (response.contains("Ibeyonde")) {
-                            _url.setValue(localUrl + "stream");
+                            _url.setValue("http://" + c._localIp + ":/stream");
                             //stopStream(ctx, uuid);
                         }
                         else {
@@ -90,25 +90,4 @@ public class LiveViewModel extends ViewModel {
         queue.add(stringRequest);
     }
 
-
-    public void stopStream(Context ctx, String uuid){
-        RequestQueue queue = Volley.newRequestQueue(ctx);
-        Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + ":81/stop";
-
-        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i(TAG, response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "stopStream Request failed ," + error.getMessage());
-                getLiveUrl(ctx, uuid);
-            }
-        });
-        queue.add(stringRequest);
-    }
 }

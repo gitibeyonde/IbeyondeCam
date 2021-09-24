@@ -12,27 +12,21 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.FragmentManager;
 
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ibeyonde.cam.MainActivity;
 import com.ibeyonde.cam.R;
-import com.ibeyonde.cam.ui.device.history.HistoryFragment;
-import com.ibeyonde.cam.ui.device.history.HistoryViewModel;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 
 

@@ -39,4 +39,6 @@
     <string name="textview">TextView</string>
     <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
     <string name="fcm_message">CleverCam ALert</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="20dp">
+    android:orientation="vertical">
 
 
     <ImageView
@@ -21,44 +20,43 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_weight="1"
         android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/deviceSetting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="deviceSettingClick"
-            app:srcCompat="@android:drawable/ic_menu_manage" />
 
         <TextView
             android:id="@+id/deviceUuid"
             style="@style/UUIDStyle"
             android:layout_width="125dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
-            android:layout_weight="1"
+            android:gravity="center"
             android:text="abc897dfg" />
 
-        <Button
-            android:id="@+id/deviceLive"
-            style="@style/ButtonStyle"
+        <ImageButton
+            android:id="@+id/deviceSetting"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="cameraLiveClick"
-            android:text="Live" />
+            android:onClick="deviceSettingClick"
+            app:srcCompat="@drawable/tools" />
 
-        <Button
-            android:id="@+id/deviceHistory"
-            style="@style/ButtonStyle"
+        <ImageButton
+            android:id="@+id/deviceLive"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:backgroundTint="#D6D7D7"
+            android:onClick="cameraLiveClick"
+            app:srcCompat="@drawable/play" />
+
+        <ImageButton
+            android:id="@+id/deviceHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:onClick="cameraHistoryClick"
-            android:text="History" />
+            app:srcCompat="@drawable/gallery" />
 
     </LinearLayout>
 

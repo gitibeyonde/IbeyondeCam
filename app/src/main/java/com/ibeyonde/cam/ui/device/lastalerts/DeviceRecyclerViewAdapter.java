@@ -62,8 +62,8 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView uuid;
         public final ImageView picture;
-        public final Button live;
-        public final Button history;
+        public final ImageButton live;
+        public final ImageButton history;
         public final ImageButton setting;
 
         public ViewHolder(FragmentDeviceItemBinding binding) {

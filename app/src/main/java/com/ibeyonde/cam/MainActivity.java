@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,6 +27,7 @@ import com.ibeyonde.cam.databinding.ActivityMainBinding;
 import com.ibeyonde.cam.ui.device.live.LiveFragment;
 import com.ibeyonde.cam.ui.device.history.HistoryFragment;
 import com.ibeyonde.cam.ui.device.setting.DeviceSettingFragment;
+import com.ibeyonde.cam.ui.notifications.BellAlertFragment;
 import com.ibeyonde.cam.utils.CCFirebaseMessagingService;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -91,15 +91,14 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "cameraHistoryClick On Click =  " + view.getContentDescription());
         FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
 
-        HistoryFragment historyFragment = new HistoryFragment();
-        historyFragment._cameraId = view.getContentDescription().toString();
-        historyFragment._list_size = 10;
+        BellAlertFragment bellAlertFragment = new BellAlertFragment();
+        bellAlertFragment._cameraId = view.getContentDescription().toString();
         fragmentManager.beginTransaction()
-                .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), historyFragment, "history")
+                .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), bellAlertFragment, "bellalert")
                 .setReorderingAllowed(true)
                 .addToBackStack("home")
                 .commit();
-        getSupportActionBar().setTitle(historyFragment._cameraId  + " History ");
+        getSupportActionBar().setTitle(bellAlertFragment._cameraId  + " Bell Alert ");
     }
 
     public void deviceListClick(View view) {

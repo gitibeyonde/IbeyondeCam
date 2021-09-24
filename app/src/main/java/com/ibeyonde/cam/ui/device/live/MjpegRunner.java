@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -28,37 +29,45 @@ import java.util.Queue;
 public class MjpegRunner implements Runnable {
     private static final String TAG= MjpegRunner.class.getCanonicalName();
     private URL url;
-    private InputStream urlStream;
+    private static InputStream urlStream;
     private Handler handler;
-    private FragmentLiveBinding binding;
+    private ImageView cameraLive;
     public static boolean isRunning = true;
     private static int _timout_count=0;
 
     private static final int SKIP_HEADER = "Content-Type: image/jpeg\nContent-Length: ".length();
 
-    public MjpegRunner(URL url, Handler handler, FragmentLiveBinding binding) throws IOException {
+    public MjpegRunner(URL url, Handler handler, ImageView cameraLive) throws IOException {
         this.url = url;
         this.handler = handler;
-        this.binding = binding;
+        this.cameraLive = cameraLive;
         isRunning = true;
-        while(start() == false);
     }
 
-    private boolean start() {
+    public boolean start() {
         if (isRunning == false)return true;
         URLConnection urlConn = null;
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
         try {
             urlConn = url.openConnection();
-            urlConn.setReadTimeout(5000);
+            urlConn.setReadTimeout(20000);
             urlConn.connect();
             urlStream = urlConn.getInputStream();
             Log.i(TAG, "Starting mjpeg");
         } catch (IOException e) {
             e.printStackTrace();
-            try {
-                Thread.sleep((_timout_count < 1000 ? _timout_count++ : _timout_count) * 128);
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
+            if (urlStream != null) {
+                try {
+                    urlStream.close();
+                } catch (Exception ioException) {
+                    Log.e(TAG, "Failed to close the stream: " + ioException);
+                    ioException.printStackTrace();
+                }
+                urlStream = null;
             }
             return false;
         }
@@ -80,27 +89,27 @@ public class MjpegRunner implements Runnable {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        binding.cameraLive.setImageBitmap(bmp);
+                        cameraLive.setImageBitmap(bmp);
                     }
                 });
             }
             catch (IOException e) {
                 Log.e(TAG, "failed stream read: " + e);
                 e.printStackTrace();
-                //reinitialize
-                while(start() == false);
+                start();
             }
             catch (NumberFormatException e) {
                 Log.e(TAG, "failed stream read: " + e);
                 e.printStackTrace();
-                //reinitialize
-                while(start() == false);
+                start();
             }
         }
         try {
-            if (urlStream != null)
+            if (urlStream != null) {
                 urlStream.close();
-        } catch (IOException ioe) {
+                urlStream = null;
+            }
+        } catch (Exception ioe) {
             Log.e(TAG, "Failed to close the stream: " + ioe);
             ioe.printStackTrace();
         }
