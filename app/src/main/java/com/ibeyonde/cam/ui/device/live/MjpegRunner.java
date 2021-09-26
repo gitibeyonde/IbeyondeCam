@@ -34,7 +34,6 @@ public class MjpegRunner implements Runnable {
     private Handler handler;
     private ImageView cameraLive;
     public static boolean isRunning = true;
-    private static int _timout_count=0;
 
     private static final int SKIP_HEADER = "Content-Type: image/jpeg\nContent-Length: ".length();
 
@@ -43,35 +42,33 @@ public class MjpegRunner implements Runnable {
         this.handler = handler;
         this.cameraLive = cameraLive;
         isRunning = true;
-    }
-
-    public InputStream getUrlInputStream() {
-        HttpURLConnection urlConn = null;
-        InputStream urlStream = null;
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+    }
+
+    public InputStream getUrlInputStream() {
+        InputStream urlStream = null;
         try {
-            urlConn = (HttpURLConnection)url.openConnection();
-            urlConn.setReadTimeout(10000);
-            urlConn.setRequestProperty("Connection", "keep-alive");
-            urlConn.setRequestProperty("Connection", "close");
-            urlConn.setRequestProperty("Accept", "\"multipart/x-mixed-replace,image/jpeg");
-            urlConn.connect();
-            urlStream = new BufferedInputStream(urlConn.getInputStream());
+            Log.i(TAG, "Trying to connect..");
+            URLConnection urlConnection = url.openConnection();
+            urlConnection.setReadTimeout(20000);
+            urlConnection.setAllowUserInteraction(true);
+            urlConnection.setUseCaches(false);
+            urlConnection.connect();
+            urlStream = urlConnection.getInputStream();
             Log.i(TAG, "Starting mjpeg");
         } catch (Exception e) {
             Log.e(TAG, "Url connection failed");
             try {
-                if (urlConn != null)
-                    urlConn.disconnect();
                 if (urlStream != null)
                     urlStream.close();
             } catch (Exception ioException) {
                 Log.e(TAG, "Exception while closing resources");
             }
+            return null;
         }
         return urlStream;
     }
@@ -84,9 +81,10 @@ public class MjpegRunner implements Runnable {
         Integer i=0;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
+        InputStream urlStream = null;
         while (isRunning) {
-            InputStream urlStream = getUrlInputStream();
             if (urlStream == null){
+                urlStream = getUrlInputStream();
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -132,12 +130,11 @@ public class MjpegRunner implements Runnable {
                 break;
             }
         }
-        Log.d(TAG,"Content length = " + boundary);
 
         //skip headers
         byte[] skipBytes = new byte[SKIP_HEADER];
         int offset = 0;
-        int numRead = 0;
+        int numRead;
         while (offset < SKIP_HEADER
                 && (numRead = urlStream.read(skipBytes, offset, SKIP_HEADER - offset)) >= 0) {
             offset += numRead;
@@ -156,11 +153,11 @@ public class MjpegRunner implements Runnable {
         // rest is the buffer
         byte[] imageBytes = new byte[content_length];
         offset = 0;
-        numRead = 0;
         while (offset < imageBytes.length
                 && (numRead = urlStream.read(imageBytes, offset, imageBytes.length - offset)) >= 0) {
             offset += numRead;
         }
+        Log.d(TAG, "Image length = " + offset);
 
         return imageBytes;
     }
