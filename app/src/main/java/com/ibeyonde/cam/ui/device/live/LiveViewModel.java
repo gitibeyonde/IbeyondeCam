@@ -36,8 +36,7 @@ public class LiveViewModel extends ViewModel {
                     public void onResponse(String response) {
                         Log.i(TAG, "checking local url " + response);
                         if (response.contains("Ibeyonde")) {
-                            _url.setValue("http://" + c._localIp + ":/stream");
-                            //stopStream(ctx, uuid);
+                            _url.setValue("http://" + c._localIp + "/stream");
                         }
                         else {
                             getLiveUrl(ctx, uuid);

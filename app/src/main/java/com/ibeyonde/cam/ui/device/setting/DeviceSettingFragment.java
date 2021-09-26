@@ -24,6 +24,13 @@ import android.widget.TextView;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceSettingBinding;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 public class DeviceSettingFragment extends Fragment {
     private static final String TAG= DeviceSettingFragment.class.getCanonicalName();
 
@@ -46,9 +53,15 @@ public class DeviceSettingFragment extends Fragment {
         mViewModel.getConfig(getContext(), _cameraId);
         //mViewModel.getCam(getContext(), _cameraId);
 
+        Spinner frameSize = binding.frameSize;
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, new String[]{ "Large", "Medium", "Small"});
+        frameSize.setAdapter(adapter);
+
         Spinner dropdown = binding.timeZone;
-        String[] items = TimeZone.getAvailableIDs();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        String[] items = TimeOffset._time_offset.keySet().toArray(new String[0]);
+
+        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
         binding.settingText.setVisibility(View.GONE);
@@ -80,6 +93,7 @@ public class DeviceSettingFragment extends Fragment {
                                 binding.motionHistory.setChecked(true);
                             }
                             selectSpinnerItemByValue(binding.timeZone, mViewModel._dev_nv.get("tz"));
+                            selectSpinnerItemByValue(binding.frameSize, getFrameSize(Integer.parseInt(mViewModel._dev_nv.get("framesize"))));
                             binding.settingProgressBar.setVisibility(View.GONE);
                             binding.settingText.setVisibility(View.GONE);
                             binding.cloudConnect.setAlpha(1f);
@@ -88,6 +102,8 @@ public class DeviceSettingFragment extends Fragment {
                             binding.motionHistory.setEnabled(true);
                             binding.camName.setAlpha(1f);
                             binding.camName.setEnabled(true);
+                            binding.frameSize.setAlpha(1f);
+                            binding.frameSize.setEnabled(true);
                             binding.timeZone.setAlpha(1f);
                             binding.timeZone.setEnabled(true);
                             binding.camName.setText(mViewModel._dev_nv.get("cn"));
@@ -130,11 +146,24 @@ public class DeviceSettingFragment extends Fragment {
             }
         });
 
-        Spinner spr = binding.timeZone;
-        spr.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        Spinner sprTz = binding.timeZone;
+        sprTz.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG, spr.getSelectedItem().toString());
+                Log.d(TAG, sprTz.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        Spinner sprFs = binding.frameSize;
+        sprFs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, sprFs.getSelectedItem().toString());
             }
 
             @Override
@@ -162,5 +191,14 @@ public class DeviceSettingFragment extends Fragment {
                 return;
             }
         }
+    }
+
+    public String getFrameSize(int fs){
+        if (fs == 8)
+            return "Large";
+        else if(fs == 5)
+            return "Medium";
+        else
+            return "Small";
     }
 }

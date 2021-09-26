@@ -309,17 +309,22 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             @Override
             public void run() {
                 Log.i(TAG, "Bluetooth Main");
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
+                try {
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
 
-                BluetoothFragment bluetoothFragment = new BluetoothFragment();
-                fragmentManager.beginTransaction()
-                        .replace(getActivity().getSupportFragmentManager().getPrimaryNavigationFragment().getId(), bluetoothFragment, "bluetooth")
-                        .setReorderingAllowed(true)
-                        .addToBackStack("home")
-                        .commit();
-                //getSupportActionBar().setTitle(settingFragment._cameraId  + " Setting ");
+                    BluetoothFragment bluetoothFragment = new BluetoothFragment();
+                    fragmentManager.beginTransaction()
+                            .replace(getActivity().getSupportFragmentManager().getPrimaryNavigationFragment().getId(), bluetoothFragment, "bluetooth")
+                            .setReorderingAllowed(true)
+                            .addToBackStack("home")
+                            .commit();
+                    //getSupportActionBar().setTitle(settingFragment._cameraId  + " Setting ");
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
-        }, 4000);
+        }, 2000);
     }
 
 }

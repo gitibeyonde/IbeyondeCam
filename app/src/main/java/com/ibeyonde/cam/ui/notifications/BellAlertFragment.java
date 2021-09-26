@@ -120,7 +120,6 @@ public class BellAlertFragment extends Fragment {
                     try {
                         handler = new Handler(getContext().getMainLooper());
                         rc = new MjpegRunner(new URL(url), handler, binding.cameraLive);
-                        rc.start();
                         Thread t = new Thread(rc);
                         t.start();
                     } catch (Exception e) {
