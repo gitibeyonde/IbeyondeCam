@@ -38,15 +38,16 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
             else {
                 URL urlConnection = new URL(url);
                 HttpURLConnection connection = (HttpURLConnection) urlConnection.openConnection();
-                connection.setDoInput(true);
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 myBitmap = BitmapFactory.decodeStream(input);
                 s_cache.put(new String(messageDigest), myBitmap);
+                input.close();
+                connection.disconnect();
                 return myBitmap;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "doInBackground connection issue" ,e);
         }
         return null;
     }

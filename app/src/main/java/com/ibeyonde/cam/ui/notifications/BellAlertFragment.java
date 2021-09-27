@@ -1,5 +1,6 @@
 package com.ibeyonde.cam.ui.notifications;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -128,8 +129,7 @@ public class BellAlertFragment extends Fragment {
                 }
             }
         });
-
-        getActivity().getActionBar().setTitle(_cameraId  + " Bell Alert ");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(_cameraId  + " Bell Alert ");
         return root;
     }
 
