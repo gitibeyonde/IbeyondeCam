@@ -2,6 +2,7 @@ package com.ibeyonde.cam.ui.device.lastalerts;
 
 import com.ibeyonde.cam.utils.Camera;
 import com.ibeyonde.cam.utils.History;
+import com.ibeyonde.cam.utils.LastAlerts;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -21,7 +22,7 @@ public class DeviceMotionContent {
         while (e.hasMoreElements()) {
             String uuid = e.nextElement();
             Camera c = ch.get(uuid);
-            History h = c._history;
+            LastAlerts h = c._lastalerts;
             if (h != null) {
                 PlaceHolder hi = new PlaceHolder(c._index, uuid, h);
                 _item_list.add(hi);
@@ -32,12 +33,12 @@ public class DeviceMotionContent {
     public static class PlaceHolder {
         public final String _id;
         public final String _uuid;
-        public final History _history;
+        public final LastAlerts _lastalerts;
 
-        public PlaceHolder(int id, String uuid, History history) {
+        public PlaceHolder(int id, String uuid, LastAlerts lastalerts) {
             this._id = Integer.toString(id);
             this._uuid = uuid;
-            this._history = history;
+            this._lastalerts = lastalerts;
         }
 
         @Override

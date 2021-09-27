@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.HashMap;
 
 public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
@@ -27,7 +28,10 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(Void... params) {
         try {
-            Bitmap myBitmap = s_cache.get(url);
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(url.getBytes());
+            byte messageDigest[] = digest.digest();
+            Bitmap myBitmap = s_cache.get(new String(messageDigest));
             if (myBitmap != null){
                 return myBitmap;
             }
@@ -38,7 +42,7 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 myBitmap = BitmapFactory.decodeStream(input);
-                s_cache.put(url, myBitmap);
+                s_cache.put(new String(messageDigest), myBitmap);
                 return myBitmap;
             }
         } catch (Exception e) {

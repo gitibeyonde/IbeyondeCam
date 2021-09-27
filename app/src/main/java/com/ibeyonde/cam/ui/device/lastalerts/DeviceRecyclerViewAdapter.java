@@ -5,13 +5,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceItemBinding;
-import com.ibeyonde.cam.databinding.FragmentDeviceListBinding;
 import com.ibeyonde.cam.utils.ImageLoadTask;
 
 import java.util.List;
@@ -47,7 +45,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         {
             @Override
             public void run() {
-                new ImageLoadTask(hi._history.getCurrentURL(), holder.picture).execute();
+                new ImageLoadTask(hi._lastalerts.getCurrentURL(), holder.picture).execute();
             }
         };
         Timer t = new Timer();

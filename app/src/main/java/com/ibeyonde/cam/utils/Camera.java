@@ -19,6 +19,8 @@ public class Camera {
     public String _port;
     public String _token;
     public History _history;
+    public LastAlerts _lastalerts;
+    public AlertDetails _bellalerts;
 
     public Camera(JSONObject json){
         try {
@@ -36,8 +38,12 @@ public class Camera {
         }
     }
 
-    public void setHistory(String imgList) throws JSONException {
-        _history = new History(imgList);
+    public void setLastAlerts(String imgList) throws JSONException {
+        _lastalerts = new LastAlerts(imgList);
+    }
+
+    public void setBellAlerts(String imgList) throws JSONException {
+        _bellalerts = new AlertDetails(imgList);
     }
 
     public boolean isHistorySet(){

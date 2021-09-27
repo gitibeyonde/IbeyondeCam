@@ -21,7 +21,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -48,6 +48,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@android:drawable/presence_invisible" />
+
         <ImageButton
             android:id="@+id/histNav3"
             android:layout_width="wrap_content"
@@ -55,6 +56,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@android:drawable/presence_invisible" />
+
         <ImageButton
             android:id="@+id/histNav4"
             android:layout_width="wrap_content"
@@ -62,6 +64,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@android:drawable/presence_invisible" />
+
         <ImageButton
             android:id="@+id/histNav5"
             android:layout_width="wrap_content"
@@ -69,6 +72,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@android:drawable/presence_invisible" />
+
         <ImageButton
             android:id="@+id/histNav6"
             android:layout_width="wrap_content"
@@ -76,6 +80,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@android:drawable/presence_invisible" />
+
         <ImageButton
             android:id="@+id/histNav7"
             android:layout_width="wrap_content"
@@ -83,6 +88,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@android:drawable/presence_invisible" />
+
         <ImageButton
             android:id="@+id/histNav8"
             android:layout_width="wrap_content"
@@ -90,6 +96,7 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:src="@android:drawable/presence_invisible" />
+
         <ImageButton
             android:id="@+id/histNav9"
             android:layout_width="wrap_content"

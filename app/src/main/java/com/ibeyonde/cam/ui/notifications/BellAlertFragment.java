@@ -10,7 +10,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.StrictMode;
@@ -21,17 +20,16 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.ibeyonde.cam.databinding.FragmentBellAlertBinding;
-import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.device.live.LiveViewModel;
 import com.ibeyonde.cam.ui.device.live.MjpegRunner;
-import com.ibeyonde.cam.utils.Camera;
-import com.ibeyonde.cam.utils.History;
+import com.ibeyonde.cam.utils.AlertDetails;
 import com.ibeyonde.cam.utils.ImageLoadTask;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URL;
-import java.util.Hashtable;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,7 +38,7 @@ public class BellAlertFragment extends Fragment {
 
     public static String _cameraId;
     public static String _dateTime;
-    private DeviceViewModel deviceViewModel;
+    private NotificationViewModel notificationViewModel;
     private LiveViewModel liveViewModel;
     FragmentBellAlertBinding binding;
 
@@ -54,12 +52,12 @@ public class BellAlertFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        deviceViewModel = new ViewModelProvider(this).get(DeviceViewModel.class);
+        notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
         FragmentBellAlertBinding binding = FragmentBellAlertBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        deviceViewModel.getBellAlerts(getContext(), _cameraId, _dateTime);
+        notificationViewModel.getBellAlertDetails(getContext(), _cameraId, _dateTime);
 
         View.OnClickListener navClickListener = new View.OnClickListener() {
             @Override
@@ -72,35 +70,32 @@ public class BellAlertFragment extends Fragment {
         ImageButton navButtons[] = { binding.histNav0, binding.histNav1, binding.histNav2, binding.histNav3, binding.histNav4, binding.histNav5,
                 binding.histNav6, binding.histNav7, binding.histNav8, binding.histNav9};
 
-        deviceViewModel._update.observe(this.getActivity(), new Observer<Short>() {
-            public void onChanged(@Nullable Short s) {
-                Hashtable<String, Camera> ch = deviceViewModel._deviceList.getValue();
-                if (ch != null) {
-                    Camera c = ch.get(_cameraId);
-                    History h = c._history;
-                    for (int i=0;i< 10; i++){
-                        try {
-                            new ImageLoadTask(h._history.get(i).getString(0), navButtons[i]).execute();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+        notificationViewModel._alert_details.observe(this.getActivity(), new Observer<AlertDetails>() {
+            public void onChanged(@Nullable AlertDetails ad) {
+                if (ad == null) return;
+                ArrayList<JSONObject> adlist = ad._alert_details;
+                for (int i=0;i< adlist.size() && i < 10; i++){
+                    try {
+                        Log.d(TAG, adlist.get(i).getString("url"));
+                        new ImageLoadTask(adlist.get(i).getString("url"), navButtons[i]).execute();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    Log.d(TAG, "Bell alert url loading " + h.getCurrentURL());
+                }
+                Log.d(TAG, "Bell alert url loading " + ad.getCurrentURL());
 
-                    TimerTask imgRefresh = new TimerTask()
-                    {
-                        @Override
-                        public void run() {
-                            new ImageLoadTask(h.getCurrentURL(), binding.historyImage).execute();
-                        }
-                    };
-                    Timer t = new Timer();
-                    t.scheduleAtFixedRate(imgRefresh, 0, 2000);
-
-                    for (int i=0;i< 10; i++){
-                        navButtons[i].setOnClickListener(navClickListener);
+                TimerTask imgRefresh = new TimerTask()
+                {
+                    @Override
+                    public void run() {
+                        new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
                     }
+                };
+                Timer t = new Timer();
+                t.scheduleAtFixedRate(imgRefresh, 0, 2000);
 
+                for (int i=0;i< 10; i++){
+                    navButtons[i].setOnClickListener(navClickListener);
                 }
             }
         });
@@ -134,16 +129,14 @@ public class BellAlertFragment extends Fragment {
             }
         });
 
+        getActivity().getActionBar().setTitle(_cameraId  + " Bell Alert ");
         return root;
     }
 
     @Override
     public void onDestroyView() {
-        Hashtable<String, Camera> ch = deviceViewModel._deviceList.getValue();
-        Camera c = ch.get(_cameraId);
-        c._history = null;
         super.onDestroyView();
-        liveViewModel._url.postValue("");
+        notificationViewModel._alert_details.postValue(null);
         if (rc != null)rc.stop();
     }
 
