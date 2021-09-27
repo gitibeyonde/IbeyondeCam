@@ -49,7 +49,7 @@ public class DeviceSettingViewModel extends ViewModel {
                             String nv[] = nvs.split("=");
                             _dev_nv.put(nv[0], nv[1]);
                         }
-                        _device_online.setValue(true);
+                        _device_online.postValue(true);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -91,13 +91,13 @@ public class DeviceSettingViewModel extends ViewModel {
                         // "sharpness":0,"special_effect":0,"wb_mode":0,"awb":1,"awb_gain":1,"aec":1,"aec2":0,"ae_level":0,
                         // "aec_value":168,"agc":1,"agc_gain":0,"gainceiling":0,"bpc":0,"wpc":1,"raw_gma":1,"lenc":1,"hmirror":0,"dcw":1,"colorbar":0}%
 
-                        _cam_config.setValue(true);
+                        _cam_config.postValue(true);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "getCam Request failed ," + error.getMessage());
-                _cam_config.setValue(false);
+                _cam_config.postValue(false);
             }
         });
         queue.add(stringRequest);

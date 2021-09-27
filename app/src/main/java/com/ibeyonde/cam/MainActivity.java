@@ -92,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
 
         BellAlertFragment bellAlertFragment = new BellAlertFragment();
-        bellAlertFragment._cameraId = view.getContentDescription().toString();
+        String desc[] = view.getContentDescription().toString().split("%%");
+        bellAlertFragment._cameraId = desc[0];
+        bellAlertFragment._dateTime = desc[1];
         fragmentManager.beginTransaction()
                 .replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), bellAlertFragment, "bellalert")
                 .setReorderingAllowed(true)

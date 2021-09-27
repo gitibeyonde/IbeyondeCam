@@ -57,15 +57,15 @@ public class LoginViewModel extends ViewModel {
                         try {
                             Log.d(TAG, "Login response " + response.toString());
                             if (response.getString("message").equals("Success")){
-                                LoginViewModel._token.setValue("SUCCESS");
+                                LoginViewModel._token.postValue("SUCCESS");
                             }
                             else {
                                 Log.d(TAG, "Login failed 1");
-                                LoginViewModel._token.setValue("FAILED");
+                                LoginViewModel._token.postValue("FAILED");
                             }
                         } catch (JSONException e) {
                             Log.d(TAG, "Login failed 2 " + e.getMessage());
-                            LoginViewModel._token.setValue("FAILED");
+                            LoginViewModel._token.postValue("FAILED");
                             throw new RuntimeException("Login failed");
                         }
                     }
@@ -73,7 +73,7 @@ public class LoginViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Login failed 3," + error.getMessage());
-                LoginViewModel._token.setValue("FAILED");
+                LoginViewModel._token.postValue("FAILED");
             }
         }){
 

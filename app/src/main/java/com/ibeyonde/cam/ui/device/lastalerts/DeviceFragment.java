@@ -49,7 +49,7 @@ public class DeviceFragment extends Fragment {
                     String uuid = e.nextElement();
                     Activity activity = getActivity();
                     if (isAdded() && activity != null) {
-                        deviceViewModel.getHistory(activity.getApplicationContext(), uuid);
+                        deviceViewModel.getHistory(activity.getApplicationContext(), uuid, null);
                     }
                 }
             }

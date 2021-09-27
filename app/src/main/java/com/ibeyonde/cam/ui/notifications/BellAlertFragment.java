@@ -39,6 +39,7 @@ public class BellAlertFragment extends Fragment {
     private static final String TAG= BellAlertFragment.class.getCanonicalName();
 
     public static String _cameraId;
+    public static String _dateTime;
     private DeviceViewModel deviceViewModel;
     private LiveViewModel liveViewModel;
     FragmentBellAlertBinding binding;
@@ -58,7 +59,7 @@ public class BellAlertFragment extends Fragment {
         FragmentBellAlertBinding binding = FragmentBellAlertBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        deviceViewModel.getHistory(getContext(), _cameraId);
+        deviceViewModel.getBellAlerts(getContext(), _cameraId, _dateTime);
 
         View.OnClickListener navClickListener = new View.OnClickListener() {
             @Override
@@ -134,6 +135,16 @@ public class BellAlertFragment extends Fragment {
         });
 
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        Hashtable<String, Camera> ch = deviceViewModel._deviceList.getValue();
+        Camera c = ch.get(_cameraId);
+        c._history = null;
+        super.onDestroyView();
+        liveViewModel._url.postValue("");
+        if (rc != null)rc.stop();
     }
 
 }

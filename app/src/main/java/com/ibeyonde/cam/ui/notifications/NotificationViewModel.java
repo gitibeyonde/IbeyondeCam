@@ -54,7 +54,7 @@ public class NotificationViewModel extends ViewModel {
                     public void onResponse(JSONArray jsonArray) {
                         Log.d(TAG, "getBellAlerts alerts list "+ jsonArray.length());
                         try {
-                            _alerts.setValue(new Alerts(jsonArray));
+                            _alerts.postValue(new Alerts(jsonArray));
                         } catch (JSONException e) {
                             Log.e(TAG, "getBellAlerts JSON format error");
                         }

@@ -51,24 +51,32 @@ public class MjpegRunner implements Runnable {
 
     public InputStream getUrlInputStream() {
         InputStream urlStream = null;
+        HttpURLConnection urlConnection = null;
         try {
-            Log.i(TAG, "Trying to connect..");
-            URLConnection urlConnection = url.openConnection();
+            Log.i(TAG, "Trying to connect.." + url.toString());
+            urlConnection = (HttpURLConnection)url.openConnection();
             urlConnection.setReadTimeout(20000);
             urlConnection.setAllowUserInteraction(true);
             urlConnection.setUseCaches(false);
+            urlConnection.setRequestProperty("Connection", "close");
+            //urlConnection.setRequestProperty("Accept-Encoding", "identity");
+            urlConnection.setRequestProperty("Connection", "keep-alive");
             urlConnection.connect();
             urlStream = urlConnection.getInputStream();
             Log.i(TAG, "Starting mjpeg");
         } catch (Exception e) {
-            Log.e(TAG, "Url connection failed");
-            try {
-                if (urlStream != null)
-                    urlStream.close();
-            } catch (Exception ioException) {
-                Log.e(TAG, "Exception while closing resources");
+            Log.e(TAG, "Url connection failed", e);
+            if (urlConnection != null){
+                urlConnection.disconnect();
             }
-            return null;
+            if (urlStream != null){
+                try {
+                    urlStream.close();
+                } catch (IOException ioException) {
+                    Log.e(TAG, "Unclean stream closure", e);
+                }
+                urlStream = null;
+            }
         }
         return urlStream;
     }
@@ -103,23 +111,23 @@ public class MjpegRunner implements Runnable {
                     }
                 });
             }
-            catch (IOException e) {
+            catch (Exception e) {
                 Log.e(TAG, "Url connection failed IOException", e);
-            }
-            catch (NumberFormatException e) {
-                Log.e(TAG, "Url connection failed NumberFormatException", e);
-            }
-            catch (NullPointerException e) {
-                Log.e(TAG, "failed stream read NullPointerException", e);
+                try {
+                    if (urlStream != null) {
+                        urlStream.close();
+                        urlStream = null;
+                    }
+                } catch (Exception ioException) {
+                    Log.e(TAG, "Exception while closing resources");
+                }
             }
         }
     }
 
 
     private byte[] retrieveNextImage(InputStream urlStream) throws IOException, NumberFormatException {
-
-        int currByte = -1;
-
+        int currByte;
         StringWriter headerWriter = new StringWriter(128);
         StringWriter boundary = new StringWriter(16);
 
