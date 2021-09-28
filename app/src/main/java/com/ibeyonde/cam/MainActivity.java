@@ -47,19 +47,19 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_device, R.id.navigation_bluetooth, R.id.navigation_history, R.id.navigation_notifications, R.id.navigation_setting)
+                R.id.navigation_device, R.id.navigation_bluetooth, R.id.bell_alert, R.id.navigation_notifications, R.id.navigation_setting)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String uuid = extras.getString("uuid");
-            String view = extras.getString("view");
+            String datetime = extras.getString("datetime");
 
             if (uuid != null) {
-                Log.i(TAG, "Bell Alert =  " + uuid);
-                HistoryFragment._cameraId = uuid;
-                HistoryFragment._list_size = 10;
+                Log.i(TAG, "Bell Alert =  " + uuid + " dt=" + datetime);
+                BellAlertFragment._cameraId = uuid;
+                BellAlertFragment._dateTime = datetime.replace('/', '-'); //"2021/09/28 07:49:47"
                 NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
                 navGraph.setStartDestination(R.id.bell_alert);
                 navController.setGraph(navGraph);

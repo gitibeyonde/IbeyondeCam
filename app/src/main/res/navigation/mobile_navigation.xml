@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_device_list" />
 
     <fragment
-        android:id="@+id/navigation_history"
-        android:name="com.ibeyonde.cam.ui.device.history.HistoryFragment"
+        android:id="@+id/bell_alert"
+        android:name="com.ibeyonde.cam.ui.notifications.BellAlertFragment"
         android:label="@string/title_alert"
-        tools:layout="@layout/fragment_history_list" >
+        tools:layout="@layout/fragment_bell_alert" >
     </fragment>
 
     <fragment

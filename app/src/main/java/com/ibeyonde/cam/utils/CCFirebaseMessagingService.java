@@ -51,10 +51,11 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
             if (remoteMessage.getData().size() > 0) {
                 Log.d(TAG, "Message data payload: " + remoteMessage.getData());
                 //{id=529528, name=3105613C, type=bp, uuid=3105613C, image=, title=Bell button pressed on 3105613C, value=0, comment=, created={"date":"2021-09-13 10:00:27.976429","timezone":"UTC","timezone_type":3}}
-                JSONObject json = new JSONObject(remoteMessage.getData());
+                JSONObject jsonMessage = new JSONObject(remoteMessage.getData());
                 try {
-                    Log.d(TAG, "id: " + json.getString("id"));
-                    sendNotification(Integer.parseInt(json.getString("id")), json.getString("uuid"), json.getString("title") + " at " + json.getString("created"), json.getString("image"));
+                    Log.d(TAG, "id: " + jsonMessage.getString("id"));
+                    sendNotification(Integer.parseInt(jsonMessage.getString("id")), jsonMessage.getString("uuid"), jsonMessage.getString("created"),
+                            jsonMessage.getString("title") + " at " + jsonMessage.getString("created"), jsonMessage.getString("image"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -114,11 +115,11 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
             queue.add(stringRequest);
         }
 
-        private void sendNotification(int messageId, String uuid, String messageBody, String url) {
+        private void sendNotification(int messageId, String uuid, String datetime, String messageBody, String url) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("uuid", uuid);
-            intent.putExtra("view", "history");
+            intent.putExtra("datetime", datetime);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, messageId, intent,
                     PendingIntent.FLAG_ONE_SHOT);
 

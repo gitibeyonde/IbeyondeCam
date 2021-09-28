@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
 public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
@@ -18,20 +19,25 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
     private String url;
     private ImageView imageView;
+    private static MessageDigest digest;
     private static final HashMap<String, Bitmap> s_cache = new HashMap<>();
 
     public ImageLoadTask(String url, ImageView imageView) {
         this.url = url;
         this.imageView = imageView;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected Bitmap doInBackground(Void... params) {
         try {
-            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
             digest.update(url.getBytes());
-            byte messageDigest[] = digest.digest();
-            Bitmap myBitmap = s_cache.get(new String(messageDigest));
+            String messageDigest = new String(digest.digest());
+            Bitmap myBitmap = s_cache.get(messageDigest);
             if (myBitmap != null){
                 return myBitmap;
             }
@@ -41,7 +47,7 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 myBitmap = BitmapFactory.decodeStream(input);
-                s_cache.put(new String(messageDigest), myBitmap);
+                s_cache.put(messageDigest, myBitmap);
                 input.close();
                 connection.disconnect();
                 return myBitmap;

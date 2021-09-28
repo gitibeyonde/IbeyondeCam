@@ -7,9 +7,9 @@
         android:title="@string/title_device" />
 
     <item
-        android:id="@+id/navigation_history"
+        android:id="@+id/bell_alert"
         android:icon="@android:drawable/ic_dialog_alert"
-        android:title="@string/title_history"
+        android:title="@string/title_alert_details"
         android:visible="false"/>
 
     <item
