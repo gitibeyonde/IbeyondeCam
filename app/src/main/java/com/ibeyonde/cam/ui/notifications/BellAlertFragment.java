@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.ibeyonde.cam.bt.SerialService;
 import com.ibeyonde.cam.databinding.FragmentBellAlertBinding;
 import com.ibeyonde.cam.ui.device.live.LiveViewModel;
 import com.ibeyonde.cam.ui.device.live.MjpegRunner;
@@ -41,10 +44,10 @@ public class BellAlertFragment extends Fragment {
     public static String _dateTime;
     private NotificationViewModel notificationViewModel;
     private LiveViewModel liveViewModel;
-    FragmentBellAlertBinding binding;
+    private FragmentBellAlertBinding binding;
 
-    Handler handler;
-    static MjpegRunner rc;
+    private Handler handler;
+    private MjpegRunner rc;
 
     public static BellAlertFragment newInstance() {
         return new BellAlertFragment();
@@ -55,8 +58,9 @@ public class BellAlertFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
-        FragmentBellAlertBinding binding = FragmentBellAlertBinding.inflate(inflater, container, false);
+        binding = FragmentBellAlertBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        handler = new Handler(getContext().getMainLooper());
 
         notificationViewModel.getBellAlertDetails(getContext(), _cameraId, _dateTime);
 
@@ -102,25 +106,17 @@ public class BellAlertFragment extends Fragment {
         });
 
 
-        if (android.os.Build.VERSION.SDK_INT > 9)
-        {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-        liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
-
-
         liveViewModel._url.observe(this.getActivity(), new Observer<String>() {
             public void onChanged(@Nullable String url) {
                 Log.i(TAG, "Live URL = " + url);
                 if (url.toString().length() > 10) {
                     try {
-                        handler = new Handler(getContext().getMainLooper());
+                        if (rc != null)rc.stop();
                         rc = new MjpegRunner(new URL(url), handler, binding.cameraLive);
                         Thread t = new Thread(rc);
                         t.start();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.i(TAG, "Error in starting live = ", e);
                         if (rc != null)rc.stop();
                     }
                 }
@@ -129,7 +125,10 @@ public class BellAlertFragment extends Fragment {
                 }
             }
         });
+
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(_cameraId  + " Bell Alert ");
+
+        Log.i(TAG, "on create view ");
         return root;
     }
 
@@ -139,5 +138,43 @@ public class BellAlertFragment extends Fragment {
         notificationViewModel._alert_details.postValue(null);
         if (rc != null)rc.stop();
     }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, "on start ");
+
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+        liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "on resume ");
+    }
+
+    @Override
+    public void onStop() {
+        Log.i(TAG, "on stop ");
+        if (rc != null)rc.stop();
+        super.onStop();
+    }
+
+
+    @Override
+    public void onDetach() {
+        Log.i(TAG, "on detach ");
+        if (rc != null)rc.stop();
+        super.onDetach();
+    }
+
 
 }

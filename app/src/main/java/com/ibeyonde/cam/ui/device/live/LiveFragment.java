@@ -57,7 +57,6 @@ public class LiveFragment extends Fragment {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-        liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
 
         liveViewModel._url.observe(this.getActivity(), new Observer<String>() {
             public void onChanged(@Nullable String url) {
@@ -88,6 +87,34 @@ public class LiveFragment extends Fragment {
         super.onDestroyView();
         liveViewModel._url.setValue("");
         if (rc != null)rc.stop();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, "on start ");
+        liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "on resume ");
+    }
+
+    @Override
+    public void onStop() {
+        Log.i(TAG, "on stop ");
+        if (rc != null)rc.stop();
+        super.onStop();
+    }
+
+
+    @Override
+    public void onDetach() {
+        Log.i(TAG, "on detach ");
+        if (rc != null)rc.stop();
+        super.onDetach();
     }
 
 }

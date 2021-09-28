@@ -63,9 +63,9 @@ public class MjpegRunner implements Runnable {
             urlConnection.setRequestProperty("Connection", "keep-alive");
             urlConnection.connect();
             urlStream = urlConnection.getInputStream();
-            Log.i(TAG, "Starting mjpeg");
+            Log.i(TAG, "Starting mjpeg>>>>>>>");
         } catch (Exception e) {
-            Log.e(TAG, "Url connection failed", e);
+            Log.e(TAG, "Url connection failed");
             if (urlConnection != null){
                 urlConnection.disconnect();
             }
@@ -73,7 +73,7 @@ public class MjpegRunner implements Runnable {
                 try {
                     urlStream.close();
                 } catch (IOException ioException) {
-                    Log.e(TAG, "Unclean stream closure", e);
+                    Log.e(TAG, "Unclean stream closure");
                 }
                 urlStream = null;
             }
@@ -123,6 +123,7 @@ public class MjpegRunner implements Runnable {
                 }
             }
         }
+        Log.d(TAG, "Closing Mjpeg thread<<<<<<");
     }
 
 
@@ -156,7 +157,6 @@ public class MjpegRunner implements Runnable {
         while (urlStream.read() > -1) break;
 
         int content_length = Integer.parseInt(headerWriter.toString().trim());
-        Log.d(TAG, "Content length = " + content_length);
 
         // rest is the buffer
         byte[] imageBytes = new byte[content_length];

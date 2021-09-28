@@ -103,7 +103,7 @@ public class NotificationViewModel extends ViewModel {
 
         sdf = new SimpleDateFormat("yyyy/MM/dd");
         String date= sdf.format(d);
-        sdf = new SimpleDateFormat("hh");
+        sdf = new SimpleDateFormat("HH");
         String hour= sdf.format(d);
         sdf = new SimpleDateFormat("mm");
         String minute= sdf.format(d);

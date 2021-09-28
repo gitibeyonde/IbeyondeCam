@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 HistoryFragment._cameraId = uuid;
                 HistoryFragment._list_size = 10;
                 NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);
-                navGraph.setStartDestination(R.id.navigation_history);
+                navGraph.setStartDestination(R.id.bell_alert);
                 navController.setGraph(navGraph);
             }
         }

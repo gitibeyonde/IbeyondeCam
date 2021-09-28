@@ -30,8 +30,11 @@ public class AlertDetails { private static final String TAG= History.class.getCa
 
     public String getCurrentURL() {
         try {
-            JSONObject curr = _alert_details.get(_current++);
-            if (_current == _total)_current = 0;
+            JSONObject curr = _alert_details.get(_current);
+            _current++;
+            if (_current >= _total){
+                _current = 0;
+            }
             return curr.getString("url");
         } catch (JSONException e) {
             e.printStackTrace();

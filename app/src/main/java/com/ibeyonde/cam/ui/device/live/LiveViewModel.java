@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -34,7 +35,7 @@ public class LiveViewModel extends ViewModel {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i(TAG, "checking local url " + response);
+                        Log.i(TAG, "Checking local url " + response);
                         if (response.contains("Ibeyonde")) {
                             _url.postValue("http://" + c._localIp + "/stream");
                         }
@@ -50,6 +51,7 @@ public class LiveViewModel extends ViewModel {
                 getLiveUrl(ctx, uuid);
             }
         });
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
 
@@ -65,8 +67,8 @@ public class LiveViewModel extends ViewModel {
                         Log.i(TAG, "URL value ?? " + _url.getValue());
                         url = url.replaceAll("^\"|\"$", "");
                         url = url.replaceAll("\\\\", "");
-                        _url.postValue(url);
                         Log.i(TAG, "URL value set to " + _url.getValue());
+                        _url.setValue(url);
                     }
                 }, new Response.ErrorListener() {
             @Override
