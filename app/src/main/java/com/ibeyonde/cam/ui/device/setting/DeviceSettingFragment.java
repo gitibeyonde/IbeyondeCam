@@ -50,8 +50,8 @@ public class DeviceSettingFragment extends Fragment {
         binding = FragmentDeviceSettingBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
 
+        mViewModel.getCam(getContext(), _cameraId);
         mViewModel.getConfig(getContext(), _cameraId);
-        //mViewModel.getCam(getContext(), _cameraId);
 
         Spinner frameSize = binding.frameSize;
 
@@ -74,6 +74,11 @@ public class DeviceSettingFragment extends Fragment {
         binding.camName.setEnabled(false);
         binding.timeZone.setAlpha(.5f);
         binding.timeZone.setEnabled(false);
+
+        binding.vFlip.setAlpha(.5f);
+        binding.vFlip.setEnabled(false);
+        binding.hFlip.setAlpha(.5f);
+        binding.hFlip.setEnabled(false);
 
         mViewModel._device_online.observe(this.getActivity(), new Observer<Boolean>() {
             @Override
@@ -121,6 +126,28 @@ public class DeviceSettingFragment extends Fragment {
                 }
             }
         });
+
+        mViewModel._cam_config.observe(this.getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean h) {
+                Log.i(TAG, h.toString() + " Camera Online = " + _cameraId);
+                handler = new Handler(getContext().getMainLooper());
+                if (h){
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.vFlip.setChecked(mViewModel._cam_nv.get("vflip").equals("0") ? false : true);
+                            binding.vFlip.setAlpha(1f);
+                            binding.vFlip.setEnabled(true);
+                            binding.vFlip.setChecked(mViewModel._cam_nv.get("hmirror").equals("0") ? false : true);
+                            binding.hFlip.setAlpha(1f);
+                            binding.hFlip.setEnabled(true);
+                        }
+                    });
+                }
+            }
+        });
+
 
         Button cloudConnect = binding.cloudConnect;
         cloudConnect.setOnClickListener(new View.OnClickListener() {
@@ -177,6 +204,25 @@ public class DeviceSettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mViewModel.deleteHistory(getContext(), _cameraId);
+            }
+        });
+
+        /// camera config
+
+
+        Button vflip = binding.vFlip;
+        vflip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.camConnect(getContext(), _cameraId, "vflip", binding.cloudConnect.isEnabled() ? "1" : "0");
+            }
+        });
+
+        Button hflip = binding.hFlip;
+        hflip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.camConnect(getContext(), _cameraId, "hmirror", binding.cloudConnect.isEnabled() ? "1" : "0");
             }
         });
 

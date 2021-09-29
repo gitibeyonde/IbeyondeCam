@@ -12,13 +12,20 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.Camera;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 public class LiveViewModel extends ViewModel {
@@ -26,7 +33,57 @@ public class LiveViewModel extends ViewModel {
 
     public static final MutableLiveData<String> _url = new MutableLiveData<>();
 
+
     public void getLocalLiveUrl(Context ctx, String uuid){
+        Camera c = DeviceViewModel.getCamera(uuid);
+        if (c == null){
+            RequestQueue queue = Volley.newRequestQueue(ctx);
+            String url ="https://ping.ibeyonde.com/api/iot.php?view=devicelist";
+
+            JsonArrayRequest stringRequest = new JsonArrayRequest(JsonObjectRequest.Method.GET, url, null,
+                    new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray jsonArray) {
+                            Log.d(TAG, "Device list json " + jsonArray.toString());
+                            try {
+                                Hashtable<String, Camera> jl = new Hashtable<>();
+                                Camera._total = 0;
+                                for(int i=0;i< jsonArray.length();i++) {
+                                    JSONObject json = jsonArray.getJSONObject(i);
+                                    Log.d(TAG, "deviceList Device = " + json.toString());
+                                    Camera c = new Camera(json);
+                                    jl.put(c._uuid, c);
+                                }
+                                DeviceViewModel._deviceList.postValue(jl);
+                                getLocalUrl(ctx, uuid);
+                            } catch (JSONException e) {
+                                Log.i(TAG, "deviceList Device List" + e.getMessage());
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(TAG, "deviceList Request failed ," + error.getMessage());
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    String creds = String.format("%s:%s", LoginViewModel._email, LoginViewModel._pass);
+                    String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                    params.put("Authorization", auth);
+                    return params;
+                }
+            };
+            queue.add(stringRequest);
+        }
+        else {
+            getLocalUrl(ctx, uuid);
+        }
+    }
+
+
+    public void getLocalUrl(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
         String localUrl ="http://" + c._localIp + ":81/stop";

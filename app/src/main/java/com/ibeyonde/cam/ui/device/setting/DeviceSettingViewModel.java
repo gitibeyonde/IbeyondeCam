@@ -70,6 +70,7 @@ public class DeviceSettingViewModel extends ViewModel {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
                         try {
                             Log.i(TAG, "quality " + response.getString("quality"));
                             _cam_nv.put("quality",  response.getString("quality"));
@@ -84,6 +85,7 @@ public class DeviceSettingViewModel extends ViewModel {
                             _cam_nv.put("agc_gain",  response.getString("agc_gain"));
                             _cam_nv.put("gainceiling",  response.getString("gainceiling"));
                             _cam_nv.put("hmirror",  response.getString("hmirror"));
+                            _cam_nv.put("vflip",  response.getString("vflip"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -123,6 +125,25 @@ public class DeviceSettingViewModel extends ViewModel {
         queue.add(stringRequest);
     }
 
+    public void camConnect(Context ctx, String uuid, String var, String val){
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        Camera c = DeviceViewModel.getCamera(uuid);
+        String localUrl ="http://" + c._localIp + ":81/cam?var=" + var + "&val=" + val;
+
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, "camConnect " + response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "camConnect Request failed ," + error.getMessage());
+            }
+        });
+        queue.add(stringRequest);
+    }
     public void motionHistory(Context ctx, String uuid, Boolean enable){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);

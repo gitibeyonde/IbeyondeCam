@@ -29,8 +29,11 @@ public class LastAlerts {
 
     public String getCurrentURL() {
         try {
-            JSONArray curr = _lastalerts.get(_current++);
-            if (_current == _total)_current = 0;
+            JSONArray curr = _lastalerts.get(_current);
+            _current++;
+            if (_current >= _total){
+                _current = 0;
+            }
             return curr.getString(0);
         } catch (JSONException e) {
             e.printStackTrace();
