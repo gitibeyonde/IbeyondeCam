@@ -36,7 +36,7 @@ public class AlertDetails { private static final String TAG= History.class.getCa
                 _current = 0;
             }
             return curr.getString("url");
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return "http://udp1.ibeyonde.com/img/error.jpg";
         }

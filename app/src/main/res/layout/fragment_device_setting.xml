@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="20dp"
-    tools:context=".ui.device.setting.DeviceSettingFragment">
+    android:paddingBottom="60dp"
+    tools:context=".ui.device.setting.DeviceSettingFragment"
+    android:orientation="horizontal">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
     <ProgressBar
         android:id="@+id/settingProgressBar"
@@ -55,11 +62,6 @@
 
     </TableRow>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -80,6 +82,106 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            style="@style/SettingsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Store motion history" />
+
+        <Switch
+            android:id="@+id/motionHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            style="@style/SettingsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete motion history" />
+
+        <ImageButton
+            android:id="@+id/deleteHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right|end"
+            android:src="@drawable/deletebin" />
+
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            style="@style/SettingsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="TimeZone" />
+
+        <Spinner
+            android:id="@+id/timeZone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            style="@style/SettingsStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Port forward url" />
+
+
+        <EditText
+            android:id="@+id/fwdUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="8"
+            android:inputType="textPersonName" />
+
+        <ImageButton
+            android:id="@+id/fwdButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/enter" />
 
     </TableRow>
 
@@ -151,139 +253,21 @@
 
     </TableRow>
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="?android:attr/listDivider" />
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="10dp"
-        android:paddingTop="5dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="5dp">
-
-        <TextView
-            style="@style/SettingsStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="Store motion history" />
-
-        <Switch
-            android:id="@+id/motionHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </TableRow>
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="10dp"
-        android:paddingTop="5dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="5dp">
-
-        <TextView
-            style="@style/SettingsStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="TimeZone" />
-
-        <Spinner
-            android:id="@+id/timeZone"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
-    </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="?android:attr/listDivider" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
 
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="10dp"
-        android:paddingTop="5dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="5dp">
-
-        <TextView
-            style="@style/SettingsStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete motion history" />
-
-        <ImageButton
-            android:id="@+id/deleteHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|end"
-            android:src="@drawable/deletebin" />
-
-
-    </TableRow>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="10dp"
-        android:paddingTop="5dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="5dp">
-
-        <TextView
-            style="@style/SettingsStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Port forward url" />
-
-
-        <EditText
-            android:id="@+id/fwdUrl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:inputType="textPersonName" />
-
-        <ImageButton
-            android:id="@+id/fwdButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/enter" />
-
-    </TableRow>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-</TableLayout>
+</LinearLayout>

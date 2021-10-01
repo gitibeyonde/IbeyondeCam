@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             String datetime = extras.getString("datetime");
 
             if (uuid != null) {
-                Log.i(TAG, "Bell Alert =  " + uuid + " dt=" + datetime);
+                Log.i(TAG, "Bell Alert=" + uuid + " dt=" + datetime);
                 BellAlertFragment._cameraId = uuid;
                 BellAlertFragment._dateTime = datetime.replace('/', '-'); //"2021/09/28 07:49:47"
                 NavGraph navGraph = navController.getNavInflater().inflate(R.navigation.mobile_navigation);

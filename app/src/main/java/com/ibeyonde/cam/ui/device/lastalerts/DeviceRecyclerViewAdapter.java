@@ -35,7 +35,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         DeviceMotionContent.PlaceHolder hi  = _history_list.get(position);
         Log.d(TAG, "onBindViewHolder  position = " + position + " hv size = " + _history_list.size());
         Log.d(TAG, "onBindViewHolder  id = " + hi._id + " uuid = " + hi._uuid );
-        holder.uuid.setText(hi._uuid);
+        holder.uuid.setText(hi._name);
         holder.picture.setContentDescription(hi._uuid);
         holder.live.setContentDescription(hi._uuid);
         holder.history.setContentDescription(hi._uuid);

@@ -27,9 +27,8 @@
         <TextView
             android:id="@+id/deviceUuid"
             style="@style/UUIDStyle"
-            android:layout_width="125dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
             android:gravity="center"
             android:text="abc897dfg" />
 

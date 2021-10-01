@@ -24,7 +24,7 @@ public class DeviceMotionContent {
             Camera c = ch.get(uuid);
             LastAlerts h = c._lastalerts;
             if (h != null) {
-                PlaceHolder hi = new PlaceHolder(c._index, uuid, h);
+                PlaceHolder hi = new PlaceHolder(c._index, uuid, c._name, h);
                 _item_list.add(hi);
             }
         }
@@ -33,11 +33,13 @@ public class DeviceMotionContent {
     public static class PlaceHolder {
         public final String _id;
         public final String _uuid;
+        public final String _name;
         public final LastAlerts _lastalerts;
 
-        public PlaceHolder(int id, String uuid, LastAlerts lastalerts) {
+        public PlaceHolder(int id, String uuid, String name, LastAlerts lastalerts) {
             this._id = Integer.toString(id);
             this._uuid = uuid;
+            this._name = name;
             this._lastalerts = lastalerts;
         }
 

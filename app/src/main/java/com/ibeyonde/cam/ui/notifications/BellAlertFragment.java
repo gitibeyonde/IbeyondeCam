@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,19 +22,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.ibeyonde.cam.MainActivity;
 import com.ibeyonde.cam.bt.SerialService;
 import com.ibeyonde.cam.databinding.FragmentBellAlertBinding;
+import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.device.live.LiveViewModel;
 import com.ibeyonde.cam.ui.device.live.MjpegRunner;
+import com.ibeyonde.cam.ui.login.LoginActivity;
+import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.AlertDetails;
+import com.ibeyonde.cam.utils.Camera;
 import com.ibeyonde.cam.utils.ImageLoadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -42,6 +55,8 @@ public class BellAlertFragment extends Fragment {
 
     public static String _cameraId;
     public static String _dateTime;
+    private LoginViewModel loginViewModel;
+    private DeviceViewModel deviceViewModel;
     private NotificationViewModel notificationViewModel;
     private LiveViewModel liveViewModel;
     private FragmentBellAlertBinding binding;
@@ -58,11 +73,52 @@ public class BellAlertFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
         liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
+        deviceViewModel = new ViewModelProvider(this).get(DeviceViewModel.class);
         binding = FragmentBellAlertBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         handler = new Handler(getContext().getMainLooper());
 
-        notificationViewModel.getBellAlertDetails(getContext(), _cameraId, _dateTime);
+    //LOGIN
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        File file = new File(getActivity().getApplicationContext().getFilesDir(), ".cred");
+        Log.i(TAG, "Getting creds in " + file.getAbsoluteFile());
+
+        // read cred from file
+        try (BufferedReader fo = new BufferedReader(new FileReader(file))) {
+            String cred = fo.readLine();
+            if (cred != null && cred.contains("%%")) {
+                String[] cv = cred.split("%%");
+                Log.i(TAG, "Read Credential=" + cv[0] + ", " + cv[1]);
+                binding.progressBar.setVisibility(View.VISIBLE);
+                loginViewModel._email = cv[0];
+                loginViewModel._pass = cv[1];
+            }
+            else {
+                Log.i(TAG, "Failed reading cred file, no data ");
+                Toast.makeText(getActivity().getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            Log.i(TAG, "Failed reading cred file " + e.getMessage());
+        }
+
+    //GET DEVICE LIST
+        deviceViewModel.deviceList(getContext());
+
+
+        deviceViewModel._deviceList.observe(this.getActivity(), new Observer<Hashtable<String, Camera>>() {
+            public void onChanged(@Nullable Hashtable<String, Camera> c) {
+                notificationViewModel.getBellAlertDetails(getContext(), _cameraId, _dateTime);
+                if (android.os.Build.VERSION.SDK_INT > 9)
+                {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                }
+                liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
+                binding.progressBar.setVisibility(View.GONE);
+            }
+        });
 
         View.OnClickListener navClickListener = new View.OnClickListener() {
             @Override
@@ -144,15 +200,6 @@ public class BellAlertFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.i(TAG, "on start ");
-
-        if (android.os.Build.VERSION.SDK_INT > 9)
-        {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-        liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
-
-
     }
 
     @Override

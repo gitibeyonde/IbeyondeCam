@@ -98,7 +98,6 @@ public class DeviceSettingFragment extends Fragment {
                                 binding.motionHistory.setChecked(true);
                             }
                             selectSpinnerItemByValue(binding.timeZone, mViewModel._dev_nv.get("tz"));
-                            selectSpinnerItemByValue(binding.frameSize, getFrameSize(Integer.parseInt(mViewModel._dev_nv.get("framesize"))));
                             binding.settingProgressBar.setVisibility(View.GONE);
                             binding.settingText.setVisibility(View.GONE);
                             binding.cloudConnect.setAlpha(1f);
@@ -107,8 +106,6 @@ public class DeviceSettingFragment extends Fragment {
                             binding.motionHistory.setEnabled(true);
                             binding.camName.setAlpha(1f);
                             binding.camName.setEnabled(true);
-                            binding.frameSize.setAlpha(1f);
-                            binding.frameSize.setEnabled(true);
                             binding.timeZone.setAlpha(1f);
                             binding.timeZone.setEnabled(true);
                             binding.camName.setText(mViewModel._dev_nv.get("cn"));
@@ -136,6 +133,9 @@ public class DeviceSettingFragment extends Fragment {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            selectSpinnerItemByValue(binding.frameSize, getFrameSize(Integer.parseInt(mViewModel._cam_nv.get("framesize"))));
+                            binding.frameSize.setAlpha(1f);
+                            binding.frameSize.setEnabled(true);
                             binding.vFlip.setChecked(mViewModel._cam_nv.get("vflip").equals("0") ? false : true);
                             binding.vFlip.setAlpha(1f);
                             binding.vFlip.setEnabled(true);
