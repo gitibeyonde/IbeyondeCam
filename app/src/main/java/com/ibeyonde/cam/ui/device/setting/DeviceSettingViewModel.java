@@ -36,7 +36,7 @@ public class DeviceSettingViewModel extends ViewModel {
     public void getConfig(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + ":81/getcfg";
+        String localUrl ="http://" + c._localIp + "/getcfg";
 
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
@@ -64,7 +64,7 @@ public class DeviceSettingViewModel extends ViewModel {
     public void getCam(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + ":81/getcam";
+        String localUrl ="http://" + c._localIp + "/getcam";
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, localUrl, null,
                 new Response.Listener<JSONObject>() {
@@ -108,7 +108,7 @@ public class DeviceSettingViewModel extends ViewModel {
     public void cloudConnect(Context ctx, String uuid, String var, String val){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + ":81/cfg?var=" + var + "&val=" + val;
+        String localUrl ="http://" + c._localIp + "/cfg?var=" + var + "&val=" + val;
 
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
@@ -128,7 +128,7 @@ public class DeviceSettingViewModel extends ViewModel {
     public void camConnect(Context ctx, String uuid, String var, String val){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + ":81/cam?var=" + var + "&val=" + val;
+        String localUrl ="http://" + c._localIp + "/cam?var=" + var + "&val=" + val;
 
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
@@ -140,25 +140,6 @@ public class DeviceSettingViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "camConnect Request failed ," + error.getMessage());
-            }
-        });
-        queue.add(stringRequest);
-    }
-    public void motionHistory(Context ctx, String uuid, Boolean enable){
-        RequestQueue queue = Volley.newRequestQueue(ctx);
-        Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + ":81/cfg?var=history&val=" + enable;
-
-        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i(TAG, "motionHistory " + response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "motionHistory Request failed ," + error.getMessage());
             }
         });
         queue.add(stringRequest);

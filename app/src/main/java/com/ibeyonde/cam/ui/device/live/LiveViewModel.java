@@ -86,7 +86,7 @@ public class LiveViewModel extends ViewModel {
     public void getLocalUrl(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + ":81/stop";
+        String localUrl ="http://" + c._localIp + "/stop";
 
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
