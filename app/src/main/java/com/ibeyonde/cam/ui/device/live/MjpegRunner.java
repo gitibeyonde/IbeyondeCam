@@ -1,6 +1,8 @@
 package com.ibeyonde.cam.ui.device.live;
 
 
+import static java.lang.Thread.yield;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -55,7 +57,7 @@ public class MjpegRunner implements Runnable {
         try {
             Log.i(TAG, "Trying to connect.." + url.toString());
             urlConnection = (HttpURLConnection)url.openConnection();
-            urlConnection.setReadTimeout(20000);
+            urlConnection.setReadTimeout(5000);
             urlConnection.setAllowUserInteraction(true);
             urlConnection.setUseCaches(false);
             urlConnection.setRequestProperty("Connection", "close");
@@ -108,6 +110,8 @@ public class MjpegRunner implements Runnable {
                     @Override
                     public void run() {
                         cameraLive.setImageBitmap(bmp);
+                        yield();
+                        cameraLive.invalidate();
                     }
                 });
             }
@@ -133,11 +137,14 @@ public class MjpegRunner implements Runnable {
         StringWriter boundary = new StringWriter(16);
 
         //look for boundary --jpgboundary
-        while ((currByte = urlStream.read()) > -1) {
+         while ((currByte = urlStream.read()) > -1) {
             boundary.write(currByte);
             if (boundary.toString().endsWith("--jpgboundary\n")) {
                 break;
             }
+             if (boundary.toString().endsWith("--jpgboundary--\n")) {
+                 throw new IOException("Stream Ends");
+             }
         }
 
         //skip headers
@@ -165,7 +172,7 @@ public class MjpegRunner implements Runnable {
                 && (numRead = urlStream.read(imageBytes, offset, imageBytes.length - offset)) >= 0) {
             offset += numRead;
         }
-        Log.d(TAG, "Image length = " + offset);
+        //Log.d(TAG, "Image length = " + offset);
 
         return imageBytes;
     }

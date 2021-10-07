@@ -36,19 +36,23 @@ public class DeviceSettingViewModel extends ViewModel {
     public void getConfig(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/getcfg";
+        String localUrl ="http://" + c._localIp + "/cmd?name=getconf";
 
-        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
-                new Response.Listener<String>() {
+        JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, localUrl, null,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onResponse(String response) {
-                        Log.i(TAG, "checking local url " + response);
-                        //history=true&cloud=true&tz=Asia/Calcutta&cn=CleverCam
-                        String []nvls = response.split("&");
-                        for (String nvs: nvls) {
-                            String nv[] = nvs.split("=");
-                            _dev_nv.put(nv[0], nv[1]);
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString());
+                        try {
+                            _dev_nv.put("history", response.getString("history"));
+                            _dev_nv.put("cloud", response.getString("cloud"));
+                            _dev_nv.put("timezone", response.getString("timezone"));
+                            _dev_nv.put("name", response.getString("name"));
+                            _dev_nv.put("version", response.getString("version"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+                        //{"history": "true","cloud": "true","timezone": "Asia/Calcutta","name": "Test"}
                         _device_online.postValue(true);
                     }
                 }, new Response.ErrorListener() {
@@ -64,7 +68,7 @@ public class DeviceSettingViewModel extends ViewModel {
     public void getCam(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/getcam";
+        String localUrl ="http://" + c._localIp + "/cmd?name=getcam";
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, localUrl, null,
                 new Response.Listener<JSONObject>() {
@@ -106,9 +110,12 @@ public class DeviceSettingViewModel extends ViewModel {
     }
 
     public void cloudConnect(Context ctx, String uuid, String var, String val){
+        if (_dev_nv.get(var).equals(val))return;
+
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cfg?var=" + var + "&val=" + val;
+        String localUrl ="http://" + c._localIp + "/cmd?name=config&var=" + var + "&val=" + val;
+
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
@@ -126,9 +133,11 @@ public class DeviceSettingViewModel extends ViewModel {
     }
 
     public void camConnect(Context ctx, String uuid, String var, String val){
+        if (_cam_nv.get(var).equals(val))return;
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cam?var=" + var + "&val=" + val;
+        String localUrl ="http://" + c._localIp + "/cmd?name=camconf&var=" + var + "&val=" + val;
+
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
@@ -144,6 +153,30 @@ public class DeviceSettingViewModel extends ViewModel {
         });
         queue.add(stringRequest);
     }
+
+    public void command(Context ctx, String cmd, String uuid){
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        Camera c = DeviceViewModel.getCamera(uuid);
+        String localUrl ="http://" + c._localIp + "/cmd?name=" + cmd;
+
+        Log.i(TAG, localUrl);
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, "command " + response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "command Request failed ," + error.getMessage());
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+
+
     public void deleteHistory(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         String url ="https://ping.ibeyonde.com/api/iot.php?view=delhist&uuid=" + uuid;//&date=" + date + "&hour=" + hour;
@@ -174,4 +207,5 @@ public class DeviceSettingViewModel extends ViewModel {
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(120000, 5, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
+
 }

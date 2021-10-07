@@ -130,7 +130,6 @@
                     android:id="@+id/deleteHistory"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="right|end"
                     android:src="@drawable/deletebin" />
 
 
@@ -270,13 +269,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Check Updates" />
+                    android:text="Restart" />
 
                 <ImageButton
-                    android:id="@+id/updateButton"
+                    android:id="@+id/restartButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/wallcamera" />
+                    android:src="@drawable/play" />
 
             </TableRow>
 
@@ -293,10 +292,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="Restart" />
+                    android:text="Upgrade" />
 
                 <ImageButton
-                    android:id="@+id/restartButton"
+                    android:id="@+id/upgradeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/play" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    style="@style/SettingsStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Reset" />
+
+                <ImageButton
+                    android:id="@+id/resetButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/play" />

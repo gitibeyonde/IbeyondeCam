@@ -155,47 +155,4 @@ public class NotificationViewModel extends ViewModel {
         queue.add(stringRequest);
     }
 
-
-    public void deviceList(Context ctx){
-        RequestQueue queue = Volley.newRequestQueue(ctx);
-        String url ="https://ping.ibeyonde.com/api/iot.php?view=devicelist";
-
-        JsonArrayRequest stringRequest = new JsonArrayRequest(JsonObjectRequest.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray jsonArray) {
-                        Log.d(TAG, "Device list json " + jsonArray.toString());
-                        try {
-                            Hashtable<String, Camera> jl = new Hashtable<>();
-                            Camera._total = 0;
-                            for(int i=0;i< jsonArray.length();i++) {
-                                JSONObject json = jsonArray.getJSONObject(i);
-                                Log.d(TAG, "deviceList Device = " + json.toString());
-                                Camera c = new Camera(json);
-                                jl.put(c._uuid, c);
-                            }
-                            _deviceList.postValue(jl);
-                        } catch (JSONException e) {
-                            Log.i(TAG, "deviceList Device List" + e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "deviceList Request failed ," + error.getMessage());
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", LoginViewModel._email, LoginViewModel._pass);
-                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
-                params.put("Authorization", auth);
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-    }
-
-
 }

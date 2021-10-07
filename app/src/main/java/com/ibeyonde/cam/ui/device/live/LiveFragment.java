@@ -85,7 +85,7 @@ public class LiveFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        liveViewModel._url.setValue("");
+        liveViewModel.command(getContext(), "stop", _cameraId);
         if (rc != null)rc.stop();
     }
 
@@ -105,6 +105,7 @@ public class LiveFragment extends Fragment {
     @Override
     public void onStop() {
         Log.i(TAG, "on stop ");
+        liveViewModel.command(getContext(), "stop", _cameraId);
         if (rc != null)rc.stop();
         super.onStop();
     }

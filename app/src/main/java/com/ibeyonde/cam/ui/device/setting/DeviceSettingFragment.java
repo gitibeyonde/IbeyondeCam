@@ -77,89 +77,66 @@ public class DeviceSettingFragment extends Fragment {
             @Override
             public void onChanged(Boolean h) {
                 Log.i(TAG, h.toString() + " Device Online = " + _cameraId);
-                handler = new Handler(getContext().getMainLooper());
-                if (h){
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            String cc = mViewModel._dev_nv.get("cloud");
-                            String ht = mViewModel._dev_nv.get("history");
-                            if ("true".equals(cc)) {
-                                binding.cloudConnect.setChecked(true);
-                            }
-                            if ("true".equals(ht)) {
-                                binding.motionHistory.setChecked(true);
-                            }
-                            selectSpinnerItemByValue(binding.timeZone, mViewModel._dev_nv.get("tz"));
-                            binding.settingProgressBar.setVisibility(View.GONE);
-                            binding.settingText.setVisibility(View.GONE);
-                            binding.cloudConnect.setAlpha(1f);
-                            binding.cloudConnect.setEnabled(true);
-                            binding.motionHistory.setAlpha(1f);
-                            binding.motionHistory.setEnabled(true);
-                            binding.camName.setAlpha(1f);
-                            binding.camName.setEnabled(true);
-                            binding.timeZone.setAlpha(1f);
-                            binding.timeZone.setEnabled(true);
-                            binding.camName.setText(mViewModel._dev_nv.get("cn"));
-                        }
-                    });
-
-                    Button cloudConnect = binding.cloudConnect;
-                    cloudConnect.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mViewModel.cloudConnect(getContext(), _cameraId, "cloud", binding.cloudConnect.isEnabled() ? "true" : "false");
-                        }
-                    });
-
-                    Button motionHistory = binding.motionHistory;
-                    motionHistory.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mViewModel.cloudConnect(getContext(), _cameraId, "hist", binding.cloudConnect.isEnabled() ? "true" : "false");
-                        }
-                    });
-
-                    ImageButton nameSet = binding.camNameButton;
-                    nameSet.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Log.d(TAG, binding.camName.getText().toString());
-                            mViewModel.cloudConnect(getContext(), _cameraId, "cn", binding.camName.getText().toString());
-                        }
-                    });
-
-                    Spinner sprTz = binding.timeZone;
-                    sprTz.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            Log.d(TAG, sprTz.getSelectedItem().toString());
-                            mViewModel.cloudConnect(getContext(), _cameraId, "tz", sprTz.getSelectedItem().toString());
-                        }
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {}
-                    });
-
-
-                    ImageButton deleteHistory = binding.deleteHistory;
-                    deleteHistory.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mViewModel.deleteHistory(getContext(), _cameraId);
-                        }
-                    });
-
+                if(!h)return;
+                selectSpinnerItemByValue(binding.timeZone, mViewModel._dev_nv.get("timezone"));
+                String cc = mViewModel._dev_nv.get("cloud");
+                String ht = mViewModel._dev_nv.get("history");
+                if ("true".equals(cc)) {
+                    binding.cloudConnect.setChecked(true);
                 }
-                else {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            binding.settingProgressBar.setVisibility(View.GONE);
-                            binding.settingText.setVisibility(View.VISIBLE);
-                        }
-                    });
+                if ("true".equals(ht)) {
+                    binding.motionHistory.setChecked(true);
                 }
+                binding.settingProgressBar.setVisibility(View.GONE);
+                binding.settingText.setVisibility(View.GONE);
+                binding.cloudConnect.setAlpha(1f);
+                binding.cloudConnect.setEnabled(true);
+                binding.motionHistory.setAlpha(1f);
+                binding.motionHistory.setEnabled(true);
+                binding.camName.setAlpha(1f);
+                binding.camName.setEnabled(true);
+                binding.timeZone.setAlpha(1f);
+                binding.timeZone.setEnabled(true);
+                binding.camName.setText(mViewModel._dev_nv.get("name"));
+
+                Button cloudConnect = binding.cloudConnect;
+                cloudConnect.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mViewModel.cloudConnect(getContext(), _cameraId, "cloud", binding.cloudConnect.isEnabled() ? "true" : "false");
+                    }
+                });
+
+                Button motionHistory = binding.motionHistory;
+                motionHistory.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mViewModel.cloudConnect(getContext(), _cameraId, "history", binding.cloudConnect.isEnabled() ? "true" : "false");
+                    }
+                });
+
+                ImageButton nameSet = binding.camNameButton;
+                nameSet.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, binding.camName.getText().toString());
+                        mViewModel.cloudConnect(getContext(), _cameraId, "cn", binding.camName.getText().toString());
+                    }
+                });
+
+                Spinner sprTz = binding.timeZone;
+                sprTz.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d(TAG, sprTz.getSelectedItem().toString());
+                        mViewModel.cloudConnect(getContext(), _cameraId, "timezone", sprTz.getSelectedItem().toString());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
+
             }
         });
 
@@ -167,51 +144,77 @@ public class DeviceSettingFragment extends Fragment {
             @Override
             public void onChanged(Boolean h) {
                 Log.i(TAG, h.toString() + " Camera Online = " + _cameraId);
-                handler = new Handler(getContext().getMainLooper());
-                if (h){
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            selectSpinnerItemByValue(binding.frameSize, getFrameSize(Integer.parseInt(mViewModel._cam_nv.get("framesize"))));
-                            binding.frameSize.setAlpha(1f);
-                            binding.frameSize.setEnabled(true);
-                            binding.vFlip.setChecked(mViewModel._cam_nv.get("vflip").equals("0") ? false : true);
-                            binding.vFlip.setAlpha(1f);
-                            binding.vFlip.setEnabled(true);
-                            binding.vFlip.setChecked(mViewModel._cam_nv.get("hmirror").equals("0") ? false : true);
-                            binding.hFlip.setAlpha(1f);
-                            binding.hFlip.setEnabled(true);
+                if(!h)return;
+                selectSpinnerItemByValue(binding.frameSize, getFrameSize(Integer.parseInt(mViewModel._cam_nv.get("framesize"))));
+                binding.frameSize.setAlpha(1f);
+                binding.frameSize.setEnabled(true);
+                binding.vFlip.setChecked(mViewModel._cam_nv.get("vflip").equals("0") ? false : true);
+                binding.vFlip.setAlpha(1f);
+                binding.vFlip.setEnabled(true);
+                binding.vFlip.setChecked(mViewModel._cam_nv.get("hmirror").equals("0") ? false : true);
+                binding.hFlip.setAlpha(1f);
+                binding.hFlip.setEnabled(true);
 
-                        }
-                    });
+                Button vflip = binding.vFlip;
+                vflip.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mViewModel.camConnect(getContext(), _cameraId, "vflip", binding.cloudConnect.isEnabled() ? "1" : "0");
+                    }
+                });
 
-                    Button vflip = binding.vFlip;
-                    vflip.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mViewModel.camConnect(getContext(), _cameraId, "vflip", binding.cloudConnect.isEnabled() ? "1" : "0");
-                        }
-                    });
+                Button hflip = binding.hFlip;
+                hflip.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mViewModel.camConnect(getContext(), _cameraId, "hmirror", binding.cloudConnect.isEnabled() ? "1" : "0");
+                    }
+                });
 
-                    Button hflip = binding.hFlip;
-                    hflip.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mViewModel.camConnect(getContext(), _cameraId, "hmirror", binding.cloudConnect.isEnabled() ? "1" : "0");
-                        }
-                    });
+                Spinner sprFs = binding.frameSize;
+                sprFs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d(TAG, sprFs.getSelectedItem().toString());
+                        mViewModel.camConnect(getContext(), _cameraId, "framesize", getFrameSize(sprFs.getSelectedItem().toString()) +"");
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
+            }
+        });
 
-                    Spinner sprFs = binding.frameSize;
-                    sprFs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            Log.d(TAG, sprFs.getSelectedItem().toString());
-                            mViewModel.camConnect(getContext(), _cameraId, "framesize", getFrameSize(sprFs.getSelectedItem().toString()) +"");
-                        }
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {}
-                    });
-                }
+
+        ImageButton deleteHistory = binding.deleteHistory;
+        deleteHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.deleteHistory(getContext(), _cameraId);
+            }
+        });
+
+
+        ImageButton reset = binding.resetButton;
+        reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.command(getContext(), "reset", _cameraId);
+            }
+        });
+
+        ImageButton restart = binding.restartButton;
+        restart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.command(getContext(), "restart", _cameraId);
+            }
+        });
+
+        ImageButton upgrade = binding.upgradeButton;
+        upgrade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.command(getContext(), "upgrade", _cameraId);
             }
         });
         return root;
