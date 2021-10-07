@@ -109,7 +109,7 @@ public class DeviceSettingViewModel extends ViewModel {
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
         String localUrl ="http://" + c._localIp + "/cfg?var=" + var + "&val=" + val;
-
+        Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
                     @Override
@@ -129,7 +129,7 @@ public class DeviceSettingViewModel extends ViewModel {
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
         String localUrl ="http://" + c._localIp + "/cam?var=" + var + "&val=" + val;
-
+        Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
                     @Override

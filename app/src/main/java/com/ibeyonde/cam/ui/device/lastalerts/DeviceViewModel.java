@@ -32,24 +32,27 @@ import java.util.Map;
 
 public class DeviceViewModel extends ViewModel {
     private static final String TAG= DeviceViewModel.class.getCanonicalName();
-    public static final MutableLiveData<Hashtable<String, Camera>> _deviceList = new MutableLiveData<>();
-    public static final MutableLiveData<Short> _update = new MutableLiveData<>();
+    public static final Hashtable<String, Camera> _deviceList = new Hashtable<>();
+    public static final MutableLiveData<Short> _history = new MutableLiveData<>();
 
     public static Camera getCamera(String uuid){
-        Hashtable<String, Camera> cl = _deviceList.getValue();
-        return cl.get(uuid);
+        if (_deviceList.size() > 0) {
+            return _deviceList.get(uuid);
+        }
+        else {
+            return null;
+        }
     }
 
     public boolean isAllCameraWithHistory(){
-        Hashtable<String, Camera> cl = _deviceList.getValue();
-        Iterator<Camera> e = cl.values().iterator();
+        Iterator<Camera> e = _deviceList.values().iterator();
         while (e.hasNext()) {
             if (!e.next().isHistorySet()) return true;
         }
         return true;
     }
 
-    public void deviceList(Context ctx){
+    public void getAllHistory(Context ctx){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         String url ="https://ping.ibeyonde.com/api/iot.php?view=devicelist";
 
@@ -59,23 +62,22 @@ public class DeviceViewModel extends ViewModel {
                     public void onResponse(JSONArray jsonArray) {
                         Log.d(TAG, "Device list json " + jsonArray.toString());
                         try {
-                            Hashtable<String, Camera> jl = new Hashtable<>();
                             Camera._total = 0;
                             for(int i=0;i< jsonArray.length();i++) {
                                 JSONObject json = jsonArray.getJSONObject(i);
                                 Log.d(TAG, "deviceList Device = " + json.toString());
                                 Camera c = new Camera(json);
-                                jl.put(c._uuid, c);
+                                _deviceList.put(c._uuid, c);
+                                getHistory_(ctx, c._uuid, null);
                             }
-                            _deviceList.postValue(jl);
                         } catch (JSONException e) {
-                            Log.i(TAG, "deviceList Device List" + e.getMessage());
+                            Log.e(TAG, "deviceList Device List" + e.getMessage());
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "deviceList Request failed ," + error.getMessage());
+                Log.e(TAG, "deviceList Request failed ," + error.getMessage());
             }
         }){
             @Override
@@ -91,7 +93,7 @@ public class DeviceViewModel extends ViewModel {
     }
 
 
-    public void getHistory(Context ctx, String uuid, String date_time){
+    public void getHistory_(Context ctx, String uuid, String date_time){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Log.d(TAG, "getHistory " + date_time);
         Date d = new Date();
@@ -105,7 +107,6 @@ public class DeviceViewModel extends ViewModel {
             Log.d(TAG, "getHistory " + d.toString());
         }
         String url ="https://ping.ibeyonde.com/api/iot.php?view=lastalerts&uuid=" + uuid;
-        Hashtable<String, Camera> deviceList = _deviceList.getValue();
         //["https:\/\/s3-us-west-2.amazonaws.com\/e","22\/09\/2021 - 14:10:41"],
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, url,
@@ -113,11 +114,11 @@ public class DeviceViewModel extends ViewModel {
                     @Override
                     public void onResponse(String imageList) {
                         Log.d(TAG, "deviceList History img list " + imageList);
-                        Camera c = deviceList.get(uuid);
+                        Camera c = _deviceList.get(uuid);
                         if (imageList.indexOf("No alerts found for this device") == -1) {
                             try {
                                 c.setLastAlerts(imageList);
-                                _update.postValue((short) 1);
+                                _history.postValue((short) 1);
                             } catch (JSONException e) {
                                 Log.d(TAG, "getHistory JSON Exception ," + e.getMessage());
                                 e.printStackTrace();

@@ -78,7 +78,7 @@ public class BellAlertFragment extends Fragment {
         View root = binding.getRoot();
         handler = new Handler(getContext().getMainLooper());
 
-    //LOGIN
+        //LOGIN
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         File file = new File(getActivity().getApplicationContext().getFilesDir(), ".cred");
         Log.i(TAG, "Getting creds in " + file.getAbsoluteFile());
@@ -103,22 +103,8 @@ public class BellAlertFragment extends Fragment {
             Log.i(TAG, "Failed reading cred file " + e.getMessage());
         }
 
-    //GET DEVICE LIST
-        deviceViewModel.deviceList(getContext());
-
-
-        deviceViewModel._deviceList.observe(this.getActivity(), new Observer<Hashtable<String, Camera>>() {
-            public void onChanged(@Nullable Hashtable<String, Camera> c) {
-                notificationViewModel.getBellAlertDetails(getContext(), _cameraId, _dateTime);
-                if (android.os.Build.VERSION.SDK_INT > 9)
-                {
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                }
-                liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
-                binding.progressBar.setVisibility(View.GONE);
-            }
-        });
+        //GET DEVICE LIST
+        liveViewModel.getLiveUrl(getContext(), _cameraId);
 
         View.OnClickListener navClickListener = new View.OnClickListener() {
             @Override
@@ -175,6 +161,7 @@ public class BellAlertFragment extends Fragment {
                         Log.i(TAG, "Error in starting live = ", e);
                         if (rc != null)rc.stop();
                     }
+                    binding.progressBar.setVisibility(View.GONE);
                 }
                 else {
                     if (rc != null)rc.stop();

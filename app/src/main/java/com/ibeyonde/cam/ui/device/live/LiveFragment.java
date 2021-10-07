@@ -93,7 +93,7 @@ public class LiveFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.i(TAG, "on start ");
-        liveViewModel.getLocalLiveUrl(getContext(), _cameraId);
+        liveViewModel.getLiveUrl(getContext(), _cameraId);
     }
 
     @Override
