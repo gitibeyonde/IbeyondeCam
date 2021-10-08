@@ -88,21 +88,20 @@ public class BellAlertFragment extends Fragment {
             String cred = fo.readLine();
             if (cred != null && cred.contains("%%")) {
                 String[] cv = cred.split("%%");
-                Log.i(TAG, "Read Credential=" + cv[0] + ", " + cv[1]);
                 binding.progressBar.setVisibility(View.VISIBLE);
                 loginViewModel._email = cv[0];
                 loginViewModel._pass = cv[1];
             }
             else {
                 Log.i(TAG, "Failed reading cred file, no data ");
-                Toast.makeText(getActivity().getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "User not logged in, live boot failed", Toast.LENGTH_SHORT).show();
             }
         }
         catch(Exception e){
             e.printStackTrace();
             Log.i(TAG, "Failed reading cred file " + e.getMessage());
         }
-
+        notificationViewModel.getBellAlertDetails(getContext(), _cameraId, _dateTime);
         //GET DEVICE LIST
         liveViewModel.getLiveUrl(getContext(), _cameraId);
 
@@ -123,13 +122,14 @@ public class BellAlertFragment extends Fragment {
                 ArrayList<JSONObject> adlist = ad._alert_details;
                 for (int i=0;i< adlist.size() && i < 10; i++){
                     try {
-                        Log.d(TAG, adlist.get(i).getString("url"));
                         new ImageLoadTask(adlist.get(i).getString("url"), navButtons[i]).execute();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
                 Log.d(TAG, "Bell alert url loading " + ad.getCurrentURL());
+
+                new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
 
                 TimerTask imgRefresh = new TimerTask()
                 {
@@ -139,7 +139,7 @@ public class BellAlertFragment extends Fragment {
                     }
                 };
                 Timer t = new Timer();
-                t.scheduleAtFixedRate(imgRefresh, 0, 2000);
+                t.scheduleAtFixedRate(imgRefresh, 0, 1000);
 
                 for (int i=0;i< 10; i++){
                     navButtons[i].setOnClickListener(navClickListener);

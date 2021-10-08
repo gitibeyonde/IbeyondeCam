@@ -94,11 +94,11 @@ public class LiveViewModel extends ViewModel {
                         Log.i(TAG, "Checking local url " + response);
                         if (response.contains("Ibeyonde")) {
                             _url.postValue("http://" + c._localIp + "/stream");
+                            Log.i(TAG, "URL value set to " + _url.getValue());
                         }
                         else {
                             getUdpLiveUrl(ctx, uuid);
                         }
-                        Log.i(TAG, "URL value set to " + _url.getValue());
                     }
                 }, new Response.ErrorListener() {
             @Override

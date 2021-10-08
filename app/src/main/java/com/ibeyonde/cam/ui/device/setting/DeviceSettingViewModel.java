@@ -29,8 +29,6 @@ public class DeviceSettingViewModel extends ViewModel {
     private static final String TAG= DeviceSettingViewModel.class.getCanonicalName();
 
     public static final MutableLiveData<Boolean> _device_online = new MutableLiveData<>();
-    public static final MutableLiveData<Boolean> _cam_config = new MutableLiveData<>();
-    public static final Map<String, String> _dev_nv = new HashMap<>();
     public static final Map<String, String> _cam_nv= new HashMap<>();
 
     public void getConfig(Context ctx, String uuid){
@@ -44,38 +42,11 @@ public class DeviceSettingViewModel extends ViewModel {
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
                         try {
-                            _dev_nv.put("history", response.getString("history"));
-                            _dev_nv.put("cloud", response.getString("cloud"));
-                            _dev_nv.put("timezone", response.getString("timezone"));
-                            _dev_nv.put("name", response.getString("name"));
-                            _dev_nv.put("version", response.getString("version"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        //{"history": "true","cloud": "true","timezone": "Asia/Calcutta","name": "Test"}
-                        _device_online.postValue(true);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "getConfig Request failed ," + error.getMessage());
-                _device_online.setValue(false);
-            }
-        });
-        queue.add(stringRequest);
-    }
-
-    public void getCam(Context ctx, String uuid){
-        RequestQueue queue = Volley.newRequestQueue(ctx);
-        Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=getcam";
-
-        JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, localUrl, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d(TAG, response.toString());
-                        try {
+                            _cam_nv.put("history", response.getString("history"));
+                            _cam_nv.put("cloud", response.getString("cloud"));
+                            _cam_nv.put("timezone", response.getString("timezone"));
+                            _cam_nv.put("name", response.getString("name"));
+                            _cam_nv.put("version", response.getString("version"));
                             Log.i(TAG, "quality " + response.getString("quality"));
                             _cam_nv.put("quality",  response.getString("quality"));
                             _cam_nv.put("framesize",  response.getString("framesize"));
@@ -93,24 +64,21 @@ public class DeviceSettingViewModel extends ViewModel {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        //{"0xd3":8,"0x111":0,"0x132":9,"xclk":16,"pixformat":3,"framesize":8,"quality":10,"brightness":0,"contrast":0,"saturation":0,
-                        // "sharpness":0,"special_effect":0,"wb_mode":0,"awb":1,"awb_gain":1,"aec":1,"aec2":0,"ae_level":0,
-                        // "aec_value":168,"agc":1,"agc_gain":0,"gainceiling":0,"bpc":0,"wpc":1,"raw_gma":1,"lenc":1,"hmirror":0,"dcw":1,"colorbar":0}%
-
-                        _cam_config.postValue(true);
+                        //{"history": "true","cloud": "true","timezone": "Asia/Calcutta","name": "Test"}
+                        _device_online.postValue(true);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "getCam Request failed ," + error.getMessage());
-                _cam_config.postValue(false);
+                Log.d(TAG, "getConfig Request failed ," + error.getMessage());
+                _device_online.setValue(false);
             }
         });
         queue.add(stringRequest);
     }
 
     public void cloudConnect(Context ctx, String uuid, String var, String val){
-        if (_dev_nv.get(var).equals(val))return;
+        if (_cam_nv.get(var).equals(val))return;
 
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);

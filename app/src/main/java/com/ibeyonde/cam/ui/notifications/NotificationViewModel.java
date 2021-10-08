@@ -37,7 +37,6 @@ import java.util.Map;
 public class NotificationViewModel extends ViewModel {
     private static final String TAG= NotificationViewModel.class.getCanonicalName();
 
-    public static final MutableLiveData<Hashtable<String, Camera>> _deviceList = new MutableLiveData<>();
     public static final MutableLiveData<Alerts> _alerts = new MutableLiveData<>();
     public static final MutableLiveData<AlertDetails> _alert_details = new MutableLiveData<>();
 
