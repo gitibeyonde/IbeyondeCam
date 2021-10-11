@@ -119,6 +119,9 @@ public class BellAlertFragment extends Fragment {
         notificationViewModel._alert_details.observe(this.getActivity(), new Observer<AlertDetails>() {
             public void onChanged(@Nullable AlertDetails ad) {
                 if (ad == null) return;
+
+                new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
+
                 ArrayList<JSONObject> adlist = ad._alert_details;
                 for (int i=0;i< adlist.size() && i < 10; i++){
                     try {
@@ -128,8 +131,6 @@ public class BellAlertFragment extends Fragment {
                     }
                 }
                 Log.d(TAG, "Bell alert url loading " + ad.getCurrentURL());
-
-                new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
 
                 TimerTask imgRefresh = new TimerTask()
                 {
