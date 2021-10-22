@@ -23,9 +23,14 @@ import java.util.Map;
 
 public class LoginViewModel extends ViewModel {
     private static final String TAG= LoginViewModel.class.getCanonicalName();
-    public static final MutableLiveData<String> _token = new MutableLiveData<>();
+    public static final MutableLiveData<String> _login_token = new MutableLiveData<>();
+    public static final MutableLiveData<String> _register_token = new MutableLiveData<>();
+    public static final MutableLiveData<String> _reset_token = new MutableLiveData<>();
     public static String _email;
     public static String _pass;
+
+    public static final String SUCCESS="SUCCESS";
+    public static final String FAILURE="FAILURE";
 
     // A placeholder username validation check
     public boolean isUserNameValid(String username) {
@@ -44,10 +49,10 @@ public class LoginViewModel extends ViewModel {
         return password != null && password.trim().length() > 5;
     }
 
-    public void login(Context ctx, String email, String password){
+    public void login(Context ctx, String username, String password){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(ctx);
-        String url ="https://ping.ibeyonde.com/api/iot.php?view=login";
+        String url ="https://ping.ibeyonde.com/api/iot.php?view=register";
 
         // Request a string response from the provided URL.
         JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, url, null,
@@ -57,15 +62,15 @@ public class LoginViewModel extends ViewModel {
                         try {
                             Log.d(TAG, "Login response " + response.toString());
                             if (response.getString("message").equals("Success")){
-                                LoginViewModel._token.postValue("SUCCESS");
+                                LoginViewModel._login_token.postValue(SUCCESS);
                             }
                             else {
                                 Log.d(TAG, "Login failed 1");
-                                LoginViewModel._token.postValue("FAILED");
+                                LoginViewModel._login_token.postValue(FAILURE);
                             }
                         } catch (JSONException e) {
                             Log.d(TAG, "Login failed 2 " + e.getMessage());
-                            LoginViewModel._token.postValue("FAILED");
+                            LoginViewModel._login_token.postValue(FAILURE);
                             throw new RuntimeException("Login failed");
                         }
                     }
@@ -73,15 +78,15 @@ public class LoginViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Login failed 3," + error.getMessage());
-                LoginViewModel._token.postValue("FAILED");
+                LoginViewModel._login_token.postValue("FAILED");
             }
         }){
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s",email,password);
-                _email = email;
+                String creds = String.format("%s:%s",username,password);
+                _email = username;
                 _pass = password;
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 params.put("Authorization", auth);
@@ -96,4 +101,88 @@ public class LoginViewModel extends ViewModel {
     }
 
 
+    public void reset(Context ctx, String username){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        String url ="https://ping.ibeyonde.com/api/iot.php?view=reset";
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, "RESET response " + response.toString());
+                            if (response.getString("message").equals("Success")){
+                                LoginViewModel._reset_token.postValue(SUCCESS);
+                            }
+                            else {
+                                Log.d(TAG, "RESET failed 1");
+                                LoginViewModel._reset_token.postValue(FAILURE);
+                            }
+                        } catch (JSONException e) {
+                            Log.d(TAG, "RESET failed 2 " + e.getMessage());
+                            LoginViewModel._reset_token.postValue(FAILURE);
+                            throw new RuntimeException("Login failed");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "RESET failed 3," + error.getMessage());
+                LoginViewModel._reset_token.postValue("FAILED");
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
+
+    public void register(Context ctx, String username, String password, String email, String phone){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        String url ="https://ping.ibeyonde.com/api/iot.php?view=register";
+
+        JSONObject jsonRequest = new JSONObject();
+        try {
+            jsonRequest.put("user_name", username);
+            jsonRequest.put("user_name", password);
+            jsonRequest.put("user_email", email);
+            jsonRequest.put("user_phone", phone);
+            jsonRequest.put("user_password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.POST, url, jsonRequest,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d(TAG, "Register response " + response.toString());
+                            if (response.getString("message").equals("Success")){
+                                LoginViewModel._register_token.postValue(SUCCESS);
+                            }
+                            else {
+                                Log.d(TAG, "Register failed 1");
+                                LoginViewModel._register_token.postValue(FAILURE);
+                            }
+                        } catch (JSONException e) {
+                            Log.d(TAG, "Register failed 2 " + e.getMessage());
+                            LoginViewModel._register_token.postValue(FAILURE);
+                            throw new RuntimeException("Register failed");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Register failed 3," + error.getMessage());
+                LoginViewModel._register_token.postValue("FAILED");
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
 }

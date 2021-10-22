@@ -53,8 +53,8 @@ import java.util.TimerTask;
 public class BellAlertFragment extends Fragment {
     private static final String TAG= BellAlertFragment.class.getCanonicalName();
 
-    public static String _cameraId;
-    public static String _dateTime;
+    public static volatile String _cameraId;
+    public static volatile String _dateTime;
     private LoginViewModel loginViewModel;
     private DeviceViewModel deviceViewModel;
     private NotificationViewModel notificationViewModel;
@@ -142,6 +142,7 @@ public class BellAlertFragment extends Fragment {
                 Timer t = new Timer();
                 t.scheduleAtFixedRate(imgRefresh, 0, 1000);
 
+
                 for (int i=0;i< 10; i++){
                     navButtons[i].setOnClickListener(navClickListener);
                 }
@@ -149,13 +150,13 @@ public class BellAlertFragment extends Fragment {
         });
 
 
-        liveViewModel._url.observe(this.getActivity(), new Observer<String>() {
-            public void onChanged(@Nullable String url) {
+        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
+            public void onChanged(@Nullable Boolean url) {
                 Log.i(TAG, "Live URL = " + url);
-                if (url.toString().length() > 10) {
+                if (liveViewModel._url.length() > 10) {
                     try {
                         if (rc != null)rc.stop();
-                        rc = new MjpegRunner(new URL(url), handler, binding.cameraLive);
+                        rc = new MjpegRunner(new URL(liveViewModel._url), handler, binding.cameraLive);
                         Thread t = new Thread(rc);
                         t.start();
                     } catch (Exception e) {
@@ -200,6 +201,7 @@ public class BellAlertFragment extends Fragment {
     public void onStop() {
         Log.i(TAG, "on stop ");
         if (rc != null)rc.stop();
+        liveViewModel._url = "";
         super.onStop();
     }
 
@@ -208,6 +210,7 @@ public class BellAlertFragment extends Fragment {
     public void onDetach() {
         Log.i(TAG, "on detach ");
         if (rc != null)rc.stop();
+        liveViewModel._url = "";
         super.onDetach();
     }
 

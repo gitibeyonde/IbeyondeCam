@@ -31,8 +31,8 @@ import java.util.Map;
 public class LiveViewModel extends ViewModel {
     private static final String TAG= LiveViewModel.class.getCanonicalName();
 
-    public static final Hashtable<String, Camera> _deviceList = new Hashtable<>();
-    public static final MutableLiveData<String> _url = new MutableLiveData<>();
+    public static volatile MutableLiveData<Boolean> _url_updated = new MutableLiveData<>();
+    public static volatile String _url = null;
 
 
     public void getLiveUrl(Context ctx, String uuid){
@@ -52,7 +52,7 @@ public class LiveViewModel extends ViewModel {
                                     JSONObject json = jsonArray.getJSONObject(i);
                                     Log.d(TAG, "deviceList Device = " + json.toString());
                                     Camera c = new Camera(json);
-                                    _deviceList.put(c._uuid, c);
+                                    DeviceViewModel._deviceList.put(c._uuid, c);
                                 }
                                 getLocalLiveUrl_(ctx, uuid);
                             } catch (JSONException e) {
@@ -84,7 +84,7 @@ public class LiveViewModel extends ViewModel {
 
     public void getLocalLiveUrl_(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
-        Camera c = DeviceViewModel.getCamera(uuid);
+        Camera c = DeviceViewModel._deviceList.get(uuid);
         String localUrl ="http://" + c._localIp + "/";
 
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
@@ -93,8 +93,9 @@ public class LiveViewModel extends ViewModel {
                     public void onResponse(String response) {
                         Log.i(TAG, "Checking local url " + response);
                         if (response.contains("Ibeyonde")) {
-                            _url.postValue("http://" + c._localIp + "/stream");
-                            Log.i(TAG, "URL value set to " + _url.getValue());
+                            _url="http://" + c._localIp + "/stream";
+                            _url_updated.postValue(true);
+                            Log.i(TAG, "URL value set to " + _url);
                         }
                         else {
                             getUdpLiveUrl(ctx, uuid);
@@ -120,11 +121,12 @@ public class LiveViewModel extends ViewModel {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String url) {
-                        Log.i(TAG, "URL value ?? " + _url.getValue());
+                        Log.i(TAG, "URL value ?? " + _url);
                         url = url.replaceAll("^\"|\"$", "");
                         url = url.replaceAll("\\\\", "");
-                        Log.i(TAG, "URL value set to " + _url.getValue());
-                        _url.setValue(url);
+                        Log.i(TAG, "URL value set to " + _url);
+                        _url = url;
+                        _url_updated.postValue(true);
                     }
                 }, new Response.ErrorListener() {
             @Override

@@ -44,6 +44,7 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
             else {
                 URL urlConnection = new URL(url);
                 HttpURLConnection connection = (HttpURLConnection) urlConnection.openConnection();
+                connection.setConnectTimeout(2000);
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 myBitmap = BitmapFactory.decodeStream(input);

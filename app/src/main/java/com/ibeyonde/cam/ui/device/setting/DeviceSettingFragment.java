@@ -43,6 +43,7 @@ public class DeviceSettingFragment extends Fragment {
         binding = FragmentDeviceSettingBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
 
+        mViewModel.getLatestVersion(getContext());
         mViewModel.getConfig(getContext(), _cameraId);
 
         Spinner frameSize = binding.frameSize;
@@ -94,6 +95,7 @@ public class DeviceSettingFragment extends Fragment {
                 binding.motionHistory.setEnabled(true);
                 binding.camName.setAlpha(1f);
                 binding.camName.setEnabled(true);
+                binding.version.setText(mViewModel._cam_nv.get("version"));
                 binding.timeZone.setAlpha(1f);
                 binding.timeZone.setEnabled(true);
                 binding.camName.setText(mViewModel._cam_nv.get("name"));
@@ -174,6 +176,22 @@ public class DeviceSettingFragment extends Fragment {
                     public void onNothingSelected(AdapterView<?> parent) {}
                 });
 
+                int current_version = Integer.parseInt(mViewModel._cam_nv.get("version"));
+                ImageButton upgrade = binding.upgradeButton;
+                if (current_version < mViewModel._latest_version) {
+                    upgrade.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mViewModel.command(getContext(), "upgrade", _cameraId);
+                        }
+                    });
+                    upgrade.setVisibility(View.VISIBLE);
+                    binding.upgradeAvailable.setVisibility(View.VISIBLE);
+                }
+                else {
+                    upgrade.setVisibility(View.INVISIBLE);
+                    binding.upgradeAvailable.setVisibility(View.INVISIBLE);
+                }
             }
         });
 
@@ -203,13 +221,6 @@ public class DeviceSettingFragment extends Fragment {
             }
         });
 
-        ImageButton upgrade = binding.upgradeButton;
-        upgrade.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewModel.command(getContext(), "upgrade", _cameraId);
-            }
-        });
         return root;
     }
 

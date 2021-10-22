@@ -65,7 +65,7 @@ public class SplashActivity extends AppCompatActivity {
             finish();
         }
 
-        LoginViewModel._token.observe(this, new Observer<String>() {
+        LoginViewModel._login_token.observe(this, new Observer<String>() {
             public void onChanged(@Nullable String s) {
                 Log.i(TAG, "token changed Value = " + s);
                 if ("FAILED".equals(s)){

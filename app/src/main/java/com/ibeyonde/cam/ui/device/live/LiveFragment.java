@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 public class LiveFragment extends Fragment {
     private static final String TAG= LiveFragment.class.getCanonicalName();
 
-    public static String _cameraId;
+    public static volatile String _cameraId;
 
     private LiveViewModel liveViewModel;
     private FragmentLiveBinding binding;
@@ -58,13 +58,13 @@ public class LiveFragment extends Fragment {
             StrictMode.setThreadPolicy(policy);
         }
 
-        liveViewModel._url.observe(this.getActivity(), new Observer<String>() {
-            public void onChanged(@Nullable String url) {
-                Log.i(TAG, "Live URL = " + url);
-                if (url.toString().length() > 10) {
+        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
+            public void onChanged(@Nullable Boolean url_updated) {
+                Log.i(TAG, "Live URL = " + liveViewModel._url);
+                if (liveViewModel._url.length() > 10) {
                     try {
                         handler = new Handler(getContext().getMainLooper());
-                        rc = new MjpegRunner(new URL(url), handler, binding.cameraLive);
+                        rc = new MjpegRunner(new URL(liveViewModel._url), handler, binding.cameraLive);
                         Thread t = new Thread(rc);
                         t.start();
                     } catch (Exception e) {
@@ -86,6 +86,7 @@ public class LiveFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         liveViewModel.command(getContext(), "stop", _cameraId);
+        liveViewModel._url = "";
         if (rc != null)rc.stop();
     }
 
@@ -106,6 +107,7 @@ public class LiveFragment extends Fragment {
     public void onStop() {
         Log.i(TAG, "on stop ");
         liveViewModel.command(getContext(), "stop", _cameraId);
+        liveViewModel._url = "";
         if (rc != null)rc.stop();
         super.onStop();
     }

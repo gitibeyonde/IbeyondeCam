@@ -30,6 +30,7 @@ public class DeviceSettingViewModel extends ViewModel {
 
     public static final MutableLiveData<Boolean> _device_online = new MutableLiveData<>();
     public static final Map<String, String> _cam_nv= new HashMap<>();
+    public static int _latest_version=-1;
 
     public void getConfig(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
@@ -100,6 +101,26 @@ public class DeviceSettingViewModel extends ViewModel {
         queue.add(stringRequest);
     }
 
+    public void getLatestVersion(Context ctx){
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        String localUrl ="http://ping.ibeyonde.com/api/esp32_scb.php";
+
+        Log.i(TAG, localUrl);
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, "getLatestVersion " + response);
+                        _latest_version = Integer.parseInt(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "getLatestVersion Request failed ," + error.getMessage());
+            }
+        });
+        queue.add(stringRequest);
+    }
     public void camConnect(Context ctx, String uuid, String var, String val){
         if (_cam_nv.get(var).equals(val))return;
         RequestQueue queue = Volley.newRequestQueue(ctx);

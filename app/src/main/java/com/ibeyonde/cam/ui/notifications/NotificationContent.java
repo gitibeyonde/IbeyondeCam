@@ -23,7 +23,7 @@ public class NotificationContent {
             NotificationContent.PlaceHolder hi = null;
             try {
                 Log.d(TAG, h.toString());
-                hi = new NotificationContent.PlaceHolder(h.getInt("id"), h.getString("uuid"), h.getString("created"), h.getString("image"));
+                hi = new NotificationContent.PlaceHolder(h.getInt("id"), h.getString("uuid"), h.getString("uuid"), h.getString("created"), h.getString("image"));
                 _alert_list.add(hi);
             } catch (JSONException jsonException) {
                 jsonException.printStackTrace();
@@ -55,12 +55,14 @@ public class NotificationContent {
     public static class PlaceHolder {
         public final int id;
         public final String uuid;
+        public final String name;
         public final String timestamp;
         public final String url;
 
-        public PlaceHolder(int id, String uuid, String timestamp, String url) {
+        public PlaceHolder(int id, String uuid, String name, String timestamp, String url) {
             this.id = id;
             this.uuid = uuid;
+            this.name = name;
             this.timestamp = timestamp;
             this.url = url;
         }

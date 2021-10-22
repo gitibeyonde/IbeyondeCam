@@ -5,54 +5,63 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IbeyondeCam">
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@android:drawable/ic_popup_reminder" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-        <!-- [START fcm_default_channel]
+        <!--
+ [START fcm_default_channel]
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
         [END fcm_default_channel]
         <meta-data
         android:name="firebase_messaging_auto_init_enabled"
-        android:value="false" /> -->
+        android:value="false" />
+        -->
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
+
         <activity
             android:name=".ui.login.LoginActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.login.RegistrationActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.login.ResetActivity"
             android:exported="true" />
         <activity
             android:name=".ui.login.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name">
-        </activity>
+            android:label="@string/app_name"></activity>
+
         <service
             android:name=".utils.CCFirebaseMessagingService"
             android:exported="false">
@@ -62,4 +71,5 @@
         </service>
         <service android:name=".bt.SerialService" />
     </application>
+
 </manifest>

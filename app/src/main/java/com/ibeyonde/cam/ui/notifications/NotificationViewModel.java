@@ -37,8 +37,8 @@ import java.util.Map;
 public class NotificationViewModel extends ViewModel {
     private static final String TAG= NotificationViewModel.class.getCanonicalName();
 
-    public static final MutableLiveData<Alerts> _alerts = new MutableLiveData<>();
-    public static final MutableLiveData<AlertDetails> _alert_details = new MutableLiveData<>();
+    public static volatile MutableLiveData<Alerts> _alerts = new MutableLiveData<>();
+    public static volatile MutableLiveData<AlertDetails> _alert_details = new MutableLiveData<>();
 
     /**
      * [{"id":"529667","type":"bp","uuid":"3105613C","user_name":null,"image":"3105613C\/2021\/09\/14\/06_21_54\/eqpSso.jpg","value":"0.00","comment":"",
@@ -91,6 +91,7 @@ public class NotificationViewModel extends ViewModel {
 
 
     public void getBellAlertDetails(Context ctx, String uuid, String date_time){
+        _alert_details = new MutableLiveData<>();
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Log.d(TAG, "getBellAlertDetails " + date_time);
         Date d = new Date();

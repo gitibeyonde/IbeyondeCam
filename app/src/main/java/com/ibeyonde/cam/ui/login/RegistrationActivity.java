@@ -20,31 +20,27 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.ibeyonde.cam.MainActivity;
-import com.ibeyonde.cam.databinding.ActivityLoginBinding;
+import com.ibeyonde.cam.databinding.ActivityRegistrationBinding;
 
-import java.io.File;
-import java.io.FileWriter;
-
-public class LoginActivity extends AppCompatActivity {
-    private static final String TAG=LoginActivity.class.getCanonicalName();
+public class RegistrationActivity extends AppCompatActivity {
+    private static final String TAG=RegistrationActivity.class.getCanonicalName();
 
 
     private LoginViewModel loginViewModel;
-    private ActivityLoginBinding binding;
+    private ActivityRegistrationBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         loginViewModel =  new ViewModelProvider(this).get(LoginViewModel.class);
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
+        final Button registerButton = binding.register;
         final ProgressBar loadingProgressBar = binding.loading;
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -56,38 +52,30 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (loginViewModel.isPasswordValid(passwordEditText.getText().toString()) &&
                         loginViewModel.isUserNameValid(usernameEditText.getText().toString())) {
-                    loginButton.setEnabled(true);
+                    registerButton.setEnabled(true);
                 }
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 InputMethodManager imm = (InputMethodManager) getBaseContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(getApplicationContext(), usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
+                loginViewModel.register(getApplicationContext(), usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString(), binding.email.getText().toString(), binding.phone.getText().toString());
                 Log.i(TAG, "onClick user=" + usernameEditText.getText().toString() + " pass=" + passwordEditText.getText().toString());
             }
         });
 
-        binding.regLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplication(), RegistrationActivity.class);
-                startActivity(i);
-                finish();
-            }
-        });
 
-        binding.resetLink.setOnClickListener(new View.OnClickListener() {
+        binding.loginLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplication(), ResetActivity.class);
+                Intent i = new Intent(getApplication(), LoginActivity.class);
                 startActivity(i);
                 finish();
             }
@@ -96,23 +84,12 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel._login_token.observe(this, new Observer<String>() {
             public void onChanged(@Nullable String s) {
                 Log.i(TAG, "Login Activity token = " + s);
+                loadingProgressBar.setVisibility(View.INVISIBLE);
                 if ("FAILED".equals(s)) {
-                    Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
-                    loadingProgressBar.setVisibility(View.INVISIBLE);
-                    usernameEditText.setText(null);
-                    passwordEditText.setText(null);
+                    Toast.makeText(getApplicationContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "Welcome to Ibeyonde CleverCam", Toast.LENGTH_SHORT).show();
-                    File file = new File(getApplicationContext().getFilesDir(), ".cred");
-                    Log.i(TAG, "Saving credentials to " + file.getAbsoluteFile());
-                    try (FileWriter fo = new FileWriter(file)) {
-                        String cred = usernameEditText.getText().toString() + "%%" + passwordEditText.getText().toString();
-                        fo.write(cred);
-                        Log.i(TAG, "Creds= " + cred);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    Intent i = new Intent(getApplication(), MainActivity.class);
+                    Intent i = new Intent(getApplication(), LoginActivity.class);
                     startActivity(i);
                     finish();
                 }

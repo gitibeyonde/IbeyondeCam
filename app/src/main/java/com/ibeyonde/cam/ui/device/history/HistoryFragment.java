@@ -24,8 +24,8 @@ import com.ibeyonde.cam.utils.History;
 public class HistoryFragment extends Fragment {
     private static final String TAG= HistoryFragment.class.getCanonicalName();
 
-    public static String _cameraId;
-    public static int _list_size=20;
+    public static volatile String _cameraId;
+    public static volatile int _list_size=20;
     private HistoryViewModel historyViewModel;
 
     @Override

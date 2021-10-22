@@ -49,7 +49,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
             }
         };
         Timer t = new Timer();
-        t.scheduleAtFixedRate(imgRefresh, 0, 2000);
+        t.scheduleAtFixedRate(imgRefresh, 0, 1000);
     }
 
     @Override
