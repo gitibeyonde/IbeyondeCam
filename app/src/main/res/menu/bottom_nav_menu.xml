@@ -3,27 +3,27 @@
 
     <item
         android:id="@+id/navigation_device"
-        android:icon="@android:drawable/ic_menu_gallery"
+        android:icon="@drawable/tt_autoawesome_motion"
         android:title="@string/title_device" />
 
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@android:drawable/ic_menu_info_details"
+        android:icon="@drawable/tt_notification_active"
         android:title="@string/title_notifications" />
 
     <item
         android:id="@+id/navigation_bluetooth"
-        android:icon="@android:drawable/stat_sys_data_bluetooth"
+        android:icon="@drawable/tt_settings_bluetooth"
         android:title="@string/title_bluetooth" />
 
     <item
         android:id="@+id/navigation_setting"
-        android:icon="@android:drawable/ic_menu_manage"
+        android:icon="@drawable/tt_handyman"
         android:title="@string/title_setting" />
 
     <item
         android:id="@+id/bell_alert"
-        android:icon="@android:drawable/ic_dialog_alert"
+        android:icon="@drawable/tt_notification_active"
         android:title="@string/title_alert_details"
         android:visible="false"/>
 </menu>

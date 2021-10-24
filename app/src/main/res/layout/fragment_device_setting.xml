@@ -62,7 +62,7 @@
                     android:id="@+id/camNameButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/enter" />
+                    android:src="@drawable/tt_check" />
 
             </TableRow>
 
@@ -153,7 +153,8 @@
                     android:id="@+id/deleteHistory"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/deletebin" />
+                    android:layout_gravity="right"
+                    android:src="@drawable/tt_delete_forever" />
 
 
             </TableRow>
@@ -267,7 +268,8 @@
                     android:id="@+id/restartButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/play" />
+                    android:layout_gravity="right"
+                    android:src="@drawable/tt_check" />
 
             </TableRow>
 
@@ -291,7 +293,8 @@
                     android:id="@+id/upgradeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/play" />
+                    android:layout_gravity="right"
+                    android:src="@drawable/tt_check" />
 
             </TableRow>
 
@@ -315,7 +318,8 @@
                     android:id="@+id/resetButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/play" />
+                    android:layout_gravity="right"
+                    android:src="@drawable/tt_check" />
 
             </TableRow>
 
