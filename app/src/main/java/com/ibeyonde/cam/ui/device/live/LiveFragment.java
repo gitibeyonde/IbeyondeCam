@@ -68,7 +68,7 @@ public class LiveFragment extends Fragment {
                         Thread t = new Thread(rc);
                         t.start();
                     } catch (Exception e) {
-                        Log.e(TAG,"Live URL streamaing failed");
+                        Log.e(TAG,"Live URL streaming failed");
                         if (rc != null)rc.stop();
                     }
                 }
@@ -85,7 +85,6 @@ public class LiveFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        liveViewModel.command(getContext(), "stop", _cameraId);
         liveViewModel._url = "";
         if (rc != null)rc.stop();
     }
@@ -106,7 +105,6 @@ public class LiveFragment extends Fragment {
     @Override
     public void onStop() {
         Log.i(TAG, "on stop ");
-        liveViewModel.command(getContext(), "stop", _cameraId);
         liveViewModel._url = "";
         if (rc != null)rc.stop();
         super.onStop();

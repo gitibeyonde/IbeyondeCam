@@ -27,10 +27,8 @@
     <style name="TimestampStyle">
         <item name="android:fontFamily">serif</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">@color/indian_red</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:typeface">normal</item>
     </style>
 

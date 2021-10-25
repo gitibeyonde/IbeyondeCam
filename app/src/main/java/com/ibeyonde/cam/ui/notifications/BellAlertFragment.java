@@ -171,7 +171,8 @@ public class BellAlertFragment extends Fragment {
             }
         });
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(_cameraId  + " Bell Alert ");
+        Camera c = DeviceViewModel.getCamera(_cameraId);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Bell Alert ");
 
         Log.i(TAG, "on create view ");
         return root;

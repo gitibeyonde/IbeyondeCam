@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
@@ -19,25 +18,18 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
     private String url;
     private ImageView imageView;
-    private static MessageDigest digest;
     private static final HashMap<String, Bitmap> s_cache = new HashMap<>();
 
     public ImageLoadTask(String url, ImageView imageView) {
         this.url = url;
         this.imageView = imageView;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     protected Bitmap doInBackground(Void... params) {
         try {
-            digest.update(url.getBytes());
-            String messageDigest = new String(digest.digest());
-            Bitmap myBitmap = s_cache.get(messageDigest);
+            String urlSnippet = url.substring(url.indexOf("data.ibeyonde"), url.indexOf("?"));
+            Bitmap myBitmap = s_cache.get(urlSnippet);
             if (myBitmap != null){
                 return myBitmap;
             }
@@ -48,7 +40,7 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
                 connection.connect();
                 InputStream input = connection.getInputStream();
                 myBitmap = BitmapFactory.decodeStream(input);
-                s_cache.put(messageDigest, myBitmap);
+                s_cache.put(urlSnippet, myBitmap);
                 input.close();
                 connection.disconnect();
                 return myBitmap;
@@ -62,6 +54,7 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
     @Override
     protected void onPostExecute(Bitmap result) {
         super.onPostExecute(result);
+        if (result == null) return;
         imageView.setImageBitmap(result);
     }
 

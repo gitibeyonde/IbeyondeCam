@@ -32,7 +32,7 @@ public class NotificationRecyclerViewAdapter  extends RecyclerView.Adapter<Notif
         Log.d(TAG, hi.toString());
         holder.timestamp.setText(hi.timestamp);
         Log.d(TAG, hi.id + " id");
-        holder.id.setText(hi.id + "/" + hi.uuid);
+        holder.id.setText(hi.name + "-" + hi.id);
         holder.picture.setContentDescription(hi.uuid + "%%" + hi.timestamp);
         new ImageLoadTask(hi.url, holder.picture).execute();
     }

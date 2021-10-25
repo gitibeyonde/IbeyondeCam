@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
@@ -103,11 +104,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(bellAlertFragment._cameraId  + " Bell Alert ");
     }
 
-    public void deviceListClick(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager();
-        fragmentManager.popBackStack();
-        getSupportActionBar().setTitle( "Device List");
-    }
 
     public void cameraLiveClick(View view) {
         Log.i(TAG, "cameraLiveClick On Click =  " + view.getContentDescription());

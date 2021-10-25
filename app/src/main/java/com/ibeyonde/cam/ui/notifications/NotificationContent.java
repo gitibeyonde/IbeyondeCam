@@ -2,6 +2,9 @@ package com.ibeyonde.cam.ui.notifications;
 
 import android.util.Log;
 
+import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
+import com.ibeyonde.cam.utils.Camera;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,7 +26,9 @@ public class NotificationContent {
             NotificationContent.PlaceHolder hi = null;
             try {
                 Log.d(TAG, h.toString());
-                hi = new NotificationContent.PlaceHolder(h.getInt("id"), h.getString("uuid"), h.getString("uuid"), h.getString("created"), h.getString("image"));
+                String uuid = h.getString("uuid");
+                Camera c = DeviceViewModel.getCamera(uuid);
+                hi = new NotificationContent.PlaceHolder(h.getInt("id"), uuid, c._name, h.getString("created"), h.getString("image"));
                 _alert_list.add(hi);
             } catch (JSONException jsonException) {
                 jsonException.printStackTrace();
