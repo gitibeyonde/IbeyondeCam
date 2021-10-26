@@ -1,5 +1,6 @@
 package com.ibeyonde.cam.ui.device.setting;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,6 +24,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceSettingBinding;
+import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
+import com.ibeyonde.cam.utils.Camera;
 
 public class DeviceSettingFragment extends Fragment {
     private static final String TAG= DeviceSettingFragment.class.getCanonicalName();
@@ -77,6 +80,8 @@ public class DeviceSettingFragment extends Fragment {
             @Override
             public void onChanged(Boolean h) {
                 Log.i(TAG, h.toString() + " Device Online = " + _cameraId);
+                Camera c = DeviceViewModel.getCamera(_cameraId);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Settings ");
                 if(!h)return;
                 selectSpinnerItemByValue(binding.timeZone, mViewModel._cam_nv.get("timezone"));
                 String cc = mViewModel._cam_nv.get("cloud");

@@ -3,6 +3,7 @@ package com.ibeyonde.cam.ui.device.history;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,6 +17,8 @@ import android.view.ViewGroup;
 
 import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.databinding.FragmentHistoryListBinding;
+import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
+import com.ibeyonde.cam.utils.Camera;
 import com.ibeyonde.cam.utils.History;
 
 /**
@@ -51,10 +54,11 @@ public class HistoryFragment extends Fragment {
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
                     recyclerView.setAdapter(new HistoryRecyclerViewAdapter(HistoryMotionContent._item_list));
                 }
+                Camera c = DeviceViewModel.getCamera(_cameraId);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " History ");
             }
         });
 
-        getActivity().setTitle( _cameraId + " History ");
 
         /**OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
