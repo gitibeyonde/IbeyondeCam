@@ -33,7 +33,7 @@ import java.util.Map;
 public class DeviceViewModel extends ViewModel {
     private static final String TAG= DeviceViewModel.class.getCanonicalName();
     public static final Hashtable<String, Camera> _deviceList = new Hashtable<>();
-    public static final MutableLiveData<Short> _history = new MutableLiveData<>();
+    public final MutableLiveData<Short> _history = new MutableLiveData<>();
 
     public static Camera getCamera(String uuid){
         if (_deviceList.size() > 0) {

@@ -149,14 +149,13 @@ public class BellAlertFragment extends Fragment {
             }
         });
 
-
+        rc = new MjpegRunner(handler, binding.cameraLive);
         liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
             public void onChanged(@Nullable Boolean url) {
                 Log.i(TAG, "Live URL = " + url);
                 if (liveViewModel._url.length() > 10) {
                     try {
-                        if (rc != null)rc.stop();
-                        rc = new MjpegRunner(new URL(liveViewModel._url), handler, binding.cameraLive);
+                        rc.setURL(new URL(liveViewModel._url));
                         Thread t = new Thread(rc);
                         t.start();
                     } catch (Exception e) {
@@ -164,6 +163,9 @@ public class BellAlertFragment extends Fragment {
                         if (rc != null)rc.stop();
                     }
                     binding.progressBar.setVisibility(View.GONE);
+
+                    Camera c = DeviceViewModel.getCamera(_cameraId);
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Bell Alert ");
                 }
                 else {
                     if (rc != null)rc.stop();
@@ -171,48 +173,30 @@ public class BellAlertFragment extends Fragment {
             }
         });
 
-        Camera c = DeviceViewModel.getCamera(_cameraId);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Bell Alert ");
-
         Log.i(TAG, "on create view ");
         return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        notificationViewModel._alert_details.postValue(null);
-        if (rc != null)rc.stop();
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(TAG, "on start ");
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.i(TAG, "on resume ");
+        rc.resume();
     }
 
     @Override
-    public void onStop() {
-        Log.i(TAG, "on stop ");
-        if (rc != null)rc.stop();
-        liveViewModel._url = "";
-        super.onStop();
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "on pause ");
+        rc.pause();
     }
 
-
     @Override
-    public void onDetach() {
-        Log.i(TAG, "on detach ");
+    public void onDestroyView() {
+        Log.i(TAG, "on onDestroyView ");
         if (rc != null)rc.stop();
-        liveViewModel._url = "";
-        super.onDetach();
+        notificationViewModel._alert_details.setValue(null);
+        super.onDestroyView();
     }
 
 

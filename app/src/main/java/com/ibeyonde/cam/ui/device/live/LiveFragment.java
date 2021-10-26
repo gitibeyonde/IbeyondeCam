@@ -20,12 +20,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
 import com.ibeyonde.cam.databinding.FragmentLiveBinding;
+import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
+import com.ibeyonde.cam.utils.Camera;
 
 import java.net.URL;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -43,34 +47,39 @@ public class LiveFragment extends Fragment {
     static MjpegRunner rc;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        liveViewModel =
-                new ViewModelProvider(this).get(LiveViewModel.class);
+        liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
         binding = FragmentLiveBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        binding.cameraLabel.setText(_cameraId);
+        liveViewModel.getLiveUrl(getContext(), _cameraId);
 
-        if (android.os.Build.VERSION.SDK_INT > 9)
-        {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
+        handler = new Handler(getContext().getMainLooper());
+        rc = new MjpegRunner(handler, binding.cameraLive);
 
         liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
             public void onChanged(@Nullable Boolean url_updated) {
-                Log.i(TAG, "Live URL = " + liveViewModel._url);
                 if (liveViewModel._url.length() > 10) {
+                    //liveViewModel._url_updated.removeObserver(this::onChanged);
+                    Log.i(TAG, "Live URL = " + liveViewModel._url);
                     try {
-                        handler = new Handler(getContext().getMainLooper());
-                        rc = new MjpegRunner(new URL(liveViewModel._url), handler, binding.cameraLive);
+                        rc.setURL(new URL(liveViewModel._url));
                         Thread t = new Thread(rc);
                         t.start();
                     } catch (Exception e) {
                         Log.e(TAG,"Live URL streaming failed");
                         if (rc != null)rc.stop();
                     }
+                    Camera c = DeviceViewModel.getCamera(_cameraId);
+                    binding.cameraLabel.setText(c._name);
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Live ");
                 }
                 else {
                     if (rc != null)rc.stop();
@@ -83,39 +92,23 @@ public class LiveFragment extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        liveViewModel._url = "";
-        if (rc != null)rc.stop();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(TAG, "on start ");
-        liveViewModel.getLiveUrl(getContext(), _cameraId);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         Log.i(TAG, "on resume ");
+        rc.resume();
     }
 
     @Override
-    public void onStop() {
-        Log.i(TAG, "on stop ");
-        liveViewModel._url = "";
-        if (rc != null)rc.stop();
-        super.onStop();
+    public void onPause() {
+        super.onPause();
+        Log.i(TAG, "on pause ");
+        rc.pause();
     }
-
 
     @Override
-    public void onDetach() {
-        Log.i(TAG, "on detach ");
+    public void onDestroyView() {
+        Log.i(TAG, "on onDestroyView ");
         if (rc != null)rc.stop();
-        super.onDetach();
+        super.onDestroyView();
     }
-
 }

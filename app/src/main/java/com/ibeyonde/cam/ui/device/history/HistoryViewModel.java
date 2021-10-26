@@ -27,7 +27,7 @@ import java.util.Map;
 public class HistoryViewModel extends ViewModel {
     private static final String TAG= HistoryViewModel.class.getCanonicalName();
 
-    public static final MutableLiveData<History> _history = new MutableLiveData<>();
+    public final MutableLiveData<History> _history = new MutableLiveData<>();
 
     public void getHistoryOn(Context ctx, String uuid, String date, int hour, int size){
         RequestQueue queue = Volley.newRequestQueue(ctx);

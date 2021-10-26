@@ -31,8 +31,8 @@ import java.util.Map;
 public class LiveViewModel extends ViewModel {
     private static final String TAG= LiveViewModel.class.getCanonicalName();
 
-    public static volatile MutableLiveData<Boolean> _url_updated = new MutableLiveData<>();
-    public static volatile String _url = null;
+    public final MutableLiveData<Boolean> _url_updated = new MutableLiveData<>();
+    public static String _url = null;
 
 
     public void getLiveUrl(Context ctx, String uuid){
@@ -54,7 +54,7 @@ public class LiveViewModel extends ViewModel {
                                     Camera c = new Camera(json);
                                     DeviceViewModel._deviceList.put(c._uuid, c);
                                 }
-                                getLocalLiveUrl_(ctx, uuid);
+                                getLocalLiveUrl(ctx, uuid);
                             } catch (JSONException e) {
                                 Log.i(TAG, "deviceList Device List" + e.getMessage());
                             }
@@ -77,15 +77,16 @@ public class LiveViewModel extends ViewModel {
             queue.add(stringRequest);
         }
         else {
-            getLocalLiveUrl_(ctx, uuid);
+            getLocalLiveUrl(ctx, uuid);
         }
     }
 
 
-    public void getLocalLiveUrl_(Context ctx, String uuid){
+    private void getLocalLiveUrl(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel._deviceList.get(uuid);
         String localUrl ="http://" + c._localIp + "/";
+        Log.d(TAG, "Local Live Request = " + localUrl);
 
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
                 new Response.Listener<String>() {
@@ -94,8 +95,8 @@ public class LiveViewModel extends ViewModel {
                         Log.i(TAG, "Checking local url " + response);
                         if (response.contains("Ibeyonde")) {
                             _url="http://" + c._localIp + "/stream";
-                            _url_updated.postValue(true);
-                            Log.i(TAG, "URL value set to " + _url);
+                            _url_updated.setValue(true);
+                            Log.i(TAG, "Local URL value set to " + _url);
                         }
                         else {
                             getUdpLiveUrl(ctx, uuid);
@@ -105,14 +106,12 @@ public class LiveViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Local Live Request failed ," + error.getMessage());
-                getUdpLiveUrl(ctx, uuid);
             }
         });
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
     }
 
-    public void getUdpLiveUrl(Context ctx, String uuid){
+    private void getUdpLiveUrl(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         String url ="https://ping.ibeyonde.com/api/iot.php?view=live&quality=HINI&uuid=" + uuid;
 
@@ -124,7 +123,7 @@ public class LiveViewModel extends ViewModel {
                         Log.i(TAG, "URL value ?? " + _url);
                         url = url.replaceAll("^\"|\"$", "");
                         url = url.replaceAll("\\\\", "");
-                        Log.i(TAG, "URL value set to " + _url);
+                        Log.i(TAG, "Remote URL value set to " + _url);
                         _url = url;
                         _url_updated.postValue(true);
                     }
