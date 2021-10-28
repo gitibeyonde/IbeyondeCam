@@ -78,7 +78,7 @@ public class DeviceSettingViewModel extends ViewModel {
         queue.add(stringRequest);
     }
 
-    public void cloudConnect(Context ctx, String uuid, String var, String val){
+    public void applyDeviceConfig(Context ctx, String uuid, String var, String val){
         if (_cam_nv.get(var).equals(val))return;
 
         RequestQueue queue = Volley.newRequestQueue(ctx);
@@ -121,7 +121,7 @@ public class DeviceSettingViewModel extends ViewModel {
         });
         queue.add(stringRequest);
     }
-    public void camConnect(Context ctx, String uuid, String var, String val){
+    public void applyCamConfig(Context ctx, String uuid, String var, String val){
         if (_cam_nv.get(var).equals(val))return;
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);

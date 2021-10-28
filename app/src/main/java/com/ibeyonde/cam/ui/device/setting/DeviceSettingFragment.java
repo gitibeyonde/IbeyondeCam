@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.icu.util.TimeZone;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceSettingBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
@@ -119,7 +117,7 @@ public class DeviceSettingFragment extends Fragment {
                 cloudConnect.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewModel.cloudConnect(getContext(), _cameraId, "cloud", binding.cloudConnect.isEnabled() ? "true" : "false");
+                        mViewModel.applyDeviceConfig(getContext(), _cameraId, "cloud", binding.cloudConnect.isEnabled() ? "true" : "false");
                     }
                 });
 
@@ -127,7 +125,7 @@ public class DeviceSettingFragment extends Fragment {
                 motionHistory.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewModel.cloudConnect(getContext(), _cameraId, "history", binding.cloudConnect.isEnabled() ? "true" : "false");
+                        mViewModel.applyDeviceConfig(getContext(), _cameraId, "history", binding.cloudConnect.isEnabled() ? "true" : "false");
                     }
                 });
 
@@ -136,7 +134,7 @@ public class DeviceSettingFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Log.d(TAG, binding.camName.getText().toString());
-                        mViewModel.cloudConnect(getContext(), _cameraId, "cn", binding.camName.getText().toString());
+                        mViewModel.applyDeviceConfig(getContext(), _cameraId, "cn", binding.camName.getText().toString());
                     }
                 });
 
@@ -145,7 +143,7 @@ public class DeviceSettingFragment extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Log.d(TAG, sprTz.getSelectedItem().toString());
-                        mViewModel.cloudConnect(getContext(), _cameraId, "timezone", sprTz.getSelectedItem().toString());
+                        mViewModel.applyDeviceConfig(getContext(), _cameraId, "timezone", sprTz.getSelectedItem().toString());
                     }
 
                     @Override
@@ -158,7 +156,7 @@ public class DeviceSettingFragment extends Fragment {
                 vflip.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewModel.camConnect(getContext(), _cameraId, "vflip", binding.cloudConnect.isEnabled() ? "1" : "0");
+                        mViewModel.applyCamConfig(getContext(), _cameraId, "vflip", binding.cloudConnect.isEnabled() ? "1" : "0");
                     }
                 });
 
@@ -166,7 +164,7 @@ public class DeviceSettingFragment extends Fragment {
                 hflip.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewModel.camConnect(getContext(), _cameraId, "hmirror", binding.cloudConnect.isEnabled() ? "1" : "0");
+                        mViewModel.applyCamConfig(getContext(), _cameraId, "hmirror", binding.cloudConnect.isEnabled() ? "1" : "0");
                     }
                 });
 
@@ -175,7 +173,7 @@ public class DeviceSettingFragment extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Log.d(TAG, sprFs.getSelectedItem().toString());
-                        mViewModel.camConnect(getContext(), _cameraId, "framesize", getFrameSize(sprFs.getSelectedItem().toString()) +"");
+                        mViewModel.applyCamConfig(getContext(), _cameraId, "framesize", getFrameSize(sprFs.getSelectedItem().toString()) +"");
                     }
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {}
