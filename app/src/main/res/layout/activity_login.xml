@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_camera"
     android:layout_width="match_parent"
@@ -21,28 +20,26 @@
     <EditText
         android:id="@+id/username"
         style="@style/TextStyle"
-        android:textColorHint="#757575"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
-        android:autofillHints=""
+        android:layout_marginTop="60dp"
+        android:autofillHints="registered username"
         android:hint="@string/prompt_username"
         android:inputType="textPersonName"
-        android:selectAllOnFocus="true" />
-
+        android:selectAllOnFocus="true"
+        tools:ignore="TextContrastCheck" />
     <EditText
         android:id="@+id/password"
         style="@style/TextStyle"
-        android:textColorHint="#757575"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:autofillHints="password"
         android:hint="@string/prompt_password"
         android:imeActionLabel="@string/action_sign_in"
         android:imeOptions="actionDone"
         android:inputType="textPassword"
-        android:selectAllOnFocus="true"
-        android:autofillHints=""/>
+        android:selectAllOnFocus="true"/>
 
     <Button
         android:id="@+id/login"

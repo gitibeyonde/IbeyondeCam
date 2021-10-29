@@ -21,16 +21,15 @@
             <ProgressBar
                 android:id="@+id/settingProgressBar"
                 style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="85dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/settingText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="The device configuration is enabled if the device is reachable. The device is reachable if you are connected to the same WiFi access point as device."
                 android:textAlignment="center"
@@ -60,8 +59,8 @@
 
                 <ImageButton
                     android:id="@+id/camNameButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/tt_check" />
 
             </TableRow>
@@ -107,7 +106,7 @@
                 <Switch
                     android:id="@+id/cloudConnect"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1" />
 
             </TableRow>
@@ -130,7 +129,7 @@
                 <Switch
                     android:id="@+id/motionHistory"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1" />
 
             </TableRow>
@@ -151,8 +150,8 @@
 
                 <ImageButton
                     android:id="@+id/deleteHistory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="right"
                     android:src="@drawable/tt_delete_forever" />
 
@@ -177,7 +176,7 @@
                 <Spinner
                     android:id="@+id/timeZone"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="48dp" />
 
             </TableRow>
 
@@ -199,7 +198,7 @@
                 <Switch
                     android:id="@+id/vFlip"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1" />
 
             </TableRow>
@@ -222,7 +221,7 @@
                 <Switch
                     android:id="@+id/hFlip"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1" />
 
             </TableRow>
@@ -245,7 +244,7 @@
                 <Spinner
                     android:id="@+id/frameSize"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="48dp" />
 
             </TableRow>
 
@@ -266,8 +265,8 @@
 
                 <ImageButton
                     android:id="@+id/restartButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="right"
                     android:src="@drawable/tt_check" />
 
@@ -291,8 +290,8 @@
 
                 <ImageButton
                     android:id="@+id/upgradeButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="right"
                     android:src="@drawable/tt_check" />
 
@@ -316,8 +315,8 @@
 
                 <ImageButton
                     android:id="@+id/resetButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="right"
                     android:src="@drawable/tt_check" />
 

@@ -85,7 +85,7 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onChanged(@Nullable String s) {
                 Log.i(TAG, "Login Activity token = " + s);
                 loadingProgressBar.setVisibility(View.INVISIBLE);
-                if ("FAILED".equals(s)) {
+                if (LoginViewModel.FAILURE.equals(s)) {
                     Toast.makeText(getApplicationContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "Welcome to Ibeyonde CleverCam", Toast.LENGTH_SHORT).show();
