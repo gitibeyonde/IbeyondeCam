@@ -46,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
+        loginButton.setEnabled(false);
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
@@ -96,13 +97,13 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel._login_token.observe(this, new Observer<String>() {
             public void onChanged(@Nullable String s) {
                 Log.i(TAG, "Login Activity token = " + s);
-                if ("FAILED".equals(s)) {
+                if (LoginViewModel.FAILURE.equals(s)) {
                     Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
                     loadingProgressBar.setVisibility(View.INVISIBLE);
                     usernameEditText.setText(null);
                     passwordEditText.setText(null);
                 } else {
-                    Toast.makeText(getApplicationContext(), "Welcome to Ibeyonde CleverCam", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Welcome to CleverCam", Toast.LENGTH_SHORT).show();
                     File file = new File(getApplicationContext().getFilesDir(), ".cred");
                     Log.i(TAG, "Saving credentials to " + file.getAbsoluteFile());
                     try (FileWriter fo = new FileWriter(file)) {
@@ -118,26 +119,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        //close app
-        AlertDialog alertbox = new AlertDialog.Builder(this)
-                .setMessage("Do you want to exit application?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        finishAffinity();
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Log.d(TAG, "setNegativeButton");
-                    }
-                })
-                .show();
     }
 
     @Override

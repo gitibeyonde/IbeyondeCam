@@ -68,38 +68,19 @@ public class SplashActivity extends AppCompatActivity {
         LoginViewModel._login_token.observe(this, new Observer<String>() {
             public void onChanged(@Nullable String s) {
                 Log.i(TAG, "token changed Value = " + s);
-                if ("FAILED".equals(s)){
+                if (LoginViewModel.FAILURE.equals(s)){
                     Intent i = new Intent(getApplication(), LoginActivity.class);
                     startActivity(i);
                     finish();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "Welcome to Ibeyonde", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Welcome to CleverCam", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(getApplication(), MainActivity.class);
                     startActivity(i);
                     finish();
                 }
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        //close app
-        AlertDialog alertbox = new AlertDialog.Builder(this)
-                .setMessage("Do you want to exit application?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        finishAffinity();
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Log.d(TAG, "setNegativeButton");
-                    }
-                })
-                .show();
     }
 
     @Override

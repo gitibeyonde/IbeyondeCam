@@ -52,7 +52,7 @@ public class LoginViewModel extends ViewModel {
     public void login(Context ctx, String username, String password){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(ctx);
-        String url ="https://ping.ibeyonde.com/api/iot.php?view=register";
+        String url ="https://ping.ibeyonde.com/api/iot.php?view=login";
 
         // Request a string response from the provided URL.
         JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, url, null,

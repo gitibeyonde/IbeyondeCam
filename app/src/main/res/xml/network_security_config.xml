@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!--Set application-wide security config using base-config tag.-->
+    <!--Need to allow all private ips for cleartext as the devices are not capable to https.
+    Class A: 10.0.0.0 to 10.255.255.255
+    Class B: 172.16.0.0 to 172.31.255.255
+    Class C: 192.168.0.0 to 192.168.255.255
+    -->
     <base-config cleartextTrafficPermitted="true"/>
+
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">ibeyonde.com</domain>
+    </domain-config>
 </network-security-config>

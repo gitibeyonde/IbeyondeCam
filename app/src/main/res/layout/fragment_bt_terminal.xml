@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="50"
-        android:background="#B9F6CA"
         android:freezesText="true"
         android:gravity="bottom"
         android:scrollbars="vertical"
@@ -35,7 +34,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#F4FF81"
             android:inputType="text|textNoSuggestions"
             android:singleLine="true" />
 
@@ -43,7 +41,6 @@
             android:id="@+id/send_btn"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:background="#FFE57F"
             app:srcCompat="@drawable/ic_send_white_24dp" />
     </LinearLayout>
 

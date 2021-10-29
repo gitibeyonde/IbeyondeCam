@@ -9,19 +9,15 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/medium_violet_red</item>
         <item name="colorSecondaryVariant">@color/maroon</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/gray</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">#D6D7D7</item>
+        <item name="android:windowBackground">@color/light_grey</item>
 
 
         <!-- Colors -->
         <item name="colorPrimaryDark">@color/blue_violet</item>
         <item name="colorAccent">?attr/colorSecondary</item>
-    </style>
-    <style name="ThemeOverlay.IbeyondeCam.FullscreenContainer" parent="">
-        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
-        <item name="fullscreenTextColor">@color/light_blue_A200</item>
     </style>
 </resources>

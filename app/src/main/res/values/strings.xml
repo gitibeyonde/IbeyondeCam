@@ -9,7 +9,7 @@
     <string name="prompt_phone">Phone number</string>
     <string name="action_register">Register</string>
     <string name="action_reset">Reset Password</string>
-    <string name="welcome">"Welcome !"</string>
+    <string name="welcome">Welcome to CleverCam !</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
@@ -43,8 +43,6 @@
     <string name="default_notification_channel_id">772007</string>
     <string name="textview">TextView</string>
     <string name="msg_token_fmt" translatable="false">FCM registration Token: %s</string>
-    <string name="fcm_message">CleverCam ALert</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="fcm_message">CleverCam Alert</string>
     <string name="title_activity_registration">RegistrationActivity</string>
 </resources>

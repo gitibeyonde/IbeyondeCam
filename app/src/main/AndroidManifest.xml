@@ -19,12 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IbeyondeCam">
 
-        <meta-data
+        <!-- meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@android:drawable/ic_popup_reminder" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
+            android:resource="@color/colorAccent" / -->
         <!--
  [START fcm_default_channel]
         <meta-data

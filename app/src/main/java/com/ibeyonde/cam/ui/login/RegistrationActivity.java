@@ -101,7 +101,7 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //close app
-        AlertDialog alertbox = new AlertDialog.Builder(this)
+        /**AlertDialog alertbox = new AlertDialog.Builder(this)
                 .setMessage("Do you want to exit application?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
@@ -114,7 +114,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         Log.d(TAG, "setNegativeButton");
                     }
                 })
-                .show();
+                .show();**/
     }
 
     @Override

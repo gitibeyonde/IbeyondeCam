@@ -103,7 +103,7 @@ public class DeviceSettingViewModel extends ViewModel {
 
     public void getLatestVersion(Context ctx){
         RequestQueue queue = Volley.newRequestQueue(ctx);
-        String localUrl ="http://ping.ibeyonde.com/api/esp32_scb.php";
+        String localUrl ="https://ping.ibeyonde.com/api/esp32_scb.php";
 
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,

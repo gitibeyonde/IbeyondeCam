@@ -38,7 +38,7 @@ public class ResetActivity extends AppCompatActivity {
 
         loginViewModel =  new ViewModelProvider(this).get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.username;
+        final EditText useremailEditText = binding.useremail;
         final Button resetButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
 
@@ -49,12 +49,12 @@ public class ResetActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                if ( loginViewModel.isUserNameValid(usernameEditText.getText().toString())) {
+                if ( loginViewModel.isUserNameValid(useremailEditText.getText().toString())) {
                     resetButton.setEnabled(true);
                 }
             }
         };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
+        useremailEditText.addTextChangedListener(afterTextChangedListener);
 
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,8 +62,8 @@ public class ResetActivity extends AppCompatActivity {
                 InputMethodManager imm = (InputMethodManager) getBaseContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.reset(getApplicationContext(), usernameEditText.getText().toString());
-                Log.i(TAG, "onClick user=" + usernameEditText.getText().toString());
+                loginViewModel.reset(getApplicationContext(), useremailEditText.getText().toString());
+                Log.i(TAG, "onClick user=" + useremailEditText.getText().toString());
             }
         });
 
@@ -90,25 +90,6 @@ public class ResetActivity extends AppCompatActivity {
         });
     }
 
-
-    @Override
-    public void onBackPressed() {
-        //close app
-        AlertDialog alertbox = new AlertDialog.Builder(this)
-                .setMessage("Do you want to exit application?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        finishAffinity();
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Log.d(TAG, "setNegativeButton");
-                    }
-                })
-                .show();
-    }
 
     @Override
     public void onDestroy() {
