@@ -26,6 +26,7 @@
 
         <ImageButton
             android:id="@+id/logoutButton"
+            style="@style/ButtonStyle"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/tt_restart_alt" />

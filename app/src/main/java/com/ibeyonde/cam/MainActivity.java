@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         //Toast.makeText(MainActivity.this, "CleverCam", Toast.LENGTH_SHORT).show();
                     }
                 });
-        //createNotificationChannel();
+        createNotificationChannel();
     }
 
     public void alertClick(View view) {

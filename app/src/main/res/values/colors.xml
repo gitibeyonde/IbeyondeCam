@@ -8,6 +8,24 @@
     <color name="colorSendText">#82CAFF</color>
     <color name="colorStatusText">#FFDB58</color>
 
+    <color name="primaryColor">#3949ab</color>
+    <color name="primaryLightColor">#6f74dd</color>
+    <color name="primaryDarkColor">#00227b</color>
+    <color name="secondaryColor">#d81b60</color>
+    <color name="secondaryLightColor">#ff5c8d</color>
+    <color name="secondaryDarkColor">#a00037</color>
+    <color name="primaryTextColor">@color/secondaryColor</color>
+    <color name="secondaryTextColor">@color/secondaryDarkColor</color>
+
+    <color name="primaryColorDM">#1a237e</color>
+    <color name="primaryLightColorDM">#534bae</color>
+    <color name="primaryDarkColorDM">#000051</color>
+    <color name="secondaryColorDM">#880e4f</color>
+    <color name="secondaryLightColorDM">#bc477b</color>
+    <color name="secondaryDarkColorDM">#560027</color>
+    <color name="primaryTextColorDM">@color/secondaryColorDM</color>
+    <color name="secondaryTextColorDM">@color/secondaryDarkColorDM</color>
+
     <color name="white">#FFFFFF</color>
     <color name="ivory">#FFFFF0</color>
     <color name="light_yellow">#FFFFE0</color>

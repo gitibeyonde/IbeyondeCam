@@ -34,6 +34,7 @@
 
         <ImageButton
             android:id="@+id/deviceSetting"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -42,6 +43,7 @@
 
         <ImageButton
             android:id="@+id/deviceLive"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -50,6 +52,7 @@
 
         <ImageButton
             android:id="@+id/deviceHistory"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

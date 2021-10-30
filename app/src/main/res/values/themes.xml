@@ -2,22 +2,24 @@
     <!-- Base application theme. -->
     <style name="Theme.IbeyondeCam" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimaryVariant">@color/sandy_brown</item> <!-- Top status abr of phone -->
-        <item name="android:navigationBarColor">@color/sandy_brown</item><!-- Phone's navigation status abr of phone -->
-        <item name="colorPrimary">@color/salmon</item> <!-- app top status bar and selected icon colour -->
-        <item name="colorOnPrimary">@color/khaki</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColor</item> <!-- Top status abr of phone -->
+        <item name="android:navigationBarColor">@color/primaryDarkColor</item><!-- Phone's navigation status abr of phone -->
+        <item name="colorPrimary">@color/primaryColor</item> <!-- app top status bar and selected icon colour -->
+        <item name="colorOnPrimary">@color/primaryDarkColor</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/medium_violet_red</item>
-        <item name="colorSecondaryVariant">@color/maroon</item>
-        <item name="colorOnSecondary">@color/gray</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSecondaryVariant">@color/secondaryLightColor</item>
+        <item name="colorOnSecondary">@color/secondaryDarkColor</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/light_grey</item>
 
+        <item name="android:textColor">@color/secondaryTextColor</item>
+        <item name="colorButtonNormal">@color/light_grey</item>
 
         <!-- Colors -->
-        <item name="colorPrimaryDark">@color/blue_violet</item>
-        <item name="colorAccent">?attr/colorSecondary</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
     </style>
 </resources>

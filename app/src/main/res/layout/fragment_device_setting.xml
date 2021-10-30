@@ -59,6 +59,7 @@
 
                 <ImageButton
                     android:id="@+id/camNameButton"
+                    style="@style/ButtonStyle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:src="@drawable/tt_check" />
@@ -150,6 +151,7 @@
 
                 <ImageButton
                     android:id="@+id/deleteHistory"
+                    style="@style/ButtonStyle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="right"
@@ -265,6 +267,7 @@
 
                 <ImageButton
                     android:id="@+id/restartButton"
+                    style="@style/ButtonStyle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="right"
@@ -290,6 +293,7 @@
 
                 <ImageButton
                     android:id="@+id/upgradeButton"
+                    style="@style/ButtonStyle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="right"
@@ -315,6 +319,7 @@
 
                 <ImageButton
                     android:id="@+id/resetButton"
+                    style="@style/ButtonStyle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="right"

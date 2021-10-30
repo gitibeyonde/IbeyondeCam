@@ -2,22 +2,24 @@
     <!-- Base application theme. -->
     <style name="Theme.IbeyondeCam" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimaryVariant">@color/dark_green</item> <!-- Top status abr of phone -->
-        <item name="android:navigationBarColor">@color/dark_green</item><!-- Phone's bottom navigation status bar of phone -->
-        <item name="colorPrimary">@color/green</item> <!-- app top status bar and selected icon colour -->
-        <item name="colorOnPrimary">@color/khaki</item>
+        <item name="colorPrimaryVariant">@color/primaryColorDM</item> <!-- Top status abr of phone -->
+        <item name="android:navigationBarColor">@color/primaryColorDM</item><!-- Phone's navigation status abr of phone -->
+        <item name="colorPrimary">@color/primaryDarkColorDM</item> <!-- app top status bar and selected icon colour -->
+        <item name="colorOnPrimary">@color/primaryDarkColorDM</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/medium_violet_red</item>
-        <item name="colorSecondaryVariant">@color/maroon</item>
-        <item name="colorOnSecondary">@color/gray</item>
+        <item name="colorSecondary">@color/secondaryColorDM</item>
+        <item name="colorSecondaryVariant">@color/secondaryLightColorDM</item>
+        <item name="colorOnSecondary">@color/secondaryDarkColorDM</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@color/dark_gray</item>
+        <item name="android:windowBackground">@color/gray</item>
 
+        <item name="android:textColor">@color/secondaryTextColorDM</item>
+        <item name="colorButtonNormal">@color/gray</item>
 
         <!-- Colors -->
-        <item name="colorPrimaryDark">@color/blue_violet</item>
-        <item name="colorAccent">?attr/colorSecondary</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColorDM</item>
+        <item name="colorAccent">@color/secondaryColorDM</item>
     </style>
 </resources>
