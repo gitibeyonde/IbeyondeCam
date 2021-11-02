@@ -13,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
@@ -34,16 +35,16 @@ public class LoginViewModel extends ViewModel {
 
     // A placeholder username validation check
     public boolean isUserNameValid(String username) {
-        if (username == null) {
-            return false;
-            //}
-            //if (username.contains("@")) {
-            //  return Patterns.EMAIL_ADDRESS.matcher(username).matches();
-        } else {
-            return !username.trim().isEmpty();
-        }
+        return username != null && username.trim().length() > 4;
     }
 
+    public boolean isUserEmailValid(String useremail) {
+        return useremail != null && useremail.trim().length() > 6 && useremail.contains("@");
+    }
+
+    public boolean isUserPhoneValid(String userphone) {
+        return userphone != null && userphone.trim().length() > 6;
+    }
     // A placeholder password validation check
     public boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
@@ -101,10 +102,10 @@ public class LoginViewModel extends ViewModel {
     }
 
 
-    public void reset(Context ctx, String username){
+    public void reset(Context ctx, String user_email){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(ctx);
-        String url ="https://ping.ibeyonde.com/api/iot.php?view=reset";
+        String url ="https://ping.ibeyonde.com/api/iot.php?view=reset&user_email=" + user_email;
 
         // Request a string response from the provided URL.
         JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, url, null,
@@ -113,7 +114,7 @@ public class LoginViewModel extends ViewModel {
                     public void onResponse(JSONObject response) {
                         try {
                             Log.d(TAG, "RESET response " + response.toString());
-                            if (response.getString("message").equals("Success")){
+                            if (response.getString("message").equals("Password reset email sent to you email id.")){
                                 LoginViewModel._reset_token.postValue(SUCCESS);
                             }
                             else {
@@ -130,7 +131,7 @@ public class LoginViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "RESET failed 3," + error.getMessage());
-                LoginViewModel._reset_token.postValue("FAILED");
+                LoginViewModel._reset_token.postValue(FAILURE);
             }
         });
         // Add the request to the RequestQueue.
@@ -144,44 +145,42 @@ public class LoginViewModel extends ViewModel {
         RequestQueue queue = Volley.newRequestQueue(ctx);
         String url ="https://ping.ibeyonde.com/api/iot.php?view=register";
 
-        JSONObject jsonRequest = new JSONObject();
-        try {
-            jsonRequest.put("user_name", username);
-            jsonRequest.put("user_name", password);
-            jsonRequest.put("user_email", email);
-            jsonRequest.put("user_phone", phone);
-            jsonRequest.put("user_password", password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         // Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.POST, url, jsonRequest,
-                new Response.Listener<JSONObject>() {
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.POST, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.d(TAG, "Register response " + response.toString());
-                            if (response.getString("message").equals("Success")){
-                                LoginViewModel._register_token.postValue(SUCCESS);
+                    public void onResponse(String response) {
+                        Log.d(TAG, "Register response " + response.toString());
+                        if (response.contains("Success")){
+                            LoginViewModel._register_token.postValue(SUCCESS);
+                        }
+                        else {
+                            Log.d(TAG, "Register failed 1");
+                            try {
+                                JSONObject json = new JSONObject(response);
+                                LoginViewModel._register_token.postValue(json.getString("message"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                LoginViewModel._register_token.postValue("Unknown error:" + e.getMessage());
                             }
-                            else {
-                                Log.d(TAG, "Register failed 1");
-                                LoginViewModel._register_token.postValue(FAILURE);
-                            }
-                        } catch (JSONException e) {
-                            Log.d(TAG, "Register failed 2 " + e.getMessage());
-                            LoginViewModel._register_token.postValue(FAILURE);
-                            throw new RuntimeException("Register failed");
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Register failed 3," + error.getMessage());
-                LoginViewModel._register_token.postValue("FAILED");
+                LoginViewModel._register_token.postValue(error.getMessage());
             }
-        });
+        }){
+            protected Map<String, String> getParams() throws com.android.volley.AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_name", username);
+                params.put("user_email", email);
+                params.put("user_phone", phone);
+                params.put("user_password", password);
+                return params;
+            };
+        };
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }

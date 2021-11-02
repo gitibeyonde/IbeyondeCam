@@ -40,6 +40,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
+        final EditText repeatPasswordEditText = binding.repeatPassword;
+        final EditText emailEditText = binding.email;
+        final EditText phoneEditText = binding.phone;
         final Button registerButton = binding.register;
         final ProgressBar loadingProgressBar = binding.loading;
 
@@ -47,17 +50,39 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!loginViewModel.isUserNameValid(usernameEditText.getText().toString()) ){
+                    Toast.makeText(getApplicationContext(), "Username should have at least 5 characters", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!loginViewModel.isPasswordValid(passwordEditText.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "Password should have at least 6 characters", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (!loginViewModel.isPasswordValid(passwordEditText.getText().toString())) {
+                        Toast.makeText(getApplicationContext(), "Password and repeat password do not match", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                if (!loginViewModel.isUserEmailValid(emailEditText.getText().toString()) ){
+                    Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
             @Override
             public void afterTextChanged(Editable s) {
-                if (loginViewModel.isPasswordValid(passwordEditText.getText().toString()) &&
-                        loginViewModel.isUserNameValid(usernameEditText.getText().toString())) {
+                if (loginViewModel.isUserNameValid(usernameEditText.getText().toString()) &&
+                        loginViewModel.isPasswordValid(passwordEditText.getText().toString()) &&
+                        passwordEditText.getText().toString().equals(repeatPasswordEditText.getText().toString()) &&
+                        loginViewModel.isUserEmailValid(emailEditText.getText().toString()) &&
+                        loginViewModel.isUserPhoneValid(phoneEditText.getText().toString())
+                ) {
                     registerButton.setEnabled(true);
                 }
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
+        repeatPasswordEditText.addTextChangedListener(afterTextChangedListener);
+        emailEditText.addTextChangedListener(afterTextChangedListener);
+        phoneEditText.addTextChangedListener(afterTextChangedListener);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,8 +91,8 @@ public class RegistrationActivity extends AppCompatActivity {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.register(getApplicationContext(), usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString(), binding.email.getText().toString(), binding.phone.getText().toString());
-                Log.i(TAG, "onClick user=" + usernameEditText.getText().toString() + " pass=" + passwordEditText.getText().toString());
+                        passwordEditText.getText().toString(), emailEditText.getText().toString(), phoneEditText.getText().toString());
+                Log.i(TAG, "onClick user=" + usernameEditText.getText().toString());
             }
         });
 
@@ -81,17 +106,17 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel._login_token.observe(this, new Observer<String>() {
+        loginViewModel._register_token.observe(this, new Observer<String>() {
             public void onChanged(@Nullable String s) {
-                Log.i(TAG, "Login Activity token = " + s);
+                Log.i(TAG, "Register Activity token = " + s);
                 loadingProgressBar.setVisibility(View.INVISIBLE);
-                if (LoginViewModel.FAILURE.equals(s)) {
-                    Toast.makeText(getApplicationContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Welcome to Ibeyonde CleverCam", Toast.LENGTH_SHORT).show();
+                if (LoginViewModel.SUCCESS.equals(s)) {
+                    Toast.makeText(getApplicationContext(), "Success: A validation email is sent to your email id.", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(getApplication(), LoginActivity.class);
                     startActivity(i);
                     finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -100,21 +125,10 @@ public class RegistrationActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //close app
-        /**AlertDialog alertbox = new AlertDialog.Builder(this)
-                .setMessage("Do you want to exit application?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        finishAffinity();
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        Log.d(TAG, "setNegativeButton");
-                    }
-                })
-                .show();**/
+        super.onBackPressed();
+        Intent i = new Intent(getApplication(), LoginActivity.class);
+        startActivity(i);
+        finish();
     }
 
     @Override

@@ -49,7 +49,7 @@ public class ResetActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                if ( loginViewModel.isUserNameValid(useremailEditText.getText().toString())) {
+                if ( loginViewModel.isUserEmailValid(useremailEditText.getText().toString())) {
                     resetButton.setEnabled(true);
                 }
             }
@@ -62,8 +62,8 @@ public class ResetActivity extends AppCompatActivity {
                 InputMethodManager imm = (InputMethodManager) getBaseContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.reset(getApplicationContext(), useremailEditText.getText().toString());
-                Log.i(TAG, "onClick user=" + useremailEditText.getText().toString());
+                String email = useremailEditText.getText().toString();
+                loginViewModel.reset(getApplicationContext(), email);
             }
         });
 
@@ -81,13 +81,21 @@ public class ResetActivity extends AppCompatActivity {
             public void onChanged(@Nullable String s) {
                 Log.i(TAG, "Login Activity token = " + s);
                 loadingProgressBar.setVisibility(View.INVISIBLE);
-                if ("FAILED".equals(s)) {
-                    Toast.makeText(getApplicationContext(), "Reset password failed.", Toast.LENGTH_SHORT).show();
+                if (LoginViewModel.FAILURE.equals(s)) {
+                    Toast.makeText(getApplicationContext(), "Reset password failed email address does not exists.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "Instructions sent on registered email.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(getApplication(), LoginActivity.class);
+        startActivity(i);
+        finish();
     }
 
 
