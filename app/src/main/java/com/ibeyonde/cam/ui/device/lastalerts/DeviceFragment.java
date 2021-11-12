@@ -61,7 +61,7 @@ public class DeviceFragment extends Fragment {
                 else {
                     Log.i(TAG, "Device List request failed retry !");
                     Toast toast = Toast.makeText(getContext(), "Device List request failed, retry !", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.TOP, 20, 400);
+                    toast.setGravity(Gravity.TOP, 20, 500);
                     toast.show();
                 }
             }

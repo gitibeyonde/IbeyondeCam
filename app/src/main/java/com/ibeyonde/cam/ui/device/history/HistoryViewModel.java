@@ -1,8 +1,11 @@
 package com.ibeyonde.cam.ui.device.history;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -15,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.ibeyonde.cam.MainActivity;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.History;
 
@@ -27,7 +31,8 @@ import java.util.Map;
 public class HistoryViewModel extends ViewModel {
     private static final String TAG= HistoryViewModel.class.getCanonicalName();
 
-    public final MutableLiveData<History> _history = new MutableLiveData<>();
+    public static History _history_list;
+    public final MutableLiveData<Short> _history = new MutableLiveData<>();
 
     public void getHistoryOn(Context ctx, String uuid, String date, int hour, int size){
         RequestQueue queue = Volley.newRequestQueue(ctx);
@@ -39,16 +44,18 @@ public class HistoryViewModel extends ViewModel {
                     public void onResponse(JSONArray jsonArray) {
                         Log.d(TAG, "History list json " + jsonArray.toString());
                         try {
-                            History c = new History(jsonArray);
-                            _history.postValue(c);
+                            _history_list = new History(jsonArray);
+                            _history.postValue((short) 1);
                         } catch (JSONException e) {
                             Log.i(TAG, "FATAL JSON Exception: deviceList Device List " + e.getMessage());
+                            _history.postValue((short) 0);
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "ERROR Response: getHistoryOn Request failed ," + error.getMessage());
+                _history.postValue((short) 0);
             }
         }){
 
