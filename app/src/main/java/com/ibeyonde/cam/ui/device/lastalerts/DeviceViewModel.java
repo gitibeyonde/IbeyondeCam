@@ -78,6 +78,7 @@ public class DeviceViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "deviceList Request failed ," + error.getMessage());
+                _history.postValue((short) 0);
             }
         }){
             @Override
@@ -122,6 +123,7 @@ public class DeviceViewModel extends ViewModel {
                             } catch (JSONException e) {
                                 Log.d(TAG, "getHistory JSON Exception ," + e.getMessage());
                                 e.printStackTrace();
+                                _history.postValue((short) 0);
                             }
                         } else {
                             try {
@@ -135,6 +137,7 @@ public class DeviceViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "getHistory Request failed ," + error.getMessage());
+                _history.postValue((short) 0);
             }
         }){
 

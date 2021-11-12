@@ -3,9 +3,11 @@ package com.ibeyonde.cam.ui.device.lastalerts;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.databinding.FragmentDeviceListBinding;
+import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.Camera;
 
 import java.util.Enumeration;
@@ -44,13 +47,22 @@ public class DeviceFragment extends Fragment {
 
         deviceViewModel._history.observe(this.getActivity(), new Observer<Short>() {
             public void onChanged(@Nullable Short s) {
-                Hashtable<String, Camera> ch = deviceViewModel._deviceList;
-                if (ch != null) {
-                    DeviceMotionContent.initialize(ch);
-                    if (deviceViewModel.isAllCameraWithHistory()){
-                        RecyclerView recyclerView = (RecyclerView) view;
-                        recyclerView.setAdapter(new DeviceRecyclerViewAdapter(DeviceMotionContent._item_list));
+                Log.i(TAG, "history = " + s);
+                if (s == 1) {
+                    Hashtable<String, Camera> ch = deviceViewModel._deviceList;
+                    if (ch != null) {
+                        DeviceMotionContent.initialize(ch);
+                        if (deviceViewModel.isAllCameraWithHistory()) {
+                            RecyclerView recyclerView = (RecyclerView) view;
+                            recyclerView.setAdapter(new DeviceRecyclerViewAdapter(DeviceMotionContent._item_list));
+                        }
                     }
+                }
+                else {
+                    Log.i(TAG, "Device List request failed retry !");
+                    Toast toast = Toast.makeText(getContext(), "Device List request failed, retry !", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 20, 400);
+                    toast.show();
                 }
             }
         });

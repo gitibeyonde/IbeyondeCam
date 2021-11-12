@@ -32,10 +32,11 @@ public class LoginViewModel extends ViewModel {
 
     public static final String SUCCESS="SUCCESS";
     public static final String FAILURE="FAILURE";
+    public static final int LONG_DELAY = 3500;
 
     // A placeholder username validation check
     public boolean isUserNameValid(String username) {
-        return username != null && username.trim().length() > 4;
+        return username != null && username.trim().length() > 3;
     }
 
     public boolean isUserEmailValid(String useremail) {
@@ -79,7 +80,7 @@ public class LoginViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Login failed 3," + error.getMessage());
-                LoginViewModel._login_token.postValue("FAILED");
+                LoginViewModel._login_token.postValue(FAILURE);
             }
         }){
 
