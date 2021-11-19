@@ -37,8 +37,10 @@ import java.util.Map;
 public class NotificationViewModel extends ViewModel {
     private static final String TAG= NotificationViewModel.class.getCanonicalName();
 
-    public final MutableLiveData<Alerts> _alerts = new MutableLiveData<>();
-    public MutableLiveData<AlertDetails> _alert_details = new MutableLiveData<>();
+    public static Alerts _alerts;
+    public final MutableLiveData<Short> _Ralerts = new MutableLiveData<>();
+    public static AlertDetails _alert_details;
+    public final MutableLiveData<Short> _Ralert_details = new MutableLiveData<>();
 
     /**
      * [{"id":"529667","type":"bp","uuid":"3105613C","user_name":null,"image":"3105613C\/2021\/09\/14\/06_21_54\/eqpSso.jpg","value":"0.00","comment":"",
@@ -63,15 +65,18 @@ public class NotificationViewModel extends ViewModel {
                     public void onResponse(JSONArray jsonArray) {
                         Log.d(TAG, "getBellAlerts alerts list "+ jsonArray.length());
                         try {
-                            _alerts.postValue(new Alerts(jsonArray));
+                            _alerts = new Alerts(jsonArray);
+                            _Ralerts.postValue((short) 1);
                         } catch (JSONException e) {
                             Log.e(TAG, "getBellAlerts JSON format error");
+                            _Ralerts.postValue((short) 0);
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "getBellAlerts Request failed ," + error.getMessage());
+                _Ralerts.postValue((short) 0);
             }
         }){
 
@@ -91,7 +96,6 @@ public class NotificationViewModel extends ViewModel {
 
 
     public void getBellAlertDetails(Context ctx, String uuid, String date_time){
-        _alert_details = new MutableLiveData<>();
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Log.d(TAG, "getBellAlertDetails " + date_time);
         Date d = new Date();
@@ -119,18 +123,20 @@ public class NotificationViewModel extends ViewModel {
                         Log.d(TAG, "getBellAlertDetails img list " + imageList);
                         if (imageList.indexOf("No alerts found for this device") == -1) {
                             try {
-                                AlertDetails ad = new AlertDetails(imageList);
-                                _alert_details.postValue(ad);
+                                _alert_details = new AlertDetails(imageList);
+                                _Ralert_details.postValue((short) 1);
                             } catch (JSONException e) {
                                 Log.d(TAG, "getBellAlertDetails JSON Exception ," + e.getMessage());
                                 e.printStackTrace();
+                                _Ralert_details.postValue((short) 0);
                             }
                         } else {
                             try {
-                                AlertDetails ad = new AlertDetails("[[\"https://udp1.ibeyonde.com/img/no_signal.jpg\", \"22\\/09\\/2021 - 14:10:41\"]]");
-                                _alert_details.postValue(ad);
+                                _alert_details = new AlertDetails("[[\"https://udp1.ibeyonde.com/img/no_signal.jpg\", \"22\\/09\\/2021 - 14:10:41\"]]");
+                                _Ralert_details.postValue((short) 1);
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                _Ralert_details.postValue((short) 0);
                             }
                         }
                     }
@@ -138,6 +144,7 @@ public class NotificationViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "getBellAlertDetails Request failed ," + error.getMessage());
+                _Ralert_details.postValue((short) 0);
             }
         }){
 

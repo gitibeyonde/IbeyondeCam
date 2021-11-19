@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,35 +117,42 @@ public class BellAlertFragment extends Fragment {
         ImageButton navButtons[] = { binding.histNav0, binding.histNav1, binding.histNav2, binding.histNav3, binding.histNav4, binding.histNav5,
                 binding.histNav6, binding.histNav7, binding.histNav8, binding.histNav9};
 
-        notificationViewModel._alert_details.observe(this.getActivity(), new Observer<AlertDetails>() {
-            public void onChanged(@Nullable AlertDetails ad) {
-                if (ad == null) return;
+        notificationViewModel._Ralert_details.observe(this.getActivity(), new Observer<Short>() {
+            public void onChanged(@Nullable Short s) {
+                if (s == 1) {
+                    AlertDetails ad = notificationViewModel._alert_details;
+                    if (ad == null) return;
 
-                new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
+                    new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
 
-                ArrayList<JSONObject> adlist = ad._alert_details;
-                for (int i=0;i< adlist.size() && i < 10; i++){
-                    try {
-                        new ImageLoadTask(adlist.get(i).getString("url"), navButtons[i]).execute();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    ArrayList<JSONObject> adlist = ad._alert_details;
+                    for (int i = 0; i < adlist.size() && i < 10; i++) {
+                        try {
+                            new ImageLoadTask(adlist.get(i).getString("url"), navButtons[i]).execute();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    Log.d(TAG, "Bell alert url loading " + ad.getCurrentURL());
+
+                    TimerTask imgRefresh = new TimerTask() {
+                        @Override
+                        public void run() {
+                            new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
+                        }
+                    };
+                    Timer t = new Timer();
+                    t.scheduleAtFixedRate(imgRefresh, 0, 1000);
+
+
+                    for (int i = 0; i < 10; i++) {
+                        navButtons[i].setOnClickListener(navClickListener);
                     }
                 }
-                Log.d(TAG, "Bell alert url loading " + ad.getCurrentURL());
-
-                TimerTask imgRefresh = new TimerTask()
-                {
-                    @Override
-                    public void run() {
-                        new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
-                    }
-                };
-                Timer t = new Timer();
-                t.scheduleAtFixedRate(imgRefresh, 0, 1000);
-
-
-                for (int i=0;i< 10; i++){
-                    navButtons[i].setOnClickListener(navClickListener);
+                else {
+                    Toast toast = Toast.makeText(getContext(), "Alert Failed to load, retry !", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 20, 500);
+                    toast.show();
                 }
             }
         });
@@ -195,7 +203,6 @@ public class BellAlertFragment extends Fragment {
     public void onDestroyView() {
         Log.i(TAG, "on onDestroyView ");
         if (rc != null)rc.stop();
-        notificationViewModel._alert_details.setValue(null);
         super.onDestroyView();
     }
 

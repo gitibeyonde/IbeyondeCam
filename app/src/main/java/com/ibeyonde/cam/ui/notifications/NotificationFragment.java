@@ -3,9 +3,11 @@ package com.ibeyonde.cam.ui.notifications;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -36,17 +38,26 @@ public class NotificationFragment extends Fragment {
         notificationViewModel.getBellAlerts(getContext());
 
 
-        notificationViewModel._alerts.observe(this.getActivity(), new Observer<Alerts>() {
+        notificationViewModel._Ralerts.observe(this.getActivity(), new Observer<Short>() {
             @Override
-            public void onChanged(Alerts h) {
-                Log.i(TAG, "Alerts List = " + h._total);
-                NotificationContent.initialize(h.getAlerts());
-                // Set the adapter
-                if (view instanceof RecyclerView) {
-                    Context context = view.getContext();
-                    RecyclerView recyclerView = (RecyclerView) view;
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    recyclerView.setAdapter(new NotificationRecyclerViewAdapter(NotificationContent._alert_list));
+            public void onChanged(Short s) {
+                if (s == 1) {
+                    Alerts al = notificationViewModel._alerts;
+                    if (al == null) return;
+                    Log.i(TAG, "Alerts List = " + al._total);
+                    NotificationContent.initialize(al.getAlerts());
+                    // Set the adapter
+                    if (view instanceof RecyclerView) {
+                        Context context = view.getContext();
+                        RecyclerView recyclerView = (RecyclerView) view;
+                        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                        recyclerView.setAdapter(new NotificationRecyclerViewAdapter(NotificationContent._alert_list));
+                    }
+                }
+                else {
+                    Toast toast = Toast.makeText(getContext(), "Failed to get notifications, retry !", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP, 20, 500);
+                    toast.show();
                 }
             }
         });

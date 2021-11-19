@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceSettingBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
@@ -31,6 +33,7 @@ public class DeviceSettingFragment extends Fragment {
     FragmentDeviceSettingBinding binding;
     private DeviceSettingViewModel mViewModel;
     public static String _cameraId;
+    public static String _veil;
     Handler handler;
 
     public static DeviceSettingFragment newInstance() {
@@ -46,6 +49,7 @@ public class DeviceSettingFragment extends Fragment {
 
         mViewModel.getLatestVersion(getContext());
         mViewModel.getConfig(getContext(), _cameraId);
+        mViewModel.getVeil(getContext());
 
         Spinner frameSize = binding.frameSize;
 
@@ -73,6 +77,20 @@ public class DeviceSettingFragment extends Fragment {
         binding.vFlip.setEnabled(false);
         binding.hFlip.setAlpha(.5f);
         binding.hFlip.setEnabled(false);
+
+        mViewModel._veil.observe(this.getActivity(), new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        if (s.length() == 0) {
+                            Toast toast = Toast.makeText(getContext(), "Failed to load, retry !", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.TOP, 20, 500);
+                            toast.show();
+                        }
+                        else {
+                            _veil = s;
+                        }
+                    }
+                });
 
         mViewModel._device_online.observe(this.getActivity(), new Observer<Boolean>() {
             @Override

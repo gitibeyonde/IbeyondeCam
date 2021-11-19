@@ -31,6 +31,7 @@ public class DeviceSettingViewModel extends ViewModel {
     public static final MutableLiveData<Boolean> _device_online = new MutableLiveData<>();
     public static final Map<String, String> _cam_nv= new HashMap<>();
     public static int _latest_version=-1;
+    public static final MutableLiveData<String> _veil= new MutableLiveData<>();
 
     public void getConfig(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
@@ -83,7 +84,7 @@ public class DeviceSettingViewModel extends ViewModel {
 
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=config&var=" + var + "&val=" + val;
+        String localUrl ="http://" + c._localIp + "/cmd?name=config&var=" + var + "&val=" + val+ "&veil=" + _veil.getValue();
 
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
@@ -121,11 +122,46 @@ public class DeviceSettingViewModel extends ViewModel {
         });
         queue.add(stringRequest);
     }
+
+
+    public void getVeil(Context ctx){
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        String localUrl ="https://ping.ibeyonde.com/api/iot.php?view=veil";
+
+        Log.i(TAG, localUrl);
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, "getVeil " + response);
+                        _veil.postValue(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "getVeil Request failed ," + error.getMessage());
+                _veil.postValue("");
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                String creds = String.format("%s:%s", LoginViewModel._email,LoginViewModel._pass);
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                params.put("Authorization", auth);
+                return params;
+            }
+
+        };
+        queue.add(stringRequest);
+    }
+
+
     public void applyCamConfig(Context ctx, String uuid, String var, String val){
         if (_cam_nv.get(var).equals(val))return;
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=camconf&var=" + var + "&val=" + val;
+        String localUrl ="http://" + c._localIp + "/cmd?name=camconf&var=" + var + "&val=" + val + "&veil=" + _veil.getValue();
 
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
@@ -146,7 +182,7 @@ public class DeviceSettingViewModel extends ViewModel {
     public void command(Context ctx, String cmd, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=" + cmd;
+        String localUrl ="http://" + c._localIp + "/cmd?name=" + cmd + "&veil=" + _veil.getValue();
 
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
