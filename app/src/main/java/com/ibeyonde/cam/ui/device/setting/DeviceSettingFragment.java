@@ -47,9 +47,8 @@ public class DeviceSettingFragment extends Fragment {
         binding = FragmentDeviceSettingBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
 
+        mViewModel.getVeil(getContext(), _cameraId);
         mViewModel.getLatestVersion(getContext());
-        mViewModel.getConfig(getContext(), _cameraId);
-        mViewModel.getVeil(getContext());
 
         Spinner frameSize = binding.frameSize;
 
@@ -88,6 +87,7 @@ public class DeviceSettingFragment extends Fragment {
                         }
                         else {
                             _veil = s;
+                            mViewModel.getConfig(getContext(), _cameraId);
                         }
                     }
                 });

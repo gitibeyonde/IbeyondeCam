@@ -36,8 +36,9 @@ public class DeviceSettingViewModel extends ViewModel {
     public void getConfig(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=getconf";
+        String localUrl ="http://" + c._localIp + "/cmd?name=getconf&veil=" + _veil.getValue();
 
+        Log.i(TAG, localUrl);
         JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, localUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -124,9 +125,9 @@ public class DeviceSettingViewModel extends ViewModel {
     }
 
 
-    public void getVeil(Context ctx){
+    public void getVeil(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
-        String localUrl ="https://ping.ibeyonde.com/api/iot.php?view=veil";
+        String localUrl ="https://ping.ibeyonde.com/api/iot.php?view=veil&uuid=" + uuid;
 
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
