@@ -30,7 +30,7 @@ public class DeviceSettingViewModel extends ViewModel {
 
     public static final MutableLiveData<Boolean> _device_online = new MutableLiveData<>();
     public static final Map<String, String> _cam_nv= new HashMap<>();
-    public static int _latest_version=-1;
+    public static MutableLiveData<Integer> _latest_version=new MutableLiveData<>();;
     public static final MutableLiveData<String> _veil= new MutableLiveData<>();
 
     public void getConfig(Context ctx, String uuid){
@@ -103,9 +103,9 @@ public class DeviceSettingViewModel extends ViewModel {
         queue.add(stringRequest);
     }
 
-    public void getLatestVersion(Context ctx){
+    public void getLatestVersion(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
-        String localUrl ="https://ping.ibeyonde.com/api/esp32_scb.php";
+        String localUrl ="https://ping.ibeyonde.com/api/esp32_scb.php?uuid=" + uuid;
 
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
@@ -113,12 +113,19 @@ public class DeviceSettingViewModel extends ViewModel {
                     @Override
                     public void onResponse(String response) {
                         Log.i(TAG, "getLatestVersion " + response);
-                        _latest_version = Integer.parseInt(response);
+                        String veil  = response.split("-")[0];
+                        if (veil == _veil.getValue()) {
+                            _latest_version.setValue(Integer.parseInt(response.split("-")[0]));
+                        }
+                        else {
+                            _latest_version.setValue(0);
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "getLatestVersion Request failed ," + error.getMessage());
+                _latest_version.setValue(0);
             }
         });
         queue.add(stringRequest);

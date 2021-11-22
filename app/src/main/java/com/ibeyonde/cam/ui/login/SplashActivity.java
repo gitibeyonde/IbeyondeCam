@@ -48,13 +48,8 @@ public class SplashActivity extends AppCompatActivity {
                 loginViewModel.login(getApplicationContext(), cv[0], cv[1]);
             }
             else {
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        finish();
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                    }
-                }, 2000);
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
             }
         }
         catch(Exception e){

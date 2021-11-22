@@ -18,11 +18,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.ibeyonde.cam.MainActivity;
 import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.databinding.FragmentDeviceSettingBinding;
 import com.ibeyonde.cam.databinding.FragmentSettingBinding;
 import com.ibeyonde.cam.ui.device.setting.DeviceSettingFragment;
 import com.ibeyonde.cam.ui.login.LoginActivity;
+import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.ui.login.SplashActivity;
 
 import java.io.File;
@@ -66,8 +68,10 @@ public class SettingFragment extends Fragment {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        System.exit(0);
-                    }}, 4000);
+                        LoginViewModel._login_token.setValue(LoginViewModel.FAILURE);
+                        Intent i = new Intent(getContext(), SplashActivity.class);
+                        startActivity(i);
+                    }}, 2000);
                 try (FileWriter fo = new FileWriter(file)) {
                     fo.write("");
                 } catch (Exception e) {

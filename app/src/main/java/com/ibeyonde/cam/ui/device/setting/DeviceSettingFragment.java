@@ -48,7 +48,6 @@ public class DeviceSettingFragment extends Fragment {
         View root = binding.getRoot();
 
         mViewModel.getVeil(getContext(), _cameraId);
-        mViewModel.getLatestVersion(getContext());
 
         Spinner frameSize = binding.frameSize;
 
@@ -196,10 +195,16 @@ public class DeviceSettingFragment extends Fragment {
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {}
                 });
+                mViewModel.getLatestVersion(getContext(), _cameraId);
+            }
+        });
 
-                int current_version = Integer.parseInt(mViewModel._cam_nv.get("version"));
+        mViewModel._latest_version.observe(this.getActivity(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer upver) {
+                int curver = Integer.parseInt(mViewModel._cam_nv.get("version"));
                 ImageButton upgrade = binding.upgradeButton;
-                if (current_version < mViewModel._latest_version) {
+                if (curver < upver) {
                     upgrade.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
