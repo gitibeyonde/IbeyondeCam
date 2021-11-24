@@ -31,6 +31,34 @@
         android:textColorHint="#757575" />
 
     <EditText
+        android:id="@+id/email"
+        style="@style/TextStyle"
+        android:textColorHint="#757575"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:autofillHints="@string/prompt_email"
+        android:hint="@string/prompt_email"
+        android:imeActionLabel="@string/action_register"
+        android:imeOptions="actionDone"
+        android:inputType="textEmailAddress"
+        android:selectAllOnFocus="true" />
+
+    <EditText
+        android:id="@+id/phone"
+        style="@style/TextStyle"
+        android:textColorHint="#757575"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:autofillHints="@string/prompt_phone"
+        android:hint="@string/prompt_phone"
+        android:imeActionLabel="@string/action_register"
+        android:imeOptions="actionDone"
+        android:inputType="phone"
+        android:selectAllOnFocus="true" />
+
+    <EditText
         android:id="@+id/password"
         style="@style/TextStyle"
         android:textColorHint="#757575"
@@ -58,33 +86,6 @@
         android:inputType="textPassword"
         android:selectAllOnFocus="true" />
 
-    <EditText
-        android:id="@+id/email"
-        style="@style/TextStyle"
-        android:textColorHint="#757575"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:autofillHints="@string/prompt_email"
-        android:hint="@string/prompt_email"
-        android:imeActionLabel="@string/action_register"
-        android:imeOptions="actionDone"
-        android:inputType="textEmailAddress"
-        android:selectAllOnFocus="true" />
-
-    <EditText
-        android:id="@+id/phone"
-        style="@style/TextStyle"
-        android:textColorHint="#757575"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:autofillHints="@string/prompt_phone"
-        android:hint="@string/prompt_phone"
-        android:imeActionLabel="@string/action_register"
-        android:imeOptions="actionDone"
-        android:inputType="phone"
-        android:selectAllOnFocus="true" />
 
     <Button
         android:id="@+id/register"

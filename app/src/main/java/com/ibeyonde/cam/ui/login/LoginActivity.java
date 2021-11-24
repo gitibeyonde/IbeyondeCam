@@ -55,8 +55,18 @@ public class LoginActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                if (loginViewModel.isPasswordValid(passwordEditText.getText().toString()) &&
-                        loginViewModel.isUserNameValid(usernameEditText.getText().toString())) {
+                if (usernameEditText.getText().toString().length() < 4 ){
+                    Toast.makeText(getApplicationContext(), "Please enter valid username with at least 5 characters.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (!usernameEditText.getText().toString().matches("[a-zA-Z0-9]+") ){
+                    Toast.makeText(getApplicationContext(), "Username should only contain alphabets and numbers.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if ( passwordEditText.getText().toString().length() < 6 || passwordEditText.getText().toString().length() > 20) {
+                    Toast.makeText(getApplicationContext(), "Password should have be between 6 to 20 characters.", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     loginButton.setEnabled(true);
                 }
             }

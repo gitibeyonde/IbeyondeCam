@@ -42,6 +42,15 @@
             app:srcCompat="@drawable/tt_setting" />
 
         <ImageButton
+            android:id="@+id/deviceHistory"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="cameraHistoryClick"
+            app:srcCompat="@drawable/tt_image_search" />
+
+        <ImageButton
             android:id="@+id/deviceLive"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
@@ -50,14 +59,6 @@
             android:onClick="cameraLiveClick"
             app:srcCompat="@drawable/tt_ondemand_video" />
 
-        <ImageButton
-            android:id="@+id/deviceHistory"
-            style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="cameraHistoryClick"
-            app:srcCompat="@drawable/tt_image_search" />
 
     </LinearLayout>
 

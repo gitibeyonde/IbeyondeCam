@@ -34,23 +34,6 @@ public class LoginViewModel extends ViewModel {
     public static final String FAILURE="FAILURE";
     public static final int LONG_DELAY = 3500;
 
-    // A placeholder username validation check
-    public boolean isUserNameValid(String username) {
-        return username != null && username.trim().length() > 3;
-    }
-
-    public boolean isUserEmailValid(String useremail) {
-        return useremail != null && useremail.trim().length() > 6 && useremail.contains("@");
-    }
-
-    public boolean isUserPhoneValid(String userphone) {
-        return userphone != null && userphone.trim().length() > 6;
-    }
-    // A placeholder password validation check
-    public boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 5;
-    }
-
     public void login(Context ctx, String username, String password){
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(ctx);

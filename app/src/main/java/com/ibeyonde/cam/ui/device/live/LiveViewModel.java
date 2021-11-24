@@ -92,7 +92,6 @@ public class LiveViewModel extends ViewModel {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i(TAG, "Checking local url " + response);
                         if (response.contains("Ibeyonde")) {
                             _url="http://" + c._localIp + "/stream";
                             _url_updated.setValue(true);

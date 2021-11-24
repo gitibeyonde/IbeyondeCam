@@ -49,7 +49,7 @@ public class ResetActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
             @Override
             public void afterTextChanged(Editable s) {
-                if ( loginViewModel.isUserEmailValid(useremailEditText.getText().toString())) {
+                if (useremailEditText.getText().toString().matches("[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}")) {
                     resetButton.setEnabled(true);
                 }
             }

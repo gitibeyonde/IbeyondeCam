@@ -50,39 +50,45 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!loginViewModel.isUserNameValid(usernameEditText.getText().toString()) ){
-                    Toast.makeText(getApplicationContext(), "Username should have at least 5 characters", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (!loginViewModel.isPasswordValid(passwordEditText.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "Password should have at least 6 characters", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (!loginViewModel.isPasswordValid(passwordEditText.getText().toString())) {
-                        Toast.makeText(getApplicationContext(), "Password and repeat password do not match", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if (!loginViewModel.isUserEmailValid(emailEditText.getText().toString()) ){
-                    Toast.makeText(getApplicationContext(), "Invalid email address", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                if (loginViewModel.isUserNameValid(usernameEditText.getText().toString()) &&
-                        loginViewModel.isPasswordValid(passwordEditText.getText().toString()) &&
-                        passwordEditText.getText().toString().equals(repeatPasswordEditText.getText().toString()) &&
-                        loginViewModel.isUserEmailValid(emailEditText.getText().toString()) &&
-                        loginViewModel.isUserPhoneValid(phoneEditText.getText().toString())
-                ) {
+                if (usernameEditText.getText().toString().length() < 5 ){
+                    Toast.makeText(getApplicationContext(), "Please enter valid username with at least 5 characters.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (!usernameEditText.getText().toString().matches("[a-zA-Z0-9]+") ){
+                    Toast.makeText(getApplicationContext(), "Username should only contain alphabets and numbers.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (!emailEditText.getText().toString().matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$") ){
+                    Toast.makeText(getApplicationContext(), "Enter a valid Email address .", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if (!phoneEditText.getText().toString().matches("[0-9+ ]{10,}") ){
+                    Toast.makeText(getApplicationContext(), "Enter a valid Phone number.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if ( passwordEditText.getText().toString().length() < 6 || passwordEditText.getText().toString().length() > 20) {
+                    Toast.makeText(getApplicationContext(), "Password should have be between 6 to 20 characters.", Toast.LENGTH_SHORT).show();
+                }
+                else if ( !passwordEditText.getText().toString().matches("^[a-zA-Z_0-9\\-_,;.:#+*?=!§$%&/()@]+$")) {
+                    Toast.makeText(getApplicationContext(), "Please enter alphabets, digits and any of -_;.:#+*?=!$%/()@.", Toast.LENGTH_SHORT).show();
+                }
+                else if ( ! passwordEditText.getText().toString().equals(repeatPasswordEditText.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "Password and Repeat password do not match.", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Log.d(TAG, "Valid values");
                     registerButton.setEnabled(true);
                 }
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
-        repeatPasswordEditText.addTextChangedListener(afterTextChangedListener);
         emailEditText.addTextChangedListener(afterTextChangedListener);
         phoneEditText.addTextChangedListener(afterTextChangedListener);
+        repeatPasswordEditText.addTextChangedListener(afterTextChangedListener);
+        passwordEditText.addTextChangedListener(afterTextChangedListener);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +122,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     startActivity(i);
                     finish();
                 } else {
-                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                 }
             }
         });
