@@ -5,30 +5,15 @@ import static java.lang.Thread.yield;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.StrictMode;
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.ibeyonde.cam.databinding.FragmentLiveBinding;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.Queue;
 
 public class MjpegRunner implements Runnable {
     private static final String TAG= MjpegRunner.class.getCanonicalName();

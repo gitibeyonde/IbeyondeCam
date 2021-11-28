@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bell_alert"
+    android:background="@color/light_grey"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -33,7 +34,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="48dp"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -44,7 +45,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/histNav1"
@@ -53,7 +55,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/histNav2"
@@ -62,7 +65,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/histNav3"
@@ -71,7 +75,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/histNav4"
@@ -80,7 +85,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/histNav5"
@@ -89,7 +95,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/histNav6"
@@ -98,7 +105,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/histNav7"
@@ -107,7 +115,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/histNav8"
@@ -116,7 +125,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <ImageButton
             android:id="@+id/histNav9"

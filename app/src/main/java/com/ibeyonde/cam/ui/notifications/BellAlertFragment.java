@@ -78,6 +78,7 @@ public class BellAlertFragment extends Fragment {
         binding = FragmentBellAlertBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         handler = new Handler(getContext().getMainLooper());
+        Timer t = new Timer();
 
         //LOGIN
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
@@ -112,6 +113,7 @@ public class BellAlertFragment extends Fragment {
                 ImageButton tb = getActivity().findViewById(v.getId());
                 Bitmap bitmap = ((BitmapDrawable)tb.getDrawable()).getBitmap();
                 binding.historyImage.setImageBitmap(bitmap);
+                t.cancel();
             }
         };
         ImageButton navButtons[] = { binding.histNav0, binding.histNav1, binding.histNav2, binding.histNav3, binding.histNav4, binding.histNav5,
@@ -141,7 +143,6 @@ public class BellAlertFragment extends Fragment {
                             new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
                         }
                     };
-                    Timer t = new Timer();
                     t.scheduleAtFixedRate(imgRefresh, 0, 1000);
 
 

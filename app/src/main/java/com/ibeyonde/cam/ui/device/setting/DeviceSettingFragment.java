@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceSettingBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
@@ -31,7 +29,7 @@ public class DeviceSettingFragment extends Fragment {
     private static final String TAG= DeviceSettingFragment.class.getCanonicalName();
 
     FragmentDeviceSettingBinding binding;
-    private DeviceSettingViewModel mViewModel;
+    private DeviceSettingViewModel deviceSettingViewModel;
     public static String _cameraId;
     public static String _veil;
     Handler handler;
@@ -43,11 +41,11 @@ public class DeviceSettingFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(DeviceSettingViewModel.class);
+        deviceSettingViewModel = new ViewModelProvider(this).get(DeviceSettingViewModel.class);
         binding = FragmentDeviceSettingBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
-
-        mViewModel.getVeil(getContext(), _cameraId);
+        Log.i(TAG, "CREATING DeviceSettingFragment");
+        deviceSettingViewModel.getVeil(getContext(), _cameraId);
 
         Spinner frameSize = binding.frameSize;
 
@@ -76,31 +74,16 @@ public class DeviceSettingFragment extends Fragment {
         binding.hFlip.setAlpha(.5f);
         binding.hFlip.setEnabled(false);
 
-        mViewModel._veil.observe(this.getActivity(), new Observer<String>() {
-                    @Override
-                    public void onChanged(String s) {
-                        if (s.length() == 0) {
-                            Toast toast = Toast.makeText(getContext(), "Failed to load, retry !", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.TOP, 20, 500);
-                            toast.show();
-                        }
-                        else {
-                            _veil = s;
-                            mViewModel.getConfig(getContext(), _cameraId);
-                        }
-                    }
-                });
-
-        mViewModel._device_online.observe(this.getActivity(), new Observer<Boolean>() {
+        deviceSettingViewModel._device_online.observe(this.getActivity(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean h) {
                 Log.i(TAG, h.toString() + " Device Online = " + _cameraId);
                 Camera c = DeviceViewModel.getCamera(_cameraId);
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Settings ");
                 if(!h)return;
-                selectSpinnerItemByValue(binding.timeZone, mViewModel._cam_nv.get("timezone"));
-                String cc = mViewModel._cam_nv.get("cloud");
-                String ht = mViewModel._cam_nv.get("history");
+                selectSpinnerItemByValue(binding.timeZone, deviceSettingViewModel._cam_nv.get("timezone"));
+                String cc = deviceSettingViewModel._cam_nv.get("cloud");
+                String ht = deviceSettingViewModel._cam_nv.get("history");
                 if ("true".equals(cc)) {
                     binding.cloudConnect.setChecked(true);
                 }
@@ -115,18 +98,18 @@ public class DeviceSettingFragment extends Fragment {
                 binding.motionHistory.setEnabled(true);
                 binding.camName.setAlpha(1f);
                 binding.camName.setEnabled(true);
-                binding.version.setText(mViewModel._cam_nv.get("version"));
+                binding.version.setText(deviceSettingViewModel._cam_nv.get("version"));
                 binding.timeZone.setAlpha(1f);
                 binding.timeZone.setEnabled(true);
-                binding.camName.setText(mViewModel._cam_nv.get("name"));
+                binding.camName.setText(deviceSettingViewModel._cam_nv.get("name"));
 
-                selectSpinnerItemByValue(binding.frameSize, getFrameSize(Integer.parseInt(mViewModel._cam_nv.get("framesize"))));
+                selectSpinnerItemByValue(binding.frameSize, getFrameSize(Integer.parseInt(deviceSettingViewModel._cam_nv.get("framesize"))));
                 binding.frameSize.setAlpha(1f);
                 binding.frameSize.setEnabled(true);
-                binding.vFlip.setChecked(mViewModel._cam_nv.get("vflip").equals("0") ? false : true);
+                binding.vFlip.setChecked(deviceSettingViewModel._cam_nv.get("vflip").equals("0") ? false : true);
                 binding.vFlip.setAlpha(1f);
                 binding.vFlip.setEnabled(true);
-                binding.vFlip.setChecked(mViewModel._cam_nv.get("hmirror").equals("0") ? false : true);
+                binding.vFlip.setChecked(deviceSettingViewModel._cam_nv.get("hmirror").equals("0") ? false : true);
                 binding.hFlip.setAlpha(1f);
                 binding.hFlip.setEnabled(true);
 
@@ -134,7 +117,7 @@ public class DeviceSettingFragment extends Fragment {
                 cloudConnect.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewModel.applyDeviceConfig(getContext(), _cameraId, "cloud", binding.cloudConnect.isEnabled() ? "true" : "false");
+                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "cloud", binding.cloudConnect.isEnabled() ? "true" : "false");
                     }
                 });
 
@@ -142,7 +125,7 @@ public class DeviceSettingFragment extends Fragment {
                 motionHistory.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewModel.applyDeviceConfig(getContext(), _cameraId, "history", binding.cloudConnect.isEnabled() ? "true" : "false");
+                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "history", binding.cloudConnect.isEnabled() ? "true" : "false");
                     }
                 });
 
@@ -151,7 +134,7 @@ public class DeviceSettingFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Log.d(TAG, binding.camName.getText().toString());
-                        mViewModel.applyDeviceConfig(getContext(), _cameraId, "cn", binding.camName.getText().toString());
+                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "cn", binding.camName.getText().toString());
                     }
                 });
 
@@ -160,7 +143,7 @@ public class DeviceSettingFragment extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Log.d(TAG, sprTz.getSelectedItem().toString());
-                        mViewModel.applyDeviceConfig(getContext(), _cameraId, "timezone", sprTz.getSelectedItem().toString());
+                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "timezone", sprTz.getSelectedItem().toString());
                     }
 
                     @Override
@@ -173,7 +156,7 @@ public class DeviceSettingFragment extends Fragment {
                 vflip.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewModel.applyCamConfig(getContext(), _cameraId, "vflip", binding.cloudConnect.isEnabled() ? "1" : "0");
+                        deviceSettingViewModel.applyCamConfig(getContext(), _cameraId, "vflip", binding.cloudConnect.isEnabled() ? "1" : "0");
                     }
                 });
 
@@ -181,7 +164,7 @@ public class DeviceSettingFragment extends Fragment {
                 hflip.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mViewModel.applyCamConfig(getContext(), _cameraId, "hmirror", binding.cloudConnect.isEnabled() ? "1" : "0");
+                        deviceSettingViewModel.applyCamConfig(getContext(), _cameraId, "hmirror", binding.cloudConnect.isEnabled() ? "1" : "0");
                     }
                 });
 
@@ -190,25 +173,19 @@ public class DeviceSettingFragment extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Log.d(TAG, sprFs.getSelectedItem().toString());
-                        mViewModel.applyCamConfig(getContext(), _cameraId, "framesize", getFrameSize(sprFs.getSelectedItem().toString()) +"");
+                        deviceSettingViewModel.applyCamConfig(getContext(), _cameraId, "framesize", getFrameSize(sprFs.getSelectedItem().toString()) +"");
                     }
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {}
                 });
-                mViewModel.getLatestVersion(getContext(), _cameraId);
-            }
-        });
 
-        mViewModel._latest_version.observe(this.getActivity(), new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer upver) {
-                int curver = Integer.parseInt(mViewModel._cam_nv.get("version"));
+                int curver = Integer.parseInt(deviceSettingViewModel._cam_nv.get("version"));
                 ImageButton upgrade = binding.upgradeButton;
-                if (curver < upver) {
+                if (curver < deviceSettingViewModel._latest_version) {
                     upgrade.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mViewModel.command(getContext(), "upgrade", _cameraId);
+                            deviceSettingViewModel.command(getContext(), "upgrade", _cameraId);
                         }
                     });
                     upgrade.setVisibility(View.VISIBLE);
@@ -218,6 +195,7 @@ public class DeviceSettingFragment extends Fragment {
                     upgrade.setVisibility(View.INVISIBLE);
                     binding.upgradeAvailable.setVisibility(View.INVISIBLE);
                 }
+
             }
         });
 
@@ -226,7 +204,7 @@ public class DeviceSettingFragment extends Fragment {
         deleteHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.deleteHistory(getContext(), _cameraId);
+                deviceSettingViewModel.deleteHistory(getContext(), _cameraId);
             }
         });
 
@@ -235,7 +213,7 @@ public class DeviceSettingFragment extends Fragment {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.command(getContext(), "reset", _cameraId);
+                deviceSettingViewModel.command(getContext(), "reset", _cameraId);
             }
         });
 
@@ -243,7 +221,7 @@ public class DeviceSettingFragment extends Fragment {
         restart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mViewModel.command(getContext(), "restart", _cameraId);
+                deviceSettingViewModel.command(getContext(), "restart", _cameraId);
             }
         });
 

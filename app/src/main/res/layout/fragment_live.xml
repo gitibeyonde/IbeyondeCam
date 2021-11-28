@@ -3,6 +3,7 @@
     xmlns:stream="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/live_fragment"
+    android:background="@color/light_grey"
     android:layout_width="match_parent"
     android:layout_height="400dp"
     android:orientation="vertical"

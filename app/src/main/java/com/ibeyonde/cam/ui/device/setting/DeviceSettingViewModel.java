@@ -28,15 +28,78 @@ import java.util.Map;
 public class DeviceSettingViewModel extends ViewModel {
     private static final String TAG= DeviceSettingViewModel.class.getCanonicalName();
 
-    public static final MutableLiveData<Boolean> _device_online = new MutableLiveData<>();
+    public static String _veil;
     public static final Map<String, String> _cam_nv= new HashMap<>();
-    public static MutableLiveData<Integer> _latest_version=new MutableLiveData<>();;
-    public static final MutableLiveData<String> _veil= new MutableLiveData<>();
+    public static Integer _latest_version=0;
+    public static final MutableLiveData<Boolean> _device_online = new MutableLiveData<>();
+
+
+    public void getVeil(Context ctx, String uuid){
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        String localUrl ="https://ping.ibeyonde.com/api/iot.php?view=veil&uuid=" + uuid;
+
+        Log.i(TAG, localUrl);
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, "getVeil " + response);
+                        getLatestVersion(ctx, uuid);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "getVeil Request failed ," + error.getMessage());
+                _device_online.setValue(false);
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<String, String>();
+                String creds = String.format("%s:%s", LoginViewModel._email,LoginViewModel._pass);
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
+                params.put("Authorization", auth);
+                return params;
+            }
+
+        };
+        queue.add(stringRequest);
+    }
+
+    public void getLatestVersion(Context ctx, String uuid){
+        RequestQueue queue = Volley.newRequestQueue(ctx);
+        String localUrl ="https://ping.ibeyonde.com/api/esp32_scb.php?uuid=" + uuid;
+
+        Log.i(TAG, localUrl);
+        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i(TAG, "getLatestVersion " + response);
+                        String veil  = response.split("-")[0];
+                        if (veil == _veil) {
+                            _latest_version=Integer.parseInt(response.split("-")[0]);
+                        }
+                        else {
+                            _latest_version=0;
+                        }
+                        getConfig(ctx, uuid);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "getLatestVersion Request failed ," + error.getMessage());
+                _device_online.setValue(false);
+            }
+        });
+        queue.add(stringRequest);
+    }
+
 
     public void getConfig(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=getconf&veil=" + _veil.getValue();
+        String localUrl ="http://" + c._localIp + "/cmd?name=getconf&veil=" + _veil;
 
         Log.i(TAG, localUrl);
         JsonObjectRequest stringRequest = new JsonObjectRequest(JsonObjectRequest.Method.GET, localUrl, null,
@@ -85,7 +148,7 @@ public class DeviceSettingViewModel extends ViewModel {
 
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=config&var=" + var + "&val=" + val+ "&veil=" + _veil.getValue();
+        String localUrl ="http://" + c._localIp + "/cmd?name=config&var=" + var + "&val=" + val+ "&veil=" + _veil;
 
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
@@ -103,73 +166,11 @@ public class DeviceSettingViewModel extends ViewModel {
         queue.add(stringRequest);
     }
 
-    public void getLatestVersion(Context ctx, String uuid){
-        RequestQueue queue = Volley.newRequestQueue(ctx);
-        String localUrl ="https://ping.ibeyonde.com/api/esp32_scb.php?uuid=" + uuid;
-
-        Log.i(TAG, localUrl);
-        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i(TAG, "getLatestVersion " + response);
-                        String veil  = response.split("-")[0];
-                        if (veil == _veil.getValue()) {
-                            _latest_version.setValue(Integer.parseInt(response.split("-")[0]));
-                        }
-                        else {
-                            _latest_version.setValue(0);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "getLatestVersion Request failed ," + error.getMessage());
-                _latest_version.setValue(0);
-            }
-        });
-        queue.add(stringRequest);
-    }
-
-
-    public void getVeil(Context ctx, String uuid){
-        RequestQueue queue = Volley.newRequestQueue(ctx);
-        String localUrl ="https://ping.ibeyonde.com/api/iot.php?view=veil&uuid=" + uuid;
-
-        Log.i(TAG, localUrl);
-        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i(TAG, "getVeil " + response);
-                        _veil.postValue(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "getVeil Request failed ," + error.getMessage());
-                _veil.postValue("");
-            }
-        }){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", LoginViewModel._email,LoginViewModel._pass);
-                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
-                params.put("Authorization", auth);
-                return params;
-            }
-
-        };
-        queue.add(stringRequest);
-    }
-
-
     public void applyCamConfig(Context ctx, String uuid, String var, String val){
         if (_cam_nv.get(var).equals(val))return;
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=camconf&var=" + var + "&val=" + val + "&veil=" + _veil.getValue();
+        String localUrl ="http://" + c._localIp + "/cmd?name=camconf&var=" + var + "&val=" + val + "&veil=" + _veil;
 
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
@@ -190,7 +191,7 @@ public class DeviceSettingViewModel extends ViewModel {
     public void command(Context ctx, String cmd, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=" + cmd + "&veil=" + _veil.getValue();
+        String localUrl ="http://" + c._localIp + "/cmd?name=" + cmd + "&veil=" + _veil;
 
         Log.i(TAG, localUrl);
         StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
