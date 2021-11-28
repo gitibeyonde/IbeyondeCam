@@ -1,11 +1,8 @@
 package com.ibeyonde.cam.ui.device.history;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,7 +15,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.ibeyonde.cam.MainActivity;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.History;
 

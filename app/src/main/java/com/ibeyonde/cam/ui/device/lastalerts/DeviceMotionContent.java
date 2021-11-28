@@ -1,7 +1,6 @@
 package com.ibeyonde.cam.ui.device.lastalerts;
 
 import com.ibeyonde.cam.utils.Camera;
-import com.ibeyonde.cam.utils.History;
 import com.ibeyonde.cam.utils.LastAlerts;
 
 import java.util.ArrayList;

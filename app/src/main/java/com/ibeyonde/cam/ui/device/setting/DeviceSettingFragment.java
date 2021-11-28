@@ -209,14 +209,6 @@ public class DeviceSettingFragment extends Fragment {
         });
 
 
-        ImageButton reset = binding.resetButton;
-        reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deviceSettingViewModel.command(getContext(), "reset", _cameraId);
-            }
-        });
-
         ImageButton restart = binding.restartButton;
         restart.setOnClickListener(new View.OnClickListener() {
             @Override

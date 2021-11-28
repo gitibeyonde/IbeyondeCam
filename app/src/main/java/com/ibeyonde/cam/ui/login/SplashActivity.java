@@ -1,7 +1,5 @@
 package com.ibeyonde.cam.ui.login;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +17,6 @@ import com.ibeyonde.cam.databinding.ActivitySplashBinding;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SplashActivity extends AppCompatActivity {
     private static final String TAG= SplashActivity.class.getCanonicalName();

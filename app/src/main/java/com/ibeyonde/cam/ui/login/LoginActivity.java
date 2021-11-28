@@ -1,13 +1,6 @@
 package com.ibeyonde.cam.ui.login;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,6 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.ibeyonde.cam.MainActivity;
 import com.ibeyonde.cam.databinding.ActivityLoginBinding;
@@ -56,15 +54,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (usernameEditText.getText().toString().length() < 4 ){
-                    Toast.makeText(getApplicationContext(), "Please enter valid username with at least 5 characters.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else if (!usernameEditText.getText().toString().matches("[a-zA-Z0-9]+") ){
-                    Toast.makeText(getApplicationContext(), "Username should only contain alphabets and numbers.", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if ( passwordEditText.getText().toString().length() < 6 || passwordEditText.getText().toString().length() > 20) {
-                    Toast.makeText(getApplicationContext(), "Password should have be between 6 to 20 characters.", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     loginButton.setEnabled(true);

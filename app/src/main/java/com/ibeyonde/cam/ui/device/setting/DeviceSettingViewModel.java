@@ -44,6 +44,7 @@ public class DeviceSettingViewModel extends ViewModel {
                     @Override
                     public void onResponse(String response) {
                         Log.i(TAG, "getVeil " + response);
+                        _veil = response.trim();
                         getLatestVersion(ctx, uuid);
                     }
                 }, new Response.ErrorListener() {

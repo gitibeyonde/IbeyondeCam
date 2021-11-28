@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,22 +15,17 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.AlertDetails;
 import com.ibeyonde.cam.utils.Alerts;
-import com.ibeyonde.cam.utils.Camera;
-import com.ibeyonde.cam.utils.History;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 public class NotificationViewModel extends ViewModel {

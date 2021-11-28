@@ -61,6 +61,7 @@ public class DeviceViewModel extends ViewModel {
                     @Override
                     public void onResponse(JSONArray jsonArray) {
                         Log.d(TAG, "Device list json " + jsonArray.toString());
+                        _deviceList.clear();
                         try {
                             Camera._total = 0;
                             for(int i=0;i< jsonArray.length();i++) {

@@ -1,6 +1,5 @@
 package com.ibeyonde.cam.ui.device.lastalerts;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,10 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.databinding.FragmentDeviceListBinding;
-import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.Camera;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 /**

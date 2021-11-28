@@ -3,6 +3,12 @@ package com.ibeyonde.cam.ui.device.history;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -11,19 +17,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.ibeyonde.cam.MainActivity;
 import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.databinding.FragmentHistoryListBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.utils.Camera;
-import com.ibeyonde.cam.utils.History;
 
 /**
  * A fragment representing a list of Items.
