@@ -76,14 +76,15 @@ public class DeviceSettingViewModel extends ViewModel {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i(TAG, "getLatestVersion " + response);
-                        String veil  = response.split("-")[0];
-                        if (veil == _veil) {
-                            _latest_version=Integer.parseInt(response.split("-")[0]);
+                        String rv[]  = response.split("-");
+                        Log.i(TAG, "getLatestVersion " + rv[0] + "--" + rv[1]);
+                        if (rv[1].equals(_veil)) {
+                            _latest_version=Integer.parseInt(rv[0]);
                         }
                         else {
                             _latest_version=0;
                         }
+                        Log.i(TAG, "getLatestVersion " + _latest_version);
                         getConfig(ctx, uuid);
                     }
                 }, new Response.ErrorListener() {

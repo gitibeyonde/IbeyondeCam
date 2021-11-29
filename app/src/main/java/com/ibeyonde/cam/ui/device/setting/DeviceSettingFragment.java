@@ -186,10 +186,13 @@ public class DeviceSettingFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             deviceSettingViewModel.command(getContext(), "upgrade", _cameraId);
+                            binding.upgradeAvailable.setText("Upgrading, please wait for a minute");
+                            upgrade.setVisibility(View.INVISIBLE);
                         }
                     });
                     upgrade.setVisibility(View.VISIBLE);
                     binding.upgradeAvailable.setVisibility(View.VISIBLE);
+                    binding.upgradeAvailable.setText("Upgrade to ver-" + deviceSettingViewModel._latest_version);
                 }
                 else {
                     upgrade.setVisibility(View.INVISIBLE);
