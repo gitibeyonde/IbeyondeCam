@@ -62,17 +62,22 @@ public class DeviceViewModel extends ViewModel {
                     public void onResponse(JSONArray jsonArray) {
                         Log.d(TAG, "Device list json " + jsonArray.toString());
                         _deviceList.clear();
-                        try {
-                            Camera._total = 0;
-                            for(int i=0;i< jsonArray.length();i++) {
-                                JSONObject json = jsonArray.getJSONObject(i);
-                                Log.d(TAG, "deviceList Device = " + json.toString());
-                                Camera c = new Camera(json);
-                                _deviceList.put(c._uuid, c);
-                                getHistory_(ctx, c._uuid, null);
+                        if (jsonArray.length() == 0 ) {
+                            _history.postValue((short) 1);
+                        }
+                        else {
+                            try {
+                                Camera._total = 0;
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject json = jsonArray.getJSONObject(i);
+                                    Log.d(TAG, "deviceList Device = " + json.toString());
+                                    Camera c = new Camera(json);
+                                    _deviceList.put(c._uuid, c);
+                                    getHistory_(ctx, c._uuid, null);
+                                }
+                            } catch (JSONException e) {
+                                Log.e(TAG, "deviceList Device List" + e.getMessage());
                             }
-                        } catch (JSONException e) {
-                            Log.e(TAG, "deviceList Device List" + e.getMessage());
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -127,10 +132,13 @@ public class DeviceViewModel extends ViewModel {
                                 _history.postValue((short) 0);
                             }
                         } else {
+                            Log.d(TAG, "No History");
                             try {
-                                c.setLastAlerts("[[\"https://udp1.ibeyonde.com/img/no_signal.jpg\", \"22\\/09\\/2021 - 14:10:41\"]]");
+                                c.setLastAlerts("[[\"https://udp1.ibeyonde.com/img/no_image.jpg\", \"01\\/01\\/1991 - 01:01:01\"]]");
+                                _history.postValue((short) 1);
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                _history.postValue((short) 0);
                             }
                         }
                     }

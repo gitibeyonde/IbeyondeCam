@@ -57,6 +57,7 @@ public class SettingFragment extends Fragment {
                     public void run() {
                         LoginViewModel._login_token.setValue(LoginViewModel.FAILURE);
                         Intent i = new Intent(getContext(), SplashActivity.class);
+                        getActivity().finish();
                         startActivity(i);
                     }}, 2000);
                 try (FileWriter fo = new FileWriter(file)) {

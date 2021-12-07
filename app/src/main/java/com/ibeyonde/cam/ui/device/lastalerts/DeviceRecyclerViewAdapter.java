@@ -45,6 +45,7 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         {
             @Override
             public void run() {
+                Log.d(TAG, "onBindViewHolder  url = " + hi._lastalerts.getCurrentURL() );
                 new ImageLoadTask(hi._lastalerts.getCurrentURL(), holder.picture).execute();
             }
         };

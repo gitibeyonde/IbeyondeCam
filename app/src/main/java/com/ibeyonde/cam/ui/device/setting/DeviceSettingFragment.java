@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,9 +21,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.ibeyonde.cam.databinding.FragmentDeviceSettingBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
+import com.ibeyonde.cam.ui.login.LoginViewModel;
+import com.ibeyonde.cam.ui.login.SplashActivity;
 import com.ibeyonde.cam.utils.Camera;
 
 public class DeviceSettingFragment extends Fragment {
@@ -45,6 +49,15 @@ public class DeviceSettingFragment extends Fragment {
         binding = FragmentDeviceSettingBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         Log.i(TAG, "CREATING DeviceSettingFragment");
+
+        //check user logged in
+        if (LoginViewModel._email == null || LoginViewModel._pass == null){
+            Toast.makeText(getContext(), "Logging In.", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getContext(), SplashActivity.class);
+            getActivity().finish();
+            startActivity(i);
+        }
+
         deviceSettingViewModel.getVeil(getContext(), _cameraId);
 
         Spinner frameSize = binding.frameSize;

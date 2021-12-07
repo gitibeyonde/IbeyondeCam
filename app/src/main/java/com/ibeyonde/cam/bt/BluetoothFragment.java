@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.ListFragment;
 
 import com.ibeyonde.cam.R;
+import com.ibeyonde.cam.ui.login.LoginViewModel;
+import com.ibeyonde.cam.ui.login.SplashActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +39,15 @@ public class BluetoothFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //check user logged in
+        if (LoginViewModel._email == null || LoginViewModel._pass == null){
+            Toast.makeText(getContext(), "Logging In.", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getContext(), SplashActivity.class);
+            getActivity().finish();
+            startActivity(i);
+        }
+
         setHasOptionsMenu(true);
         if(getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH))
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

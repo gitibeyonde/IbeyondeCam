@@ -28,7 +28,10 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(Void... params) {
         try {
-            String urlSnippet = url.substring(url.indexOf("data.ibeyonde"), url.indexOf("?"));
+            String urlSnippet = url;
+            if (url.contains("data.ibeyonde") && url.contains("?")) {
+                urlSnippet = url.substring(url.indexOf("data.ibeyonde"), url.indexOf("?"));
+            }
             Bitmap myBitmap = s_cache.get(urlSnippet);
             if (myBitmap != null){
                 return myBitmap;
