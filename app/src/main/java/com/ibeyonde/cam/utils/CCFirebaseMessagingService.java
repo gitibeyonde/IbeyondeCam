@@ -136,7 +136,7 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
                 InputStream input = connection.getInputStream();
                 myBitmap = BitmapFactory.decodeStream(input);
             } catch (Exception e) {
-                myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.error);
+                myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ico128);
                 Log.w(TAG, "Failed do download the alert image");
             }
 
