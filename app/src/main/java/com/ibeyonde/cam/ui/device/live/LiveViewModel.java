@@ -105,8 +105,14 @@ public class LiveViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Local Live Request failed ," + error.getMessage());
+                getUdpLiveUrl(ctx, uuid);
             }
         });
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                2000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         queue.add(stringRequest);
     }
 

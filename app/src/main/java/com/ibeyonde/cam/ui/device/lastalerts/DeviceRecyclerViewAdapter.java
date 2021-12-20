@@ -41,11 +41,11 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         holder.history.setContentDescription(hi._uuid);
         holder.setting.setContentDescription(hi._uuid);
 
+        Log.d(TAG, "onBindViewHolder  url = " + hi._lastalerts.getCurrentURL() );
         TimerTask imgRefresh = new TimerTask()
         {
             @Override
             public void run() {
-                Log.d(TAG, "onBindViewHolder  url = " + hi._lastalerts.getCurrentURL() );
                 new ImageLoadTask(hi._lastalerts.getCurrentURL(), holder.picture).execute();
             }
         };

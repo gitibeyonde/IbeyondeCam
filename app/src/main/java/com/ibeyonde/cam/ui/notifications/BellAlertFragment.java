@@ -119,6 +119,7 @@ public class BellAlertFragment extends Fragment {
         notificationViewModel._Ralert_details.observe(this.getActivity(), new Observer<Short>() {
             public void onChanged(@Nullable Short s) {
                 if (s == 1) {
+                    binding.progressBar.setVisibility(View.GONE);
                     AlertDetails ad = notificationViewModel._alert_details;
                     if (ad == null) return;
 

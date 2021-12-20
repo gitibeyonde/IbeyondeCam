@@ -104,7 +104,7 @@ public class MjpegRunner implements Runnable {
                 if (urlStream == null && isRunning){
                     urlStream = getUrlInputStream();
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
