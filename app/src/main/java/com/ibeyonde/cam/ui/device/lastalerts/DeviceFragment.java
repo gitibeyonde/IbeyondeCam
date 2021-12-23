@@ -31,16 +31,19 @@ public class DeviceFragment extends Fragment {
     private static final String TAG= DeviceFragment.class.getCanonicalName();
     private DeviceViewModel deviceViewModel;
 
-    public DeviceFragment() {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_device_list, container, false);
+        deviceViewModel = new ViewModelProvider(this).get(DeviceViewModel.class);
 
-        deviceViewModel =
-                new ViewModelProvider(this).get(DeviceViewModel.class);
         FragmentDeviceListBinding binding = FragmentDeviceListBinding.inflate(inflater, container, false);
 
         deviceViewModel.getAllHistory(getActivity().getApplicationContext());

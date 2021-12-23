@@ -35,6 +35,7 @@ import com.ibeyonde.cam.ui.notifications.BellAlertFragment;
 import com.ibeyonde.cam.ui.notifications.NotificationFragment;
 import com.ibeyonde.cam.ui.setting.SettingFragment;
 import com.ibeyonde.cam.utils.CCFirebaseMessagingService;
+import com.ibeyonde.cam.ui.device.history.HistoryProgressFragment;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
     final Fragment _bluetooth = new BluetoothFragment();
     final Fragment _settings = new SettingFragment();
     final LiveFragment _live = new LiveFragment();
-    final HistoryFragment _history = new HistoryFragment();
+    final HistoryProgressFragment _history_progress = new HistoryProgressFragment();
+    public final static HistoryFragment _history = new HistoryFragment();
     final DeviceSettingFragment _deviceSetting = new DeviceSettingFragment();
     final BellAlertFragment _bellAlert = new BellAlertFragment();
     final FragmentManager _fm = getSupportFragmentManager();
@@ -164,13 +166,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void cameraHistoryClick(View view) {
         Log.i(TAG, "cameraHistoryClick On Click =  " + view.getContentDescription());
-        _history._cameraId = view.getContentDescription().toString();
-        _history._list_size = 20;
+        _history_progress._cameraId = view.getContentDescription().toString();
+        _history_progress._list_size = 20;
         getSupportFragmentManager().getPrimaryNavigationFragment().getChildFragmentManager()
-                .beginTransaction().replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), _history, "history")
+                .beginTransaction().replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), _history_progress, "history")
                 .setReorderingAllowed(true)
                 .addToBackStack("home").commit();
-        getSupportActionBar().setTitle(_history._cameraId  + " History ");
+        getSupportActionBar().setTitle(_history_progress._cameraId  + " History ");
     }
 
 

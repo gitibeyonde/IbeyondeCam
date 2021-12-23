@@ -47,9 +47,12 @@
         <entry key="app/src/main/res/layout/fragment_live.xml" value="0.29375" />
         <entry key="app/src/main/res/layout/fragment_notification_item.xml" value="0.33489583333333334" />
         <entry key="app/src/main/res/layout/fragment_notification_list.xml" value="0.33489583333333334" />
+        <entry key="app/src/main/res/layout/fragment_notification_progress.xml" value="0.24635416666666668" />
+        <entry key="app/src/main/res/layout/fragment_progress.xml" value="0.23229166666666667" />
         <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.24427083333333333" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/fragment_terminal.xml" value="0.32916666666666666" />
+        <entry key="app/src/main/res/layout/progress.xml" value="0.24635416666666668" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.32864583333333336" />
         <entry key="app/src/main/res/menu/menu_terminal.xml" value="0.29375" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.31927083333333334" />
