@@ -11,9 +11,9 @@ key
 .DS_Store
 /build
 /captures
-/app/debug/app-debug.aab
-/app/debug/app-debug.apk
-/app/debug/output-metadata.json
 .externalNativeBuild
 .cxx
 local.properties
+IbeyondeCam.zip
+app-release.aab
+app-release.apk

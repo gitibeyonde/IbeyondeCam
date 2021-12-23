@@ -67,10 +67,36 @@ public class BellAlertFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
+
+        Log.d(TAG, "onCreate");
+        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
+            public void onChanged(@Nullable Boolean url_updated) {
+                String url = liveViewModel._url;
+                Log.i(TAG, "Live URL = " + url);
+                try {
+                    rc = new MjpegRunner(handler, binding.cameraLive, new URL(url));
+                    Thread t = new Thread(rc);
+                    t.start();
+                } catch (Exception e) {
+                    if (rc != null) rc.stop();
+                    Log.i(TAG, "Error in starting live = ", e);
+                }
+                binding.progressBar.setVisibility(View.GONE);
+
+                Camera c = DeviceViewModel.getCamera(_cameraId);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " Bell Alert ");
+            }
+        });
+    }
+
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
-        liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
         deviceViewModel = new ViewModelProvider(this).get(DeviceViewModel.class);
         binding = FragmentBellAlertBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -156,30 +182,6 @@ public class BellAlertFragment extends Fragment {
             }
         });
 
-        rc = new MjpegRunner(handler, binding.cameraLive);
-        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
-            public void onChanged(@Nullable Boolean url) {
-                Log.i(TAG, "Live URL = " + url);
-                if (liveViewModel._url.length() > 10) {
-                    try {
-                        rc.setURL(new URL(liveViewModel._url));
-                        Thread t = new Thread(rc);
-                        t.start();
-                    } catch (Exception e) {
-                        Log.i(TAG, "Error in starting live = ", e);
-                        if (rc != null)rc.stop();
-                    }
-                    binding.progressBar.setVisibility(View.GONE);
-
-                    Camera c = DeviceViewModel.getCamera(_cameraId);
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Bell Alert ");
-                }
-                else {
-                    if (rc != null)rc.stop();
-                }
-            }
-        });
-
         Log.i(TAG, "on create view ");
         return root;
     }
@@ -188,14 +190,14 @@ public class BellAlertFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "on resume ");
-        rc.resume();
+        if (rc != null)rc.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.i(TAG, "on pause ");
-        rc.pause();
+        if (rc != null)rc.pause();
     }
 
     @Override

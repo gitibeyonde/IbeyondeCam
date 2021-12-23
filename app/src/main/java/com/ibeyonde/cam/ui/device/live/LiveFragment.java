@@ -50,44 +50,39 @@ public class LiveFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
+        liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
+
+        handler = new Handler(getContext().getMainLooper());
+        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
+            public void onChanged(@Nullable Boolean url_updated) {
+                    String url = liveViewModel._url;
+                    Log.i(TAG, url_updated + " Live URL = " + url);
+                    try {
+                        rc = new MjpegRunner(handler, binding.cameraLive, new URL(url));
+                        Thread t = new Thread(rc);
+                        t.start();
+                    } catch (Exception e) {
+                        if (rc != null)rc.stop();
+                        Log.e(TAG,"Live URL streaming failed");
+                    }
+                    Camera c = DeviceViewModel.getCamera(_cameraId);
+                    binding.cameraLabel.setText(c._name);
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Live ");
+            }
+        });
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
         binding = FragmentLiveBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        Log.i(TAG, "onCreateView Live view created");
         liveViewModel.getLiveUrl(getContext(), _cameraId);
 
-        handler = new Handler(getContext().getMainLooper());
-        rc = new MjpegRunner(handler, binding.cameraLive);
 
-        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
-            public void onChanged(@Nullable Boolean url_updated) {
-                if (liveViewModel._url.length() > 10) {
-                    //liveViewModel._url_updated.removeObserver(this::onChanged);
-                    Log.i(TAG, "Live URL = " + liveViewModel._url);
-                    try {
-                        rc.setURL(new URL(liveViewModel._url));
-                        Thread t = new Thread(rc);
-                        t.start();
-                    } catch (Exception e) {
-                        Log.e(TAG,"Live URL streaming failed");
-                        if (rc != null)rc.stop();
-                    }
-                    Camera c = DeviceViewModel.getCamera(_cameraId);
-                    binding.cameraLabel.setText(c._name);
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Live ");
-                }
-                else {
-                    if (rc != null)rc.stop();
-                }
-            }
-        });
         Log.i(TAG, "Live view created");
-
         return root;
     }
 
@@ -95,14 +90,14 @@ public class LiveFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "on resume ");
-        rc.resume();
+        if (rc != null)rc.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.i(TAG, "on pause ");
-        rc.pause();
+        if (rc != null)rc.pause();
     }
 
     @Override

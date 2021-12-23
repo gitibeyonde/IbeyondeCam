@@ -20,12 +20,12 @@ public class MjpegRunner implements Runnable {
     private URL url;
     private Handler handler;
     private ImageView cameraLive;
-    public static boolean isRunning = true;
-    public static boolean isPaused = false;
+    public volatile boolean isRunning = true;
+    public volatile boolean isPaused = false;
 
     private static final int SKIP_HEADER = "Content-Type: image/jpeg\nContent-Length: ".length();
 
-    public MjpegRunner( Handler handler, ImageView cameraLive)  {
+    public MjpegRunner( Handler handler, ImageView cameraLive, URL url)  {
         this.handler = handler;
         this.cameraLive = cameraLive;
         if (android.os.Build.VERSION.SDK_INT > 9)
@@ -34,28 +34,26 @@ public class MjpegRunner implements Runnable {
             StrictMode.setThreadPolicy(policy);
         }
         Log.d(TAG, "MjpegRunner constructor");
-    }
-
-    public void setURL(URL url){
         this.url = url;
         isRunning = true;
         isPaused = false;
         Log.d(TAG, "MjpegRunner setURL");
     }
 
-    public synchronized static void stop() {
+    public synchronized void stop() {
         isRunning = false;
     }
 
-    public synchronized static void pause() {
+    public synchronized void pause() {
         isPaused = true;
     }
 
-    public synchronized static void resume() {
+    public synchronized void resume() {
         isPaused = false;
     }
 
     public InputStream getUrlInputStream() {
+        if (!isRunning)return null;
         InputStream urlStream = null;
         HttpURLConnection urlConnection = null;
         try {
@@ -68,7 +66,7 @@ public class MjpegRunner implements Runnable {
             //urlConnection.setRequestProperty("Accept-Encoding", "identity");
             urlConnection.connect();
             urlStream = urlConnection.getInputStream();
-            Log.i(TAG, "Starting mjpeg>>>>>>>");
+            Log.i(TAG, "Getting Input stream");
         } catch (Exception e) {
             Log.e(TAG, "Url connection failed");
             if (urlConnection != null){
@@ -90,12 +88,13 @@ public class MjpegRunner implements Runnable {
     public void run() {
         Integer i=0;
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
+        options.inMutable = false;
         InputStream urlStream = null;
+        Log.i(TAG, "Starting mjpeg>>>>>>>");
         while (isRunning) {
             if (isPaused) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -117,14 +116,14 @@ public class MjpegRunner implements Runnable {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            cameraLive.setImageBitmap(bmp);
-                            yield();
-                            cameraLive.invalidate();
+                            if (isRunning) {
+                                cameraLive.setImageBitmap(bmp);
+                            }
                         }
                     });
                 }
                 catch (Exception e) {
-                    Log.e(TAG, "Url connection failed IOException", e);
+                    Log.e(TAG, "Url connection failed ", e);
                     try {
                         if (urlStream != null) {
                             urlStream.close();
@@ -139,7 +138,6 @@ public class MjpegRunner implements Runnable {
         try {
             if (urlStream != null) {
                 urlStream.close();
-                urlStream = null;
             }
         } catch (IOException e) {
             e.printStackTrace();
