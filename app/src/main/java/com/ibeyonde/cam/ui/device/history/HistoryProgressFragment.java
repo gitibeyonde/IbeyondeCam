@@ -29,6 +29,7 @@ public class HistoryProgressFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         historyViewModel =  new ViewModelProvider(this).get(HistoryViewModel.class);
 
         historyViewModel._history.observe(this.getActivity(), new Observer<Short>() {

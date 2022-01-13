@@ -146,8 +146,8 @@ public class DeviceSettingViewModel extends ViewModel {
     }
 
     public void applyDeviceConfig(Context ctx, String uuid, String var, String val){
+        Log.i(TAG, _cam_nv.get(var) + ", " + val + ", " + var);
         if (_cam_nv.get(var).equals(val))return;
-
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);
         String localUrl ="http://" + c._localIp + "/cmd?name=config&var=" + var + "&val=" + val+ "&veil=" + _veil;
@@ -169,6 +169,7 @@ public class DeviceSettingViewModel extends ViewModel {
     }
 
     public void applyCamConfig(Context ctx, String uuid, String var, String val){
+        System.out.println(_cam_nv.get(var) + ", " + val + ", " + var);
         if (_cam_nv.get(var).equals(val))return;
         RequestQueue queue = Volley.newRequestQueue(ctx);
         Camera c = DeviceViewModel.getCamera(uuid);

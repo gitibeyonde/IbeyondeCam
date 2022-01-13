@@ -29,8 +29,8 @@ public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
     protected Bitmap doInBackground(Void... params) {
         try {
             String urlSnippet = url;
-            if (url.contains("data.ibeyonde") && url.contains("?")) {
-                urlSnippet = url.substring(url.indexOf("data.ibeyonde"), url.indexOf("?"));
+            if (url.contains("/com.ibeyonde.cam/") && url.contains(".jpg?")) {
+                urlSnippet = url.substring(url.indexOf("/com.ibeyonde.cam/"), url.indexOf(".jpg?"));
             }
             Bitmap myBitmap = s_cache.get(urlSnippet);
             if (myBitmap != null){

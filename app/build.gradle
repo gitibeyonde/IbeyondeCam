@@ -9,8 +9,8 @@ android {
         applicationId "com.ibeyonde.cam"
         minSdk 26
         targetSdk 30
-        versionCode 6
-        versionName "6.0"
+        versionCode 7
+        versionName "7.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

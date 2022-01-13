@@ -147,7 +147,7 @@ public class DeviceSettingFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Log.d(TAG, binding.camName.getText().toString());
-                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "cn", binding.camName.getText().toString());
+                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "name", binding.camName.getText().toString());
                     }
                 });
 
