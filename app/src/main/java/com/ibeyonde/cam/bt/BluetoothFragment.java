@@ -91,9 +91,9 @@ public class BluetoothFragment extends ListFragment {
         if(bluetoothAdapter == null)
             setEmptyText("<bluetooth not supported>");
         else if(!bluetoothAdapter.isEnabled())
-            setEmptyText("<bluetooth is disabled>");
+            setEmptyText("<bluetooth is off, please switch it on>");
         else
-            setEmptyText("<no bluetooth devices found, please use your device's bluetooth to pair with CleverCam devices>");
+            setEmptyText("<No CleverCam found, please use your device's bluetooth to pair with CleverCam devices.>");
         refresh();
     }
 
@@ -113,9 +113,12 @@ public class BluetoothFragment extends ListFragment {
     void refresh() {
         listItems.clear();
         if(bluetoothAdapter != null) {
-            for (BluetoothDevice device : bluetoothAdapter.getBondedDevices())
-                if (device.getType() != BluetoothDevice.DEVICE_TYPE_LE)
+            for (BluetoothDevice device : bluetoothAdapter.getBondedDevices()) {
+                Log.i(TAG, device + "");
+                if (device.getType() != BluetoothDevice.DEVICE_TYPE_LE) {
                     listItems.add(device);
+                }
+            }
         }
         Collections.sort(listItems, BluetoothFragment::compareTo);
         listAdapter.notifyDataSetChanged();

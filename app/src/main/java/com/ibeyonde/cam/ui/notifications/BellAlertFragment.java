@@ -87,7 +87,7 @@ public class BellAlertFragment extends Fragment {
                 binding.progressBar.setVisibility(View.GONE);
 
                 Camera c = DeviceViewModel.getCamera(_cameraId);
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " Bell Alert ");
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " @ " + _dateTime);
             }
         });
     }

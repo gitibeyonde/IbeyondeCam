@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction().replace(getSupportFragmentManager().getPrimaryNavigationFragment().getId(), _bellAlert, "bellAlert")
                 .setReorderingAllowed(true)
                 .addToBackStack("home").commit();
-        getSupportActionBar().setTitle(_bellAlert._cameraId  + " Bell Alert ");
+        getSupportActionBar().setTitle(_bellAlert._cameraId  + " at " + _bellAlert._dateTime);
     }
 
 

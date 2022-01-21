@@ -35,12 +35,15 @@ import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.databinding.FragmentBtTerminalBinding;
 import com.ibeyonde.cam.ui.device.setting.DeviceSettingFragment;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
+import com.ibeyonde.cam.utils.Utils;
 
 public class TerminalFragment extends Fragment implements ServiceConnection, SerialListener {
     private static final String TAG= TerminalFragment.class.getCanonicalName();
 
 
     private enum Connected { False, Pending, True }
+
+    private enum BTState { Init, Scanning, SelectWiFi, WiFiPassword, WiFiConnected, UserInited }
 
     private String deviceAddress;
     private SerialService service;
@@ -50,6 +53,8 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private TextUtil.HexWatcher hexWatcher;
 
     private Connected connected = Connected.False;
+    private BTState bt_state = BTState.Init;
+    private Integer networks=-1;
     private boolean initialStart = true;
     private boolean hexEnabled = false;
     private boolean pendingNewline = false;
@@ -219,7 +224,28 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             Toast.makeText(getActivity(), "not connected", Toast.LENGTH_SHORT).show();
             return;
         }
-        Log.i(TAG, "Send text " + str);
+        Log.i(TAG, bt_state.name() + " Send text " + str);
+        if (bt_state == BTState.SelectWiFi) {
+            if (!Utils.isInteger(str, 10)) {
+                Log.i(TAG, "Not an integer");
+                Toast.makeText(getContext(), "Type an integer between 1 to " + networks, Toast.LENGTH_SHORT).show();
+                sendText.setText("");
+                return;
+            } else if (Integer.parseInt(str) > networks || Integer.parseInt(str) < 1) {
+                Log.i(TAG, "Not in range");
+                Toast.makeText(getContext(), "Type an integer between 1 to " + networks, Toast.LENGTH_SHORT).show();
+                sendText.setText("");
+                return;
+            }
+        }
+        else if (bt_state == BTState.WiFiPassword) {
+            if (str.length() < 8) {
+                Log.i(TAG, "Password length small");
+                Toast.makeText(getContext(), "Password size should be at least 8 characters", Toast.LENGTH_SHORT).show();
+                sendText.setText("");
+                return;
+            }
+        }
         try {
             String msg;
             byte[] data;
@@ -265,6 +291,26 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             if (msg.contains("Initializing device...")){
                 send(String.format("%s%%%s", LoginViewModel._email,LoginViewModel._pass));
             }
+            else if (msg.contains("Networks found")){
+                String nc = msg.substring(0, msg.indexOf("Networks found")).trim();
+                networks = Integer.parseInt(nc);
+            }
+            else if (msg.contains("Scanning Wi-Fi")){
+                bt_state = BTState.Scanning;
+            }
+            else if (msg.contains("enter the Number for")){
+                bt_state = BTState.SelectWiFi;
+            }
+            else if (msg.contains("enter your Wi-Fi password")){
+                bt_state = BTState.WiFiPassword;
+            }
+            else if (msg.contains("-Connected-")){
+                bt_state = BTState.WiFiConnected;
+            }
+            else if (msg.contains("Bluetooth disconnecting")){
+                bt_state = BTState.UserInited;
+            }
+            Log.i(TAG, bt_state.name());
         }
     }
 
