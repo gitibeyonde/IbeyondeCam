@@ -27,8 +27,9 @@ public class LoginViewModel extends ViewModel {
     public static final MutableLiveData<String> _login_token = new MutableLiveData<>();
     public static final MutableLiveData<String> _register_token = new MutableLiveData<>();
     public static final MutableLiveData<String> _reset_token = new MutableLiveData<>();
-    public static String _email;
+    public static String _username;
     public static String _pass;
+    public static String _phoneId;
 
     public static final String SUCCESS="SUCCESS";
     public static final String FAILURE="FAILURE";
@@ -71,7 +72,7 @@ public class LoginViewModel extends ViewModel {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
                 String creds = String.format("%s:%s",username,password);
-                _email = username;
+                _username = username;
                 _pass = password;
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 params.put("Authorization", auth);

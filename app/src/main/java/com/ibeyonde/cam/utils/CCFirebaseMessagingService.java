@@ -78,16 +78,16 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
 
         public static void registerToken(String token, Context ctx){
             //username, phoneid, token, system, system_type, language, country
-            String android_id = Settings.Secure.getString(ctx.getContentResolver(),Settings.Secure.ANDROID_ID);
-            Log.d("Android","Android ID : "+android_id);
+            LoginViewModel._phoneId = Settings.Secure.getString(ctx.getContentResolver(),Settings.Secure.ANDROID_ID);
+            Log.d("Android","Android ID : "+LoginViewModel._phoneId);
             String locale = ctx.getResources().getConfiguration().getLocales().get(0).getLanguage();
             Log.d("Android","Android Locale : "+locale);
             String country = ctx.getResources().getConfiguration().getLocales().get(0).getCountry();
             Log.d("Android","Android Country : "+locale);
 
             RequestQueue queue = Volley.newRequestQueue(ctx);
-            String url ="https://ping.ibeyonde.com/api/iot.php?view=token&token=" + token + "&username=" + LoginViewModel._email
-                    + "&phone_id=" + android_id + "&system=android&system_type=android&language=" + locale + "&country=" + country;
+            String url ="https://ping.ibeyonde.com/api/iot.php?view=token&token=" + token + "&username=" + LoginViewModel._username
+                    + "&phone_id=" + LoginViewModel._phoneId + "&system=android&system_type=android&language=" + locale + "&country=" + country;
 
             StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, url,
                     new Response.Listener<String>() {
@@ -105,7 +105,7 @@ public class CCFirebaseMessagingService  extends FirebaseMessagingService {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap<String, String> params = new HashMap<String, String>();
-                    String creds = String.format("%s:%s", LoginViewModel._email,LoginViewModel._pass);
+                    String creds = String.format("%s:%s", LoginViewModel._username,LoginViewModel._pass);
                     String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                     params.put("Authorization", auth);
                     return params;

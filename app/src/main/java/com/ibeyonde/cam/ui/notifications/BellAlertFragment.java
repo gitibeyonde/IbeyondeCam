@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,13 +21,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.ibeyonde.cam.MainActivity;
-import com.ibeyonde.cam.bt.SerialService;
 import com.ibeyonde.cam.databinding.FragmentBellAlertBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.device.live.LiveViewModel;
 import com.ibeyonde.cam.ui.device.live.MjpegRunner;
-import com.ibeyonde.cam.ui.login.LoginActivity;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.AlertDetails;
 import com.ibeyonde.cam.utils.Camera;
@@ -40,11 +36,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -114,7 +107,7 @@ public class BellAlertFragment extends Fragment {
             if (cred != null && cred.contains("%%")) {
                 String[] cv = cred.split("%%");
                 binding.progressBar.setVisibility(View.VISIBLE);
-                loginViewModel._email = cv[0];
+                loginViewModel._username = cv[0];
                 loginViewModel._pass = cv[1];
             }
             else {

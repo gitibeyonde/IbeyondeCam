@@ -58,7 +58,7 @@ public class HistoryViewModel extends ViewModel {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", LoginViewModel._email,LoginViewModel._pass);
+                String creds = String.format("%s:%s", LoginViewModel._username,LoginViewModel._pass);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 params.put("Authorization", auth);
                 return params;

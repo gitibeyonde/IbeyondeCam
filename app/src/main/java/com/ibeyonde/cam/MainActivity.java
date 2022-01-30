@@ -31,6 +31,7 @@ import com.ibeyonde.cam.ui.device.lastalerts.DeviceFragment;
 import com.ibeyonde.cam.ui.device.live.LiveFragment;
 import com.ibeyonde.cam.ui.device.history.HistoryFragment;
 import com.ibeyonde.cam.ui.device.setting.DeviceSettingFragment;
+import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.ui.notifications.BellAlertFragment;
 import com.ibeyonde.cam.ui.notifications.NotificationFragment;
 import com.ibeyonde.cam.ui.setting.SettingFragment;

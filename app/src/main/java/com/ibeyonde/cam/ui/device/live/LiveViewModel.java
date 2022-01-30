@@ -25,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 public class LiveViewModel extends ViewModel {
@@ -68,7 +67,7 @@ public class LiveViewModel extends ViewModel {
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
                     HashMap<String, String> params = new HashMap<String, String>();
-                    String creds = String.format("%s:%s", LoginViewModel._email, LoginViewModel._pass);
+                    String creds = String.format("%s:%s", LoginViewModel._username, LoginViewModel._pass);
                     String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                     params.put("Authorization", auth);
                     return params;
@@ -142,7 +141,7 @@ public class LiveViewModel extends ViewModel {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s", LoginViewModel._email,LoginViewModel._pass);
+                String creds = String.format("%s:%s", LoginViewModel._username,LoginViewModel._pass);
                 String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.DEFAULT);
                 params.put("Authorization", auth);
                 return params;

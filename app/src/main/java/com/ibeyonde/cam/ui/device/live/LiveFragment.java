@@ -44,7 +44,7 @@ public class LiveFragment extends Fragment {
     private FragmentLiveBinding binding;
 
     Handler handler;
-    static MjpegRunner rc;
+    static MjpegLive rc;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,8 @@ public class LiveFragment extends Fragment {
                     String url = liveViewModel._url;
                     Log.i(TAG, url_updated + " Live URL = " + url);
                     try {
-                        rc = new MjpegRunner(handler, binding.cameraLive, new URL(url));
+                        //rc = new MjpegRunner(handler, binding.cameraLive, new URL(url));
+                        rc = new MjpegLive(_cameraId, handler, binding.cameraLive);
                         Thread t = new Thread(rc);
                         t.start();
                     } catch (Exception e) {

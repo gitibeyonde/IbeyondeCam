@@ -51,7 +51,7 @@ public class DeviceSettingFragment extends Fragment {
         Log.i(TAG, "CREATING DeviceSettingFragment");
 
         //check user logged in
-        if (LoginViewModel._email == null || LoginViewModel._pass == null){
+        if (LoginViewModel._username == null || LoginViewModel._pass == null){
             Toast.makeText(getContext(), "Logging In.", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(getContext(), SplashActivity.class);
             getActivity().finish();

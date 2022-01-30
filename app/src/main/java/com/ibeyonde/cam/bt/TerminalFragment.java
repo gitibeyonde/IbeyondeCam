@@ -33,7 +33,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.databinding.FragmentBtTerminalBinding;
-import com.ibeyonde.cam.ui.device.setting.DeviceSettingFragment;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.Utils;
 
@@ -289,7 +288,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             sendText.setText("");
             receiveText.append(TextUtil.toCaretString(msg, newline.length() != 0));
             if (msg.contains("Initializing device...")){
-                send(String.format("%s%%%s", LoginViewModel._email,LoginViewModel._pass));
+                send(String.format("%s%%%s", LoginViewModel._username,LoginViewModel._pass));
             }
             else if (msg.contains("Networks found")){
                 String nc = msg.substring(0, msg.indexOf("Networks found")).trim();
