@@ -6,7 +6,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
+import com.ibeyonde.cam.utils.Camera;
 import com.ibeyonde.cam.utils.IpUtils;
 import com.ibeyonde.cam.utils.NetUtils;
 
@@ -15,7 +17,7 @@ import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 
 public class MjpegLive implements Runnable {
-    private static final String TAG= MjpegRunner.class.getCanonicalName();
+    private static final String TAG= MjpegLive.class.getCanonicalName();
 
     private Handler _handler;
     private ImageView _cameraLive;
@@ -25,21 +27,19 @@ public class MjpegLive implements Runnable {
     String _client_uuid = null;
     String _device_uuid = null;
     String _username = null;
-    int _port = 0;
     NetUtils _net = null;
 
     public MjpegLive(String device_uuid, Handler handler, ImageView cameraLive) {
         this._client_uuid = LoginViewModel._phoneId;
         this._username = LoginViewModel._username;
-        this._port = (int)Math.random() * 60000;
         this._handler = handler;
         this._cameraLive = cameraLive;
         this._device_uuid = device_uuid;
-        Log.d(TAG, this._client_uuid + ", " + this._username + "," + this._port + "," + this._device_uuid);
+        Log.d(TAG, this._client_uuid + ", " + this._username + "," + this._device_uuid);
     }
 
     public InetSocketAddress getPeerAddress() throws IOException {
-        _net = new NetUtils(_username, _client_uuid, _port);
+        _net = new NetUtils(_username, _client_uuid);
         DatagramPacket DpRcv = _net.register();
         DpRcv = _net.getPeerAddress(_device_uuid);
         return IpUtils.getAddress(DpRcv);

@@ -1,19 +1,27 @@
 package com.ibeyonde.cam.utils;
 
+import android.util.Log;
+
+import com.ibeyonde.cam.ui.device.live.MjpegLive;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.logging.Logger;
 
 public class NetUtils {
-    private final static Logger LOG = Logger.getLogger(NetUtils.class.getName());
+    private static final String TAG= NetUtils.class.getCanonicalName();
 
     public static final int _broker_port=5020;
     public static int _peer_receive_errors =0;
@@ -28,33 +36,49 @@ public class NetUtils {
     public static final int min_udp_port = 20000;
     public static final int max_udp_port = 65535;
 
-    public ByteBuffer _img_buf = ByteBuffer.allocate(20*1024*1024);
+    public ByteBuffer _img_buf = ByteBuffer.allocate(1024*1024);
 
-    public NetUtils(String username, String uuid, int port) throws UnknownHostException, SocketException {
+    public NetUtils(String username, String uuid) throws UnknownHostException, SocketException {
         if (uuid==null) throw new IllegalStateException("Invalid uuid");
         _my_username = username;
         _my_uuid = uuid;
-        _my_port = port;
-        _my_address = InetAddress.getLocalHost();
+        _my_port = getRandomUdpPort();
+        _my_address = getLocalIp();
+        Log.d(TAG, "Ip=" + _my_address.getHostAddress() + " port=" + _my_port);
         _broker_address = InetAddress.getByName("broker.ibeyonde.com");
         _sock = new DatagramSocket();
         _sock.setReuseAddress(true);
         _sock.setSoTimeout(1000);
-        //_sock.setBroadcast(true);
+        _sock.setBroadcast(true);
+
     }
     public static int getRandomUdpPort() {
         return (int)((Math.random() * ((max_udp_port - min_udp_port) + 1)) + min_udp_port);
+    }
+    public static InetAddress getLocalIp() throws SocketException, UnknownHostException {
+        Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+        for (NetworkInterface netint : Collections.list(nets)){
+            Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
+            for (InetAddress inetAddress : Collections.list(inetAddresses)) {
+                Log.d(TAG, "InetAddress:" + inetAddress);
+                if (inetAddress.isSiteLocalAddress() && inetAddress instanceof Inet4Address) {
+                    return inetAddress;
+                }
+            }
+        }
+        return InetAddress.getLocalHost();
     }
     public DatagramPacket register() throws IOException {
         String cmd_str = new String("REGISTER:" + _my_uuid + ":");
         ByteBuffer cmd = ByteBuffer.allocate(cmd_str.length() + 6);
         cmd.put(cmd_str.getBytes());
-        cmd.put(IpUtils.ipToBytes("172.20.10.3", _my_port));
+        cmd.put(IpUtils.ipToBytes(_my_address.getHostAddress(), _my_port));//192.168.100.11 172.20.10.3
         sendCommandBroker(cmd);
         return recvCommandBroker();
     }
 
     public DatagramPacket getPeerAddress(String uuid) throws IOException {
+        _peer_receive_errors = 0;
         String cmd_str = new String("PADDR:" + uuid + ":");
         ByteBuffer cmd = ByteBuffer.allocate(cmd_str.length());
         cmd.put(cmd_str.getBytes());
@@ -67,7 +91,7 @@ public class NetUtils {
         sendCommandBroker(cmd);
     }
     public synchronized void sendCommandBroker(ByteBuffer cmd) throws IOException {
-        System.out.println("sendCommandBroker " + new String(cmd.array(), StandardCharsets.ISO_8859_1));
+        Log.d(TAG, "sendCommandBroker " + new String(cmd.array(), StandardCharsets.ISO_8859_1));
         DatagramPacket DpSend =   new DatagramPacket(cmd.array(), cmd.capacity(), _broker_address, _broker_port);
         _sock.send(DpSend);
     }
@@ -76,12 +100,12 @@ public class NetUtils {
         byte[] buf = new byte[IpUtils.CMDCHUNK];
         DatagramPacket DpRcv = new DatagramPacket(buf, buf.length, _broker_address, _broker_port);
         _sock.receive(DpRcv);
-        System.out.println("recvCommandBroker " + new String(DpRcv.getData()));
+        Log.d(TAG, "recvCommandBroker " + new String(DpRcv.getData()));
         return DpRcv;
     }
 
     public synchronized void sendCommandPeer(byte[] cmd, InetSocketAddress peer) throws IOException {
-        System.out.println("sendCommandPeer " + new String(cmd) + "__@__" + peer.getHostString() + ":" + peer.getPort());
+        Log.d(TAG, "sendCommandPeer " + new String(cmd) + "__@__" + peer.getHostString() + ":" + peer.getPort());
         DatagramPacket DpSend =   new DatagramPacket(cmd, cmd.length, peer.getAddress(), peer.getPort());
         _sock.send(DpSend);
     }
@@ -94,7 +118,7 @@ public class NetUtils {
             _sock.receive(DpRcv);
         }
         catch(java.net.SocketTimeoutException e) {
-            System.out.println(e.getMessage());
+            Log.w(TAG, e.getMessage());
         }
         return DpRcv;
     }
@@ -128,27 +152,20 @@ public class NetUtils {
                 int size = Integer.parseInt(uuid_size[1].trim());
                 String cur_uuid = uuid_size[0];
                 rcv_img = recvAllPeer(peer_address, device_uuid, size);
-                System.out.println("Size = " + size + " uuid=" + cur_uuid + " bytes " + rcv_img.length);
+                Log.d(TAG, "Size = " + size + " uuid=" + cur_uuid + " bytes " + rcv_img.length);
                 _peer_receive_errors = 0;
             }
             else  {
-                System.out.println("Error " + cmd_str);
+                Log.w(TAG, "Error " + cmd_str);
                 _peer_receive_errors++;
-                Thread.sleep(1000);
+                Thread.sleep(100);
             }
         }
         catch (SocketTimeoutException | InterruptedException ex) {
-            System.out.println("WARNING " + ex.getMessage());
+            Log.w(TAG, "WARNING " + ex.getMessage());
             _peer_receive_errors++;
         }
         return rcv_img;
     }
-
-
-    // ("192.168.100.17", 23456)
-    // Long ip = 3232261137 int port = 23456
-    // port short is unsigned short (16 bit, little endian byte order) java short
-    // ip long is unsigned long (32 bit, big endian byte order) java int
-
 
 }
