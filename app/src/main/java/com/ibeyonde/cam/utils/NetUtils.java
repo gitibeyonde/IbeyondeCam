@@ -111,14 +111,9 @@ public class NetUtils {
 
     public synchronized DatagramPacket recvCommandPeer(InetSocketAddress peer_address) throws IOException {
         DatagramPacket DpRcv = null;
-        try {
-            byte[] buf = new byte[IpUtils.CMDCHUNK];
-            DpRcv = new DatagramPacket(buf, buf.length, peer_address.getAddress(), peer_address.getPort());
-            _sock.receive(DpRcv);
-        }
-        catch(java.net.SocketTimeoutException e) {
-            //Log.w(TAG, e.getMessage());
-        }
+        byte[] buf = new byte[IpUtils.CMDCHUNK];
+        DpRcv = new DatagramPacket(buf, buf.length, peer_address.getAddress(), peer_address.getPort());
+        _sock.receive(DpRcv);
         return DpRcv;
     }
 
@@ -137,34 +132,6 @@ public class NetUtils {
         _img_buf.flip();
         _img_buf.get(buf);
         return buf;
-    }
-
-    public byte[] getImageDirect(String device_uuid, String quality, InetSocketAddress peer_address) throws IOException {
-        byte[] rcv_img = null;
-        try {
-            sendCommandPeer((quality + ":" + device_uuid + ":").getBytes(), peer_address);
-            DatagramPacket DpRcv = recvCommandPeer(peer_address);
-            String cmd_str = new String(DpRcv.getData());
-            if (cmd_str.startsWith("SIZE")) {
-                String uuid_size_str = cmd_str.substring("SIZE:".length());
-                String[] uuid_size = uuid_size_str.split("\\.");
-                int size = Integer.parseInt(uuid_size[1].trim());
-                String cur_uuid = uuid_size[0];
-                rcv_img = recvAllPeer(peer_address, device_uuid, size);
-                Log.d(TAG, "Size = " + size + " uuid=" + cur_uuid + " bytes " + rcv_img.length);
-                _peer_receive_errors = 0;
-            }
-            else  {
-                Log.w(TAG, "Error " + cmd_str);
-                _peer_receive_errors++;
-                Thread.sleep(1000);
-            }
-        }
-        catch (SocketTimeoutException | InterruptedException ex) {
-            Log.w(TAG, "WARNING " + ex.getMessage());
-            _peer_receive_errors++;
-        }
-        return rcv_img;
     }
 
 }

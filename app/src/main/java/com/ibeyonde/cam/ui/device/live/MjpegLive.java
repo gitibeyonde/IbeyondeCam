@@ -72,7 +72,7 @@ public class MjpegLive implements Runnable {
                     }
                     continue;
                 }
-                if (_net._peer_receive_errors > 10 || peer_address == null){
+                if (_net._peer_receive_errors > 5 || peer_address == null) {
                     try {
                         peer_address = getPeerAddress();
                     } catch (IOException e) {
@@ -82,30 +82,28 @@ public class MjpegLive implements Runnable {
                 }
 
                 byte[] rcv_img = null;
-                try {
-                    //_net.sendCommandBroker("HINI:" + _device_uuid + ":");
-                    _net.sendCommandPeer(( "DHINJ:" + _device_uuid + ":").getBytes(), peer_address);
-                    Thread.sleep(200);
-                    DatagramPacket DpRcv = _net.recvCommandPeer(peer_address);
-                    String cmd_str = new String(DpRcv.getData());
-                    if (cmd_str.startsWith("SIZE")) {
-                        String uuid_size_str = cmd_str.substring("SIZE:".length());
-                        String[] uuid_size = uuid_size_str.split("\\.");
-                        int size = Integer.parseInt(uuid_size[1].trim());
-                        String cur_uuid = uuid_size[0];
-                        rcv_img = _net.recvAllPeer(peer_address, _device_uuid, size);
-                        Log.d(TAG, "Size = " + size + " uuid=" + cur_uuid + " bytes " + rcv_img.length);
-                        _net._peer_receive_errors = 0;
-                    }
-                    else  {
-                        _net._peer_receive_errors++;
-                    }
+
+                _net.sendCommandPeer(("DHINJ:" + _device_uuid + ":").getBytes(), peer_address);
+                //_net.sendCommandBroker("HINI:" + _device_uuid + ":");
+                Thread.sleep(100);
+
+                DatagramPacket DpRcv = _net.recvCommandPeer(peer_address);
+                String cmd_str = new String(DpRcv.getData());
+                if (cmd_str.startsWith("SIZE")) {
+                    String uuid_size_str = cmd_str.substring("SIZE:".length());
+                    String[] uuid_size = uuid_size_str.split("\\.");
+                    int size = Integer.parseInt(uuid_size[1].trim());
+                    String cur_uuid = uuid_size[0];
+                    rcv_img = _net.recvAllPeer(peer_address, _device_uuid, size);
+                    Log.d(TAG, "Size = " + size + " uuid=" + cur_uuid + " bytes " + rcv_img.length);
                 }
-                catch (SocketTimeoutException | InterruptedException ex) {
-                    Log.w(TAG, "WARNING " + ex.getMessage());
-                    _net._peer_receive_errors++;
+                else {
+                    Log.d(TAG, cmd_str);
                 }
-                if (rcv_img==null)continue;
+
+                if (rcv_img == null) {
+                    continue;
+                }
 
                 Bitmap bmp = BitmapFactory.decodeByteArray(rcv_img, 0, rcv_img.length, options);
                 _handler.post(new Runnable() {
@@ -118,6 +116,7 @@ public class MjpegLive implements Runnable {
                 });
             } catch (IOException ex) {
                 Log.d(TAG,"ERROR :" + ex.getMessage());
+                _net._peer_receive_errors++;
             } catch (InterruptedException ex) {
                 Log.d(TAG,"ERROR :" + ex.getMessage());
             }
