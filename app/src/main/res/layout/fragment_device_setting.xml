@@ -285,6 +285,31 @@
                 android:paddingBottom="5dp">
 
                 <TextView
+                    style="@style/SettingsStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Reset" />
+
+                <ImageButton
+                    android:id="@+id/resetButton"
+                    style="@style/ButtonStyle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="right"
+                    android:src="@drawable/tt_check" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp">
+
+                <TextView
                     android:id="@+id/upgradeAvailable"
                     style="@style/SettingsStyle"
                     android:layout_width="wrap_content"

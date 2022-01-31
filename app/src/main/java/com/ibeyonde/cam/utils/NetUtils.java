@@ -36,7 +36,7 @@ public class NetUtils {
     public static final int min_udp_port = 20000;
     public static final int max_udp_port = 65535;
 
-    public ByteBuffer _img_buf = ByteBuffer.allocate(1024*1024);
+    public ByteBuffer _img_buf = ByteBuffer.allocate(10*1024*1024);
 
     public NetUtils(String username, String uuid) throws UnknownHostException, SocketException {
         if (uuid==null) throw new IllegalStateException("Invalid uuid");
@@ -49,8 +49,7 @@ public class NetUtils {
         _sock = new DatagramSocket();
         _sock.setReuseAddress(true);
         _sock.setSoTimeout(1000);
-        _sock.setBroadcast(true);
-
+        //_sock.setBroadcast(true);
     }
     public static int getRandomUdpPort() {
         return (int)((Math.random() * ((max_udp_port - min_udp_port) + 1)) + min_udp_port);
@@ -60,8 +59,8 @@ public class NetUtils {
         for (NetworkInterface netint : Collections.list(nets)){
             Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
             for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                Log.d(TAG, "InetAddress:" + inetAddress);
                 if (inetAddress.isSiteLocalAddress() && inetAddress instanceof Inet4Address) {
+                    Log.d(TAG, "InetAddress:" + inetAddress);
                     return inetAddress;
                 }
             }
@@ -118,7 +117,7 @@ public class NetUtils {
             _sock.receive(DpRcv);
         }
         catch(java.net.SocketTimeoutException e) {
-            Log.w(TAG, e.getMessage());
+            //Log.w(TAG, e.getMessage());
         }
         return DpRcv;
     }
@@ -158,7 +157,7 @@ public class NetUtils {
             else  {
                 Log.w(TAG, "Error " + cmd_str);
                 _peer_receive_errors++;
-                Thread.sleep(100);
+                Thread.sleep(1000);
             }
         }
         catch (SocketTimeoutException | InterruptedException ex) {

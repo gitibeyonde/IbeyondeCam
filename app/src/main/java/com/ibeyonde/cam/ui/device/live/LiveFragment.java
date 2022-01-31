@@ -57,7 +57,6 @@ public class LiveFragment extends Fragment {
 
         liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
             public void onChanged(@Nullable Boolean url_updated) {
-                dlive.stop();
                 if (url_updated){
                     String url = liveViewModel._url;
                     Log.i(TAG, url_updated + " Live URL = " + url);
@@ -99,7 +98,11 @@ public class LiveFragment extends Fragment {
         Log.i(TAG, "Live view created");
         return root;
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(TAG, "on start ");
+    }
     @Override
     public void onResume() {
         super.onResume();
