@@ -73,8 +73,6 @@ public class DeviceSettingFragment extends Fragment {
 
         binding.settingText.setVisibility(View.GONE);
         binding.settingProgressBar.setVisibility(View.VISIBLE);
-        binding.cloudConnect.setAlpha(.5f);
-        binding.cloudConnect.setEnabled(false);
         binding.motionHistory.setAlpha(.5f);
         binding.motionHistory.setEnabled(false);
         binding.camName.setAlpha(.5f);
@@ -97,16 +95,11 @@ public class DeviceSettingFragment extends Fragment {
                 selectSpinnerItemByValue(binding.timeZone, deviceSettingViewModel._cam_nv.get("timezone"));
                 String cc = deviceSettingViewModel._cam_nv.get("cloud");
                 String ht = deviceSettingViewModel._cam_nv.get("history");
-                if ("true".equals(cc)) {
-                    binding.cloudConnect.setChecked(true);
-                }
                 if ("true".equals(ht)) {
                     binding.motionHistory.setChecked(true);
                 }
                 binding.settingProgressBar.setVisibility(View.GONE);
                 binding.settingText.setVisibility(View.GONE);
-                binding.cloudConnect.setAlpha(1f);
-                binding.cloudConnect.setEnabled(true);
                 binding.motionHistory.setAlpha(1f);
                 binding.motionHistory.setEnabled(true);
                 binding.camName.setAlpha(1f);
@@ -126,19 +119,12 @@ public class DeviceSettingFragment extends Fragment {
                 binding.hFlip.setAlpha(1f);
                 binding.hFlip.setEnabled(true);
 
-                Button cloudConnect = binding.cloudConnect;
-                cloudConnect.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "cloud", binding.cloudConnect.isEnabled() ? "true" : "false");
-                    }
-                });
 
                 Button motionHistory = binding.motionHistory;
                 motionHistory.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "history", binding.cloudConnect.isEnabled() ? "true" : "false");
+                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "history", binding.motionHistory.isEnabled() ? "true" : "false");
                     }
                 });
 
@@ -169,7 +155,7 @@ public class DeviceSettingFragment extends Fragment {
                 vflip.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deviceSettingViewModel.applyCamConfig(getContext(), _cameraId, "vflip", binding.cloudConnect.isEnabled() ? "1" : "0");
+                        deviceSettingViewModel.applyCamConfig(getContext(), _cameraId, "vflip", binding.vFlip.isEnabled() ? "1" : "0");
                     }
                 });
 
@@ -177,7 +163,7 @@ public class DeviceSettingFragment extends Fragment {
                 hflip.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deviceSettingViewModel.applyCamConfig(getContext(), _cameraId, "hmirror", binding.cloudConnect.isEnabled() ? "1" : "0");
+                        deviceSettingViewModel.applyCamConfig(getContext(), _cameraId, "hmirror", binding.hFlip.isEnabled() ? "1" : "0");
                     }
                 });
 

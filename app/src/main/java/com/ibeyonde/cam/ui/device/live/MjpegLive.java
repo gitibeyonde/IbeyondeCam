@@ -1,26 +1,28 @@
 package com.ibeyonde.cam.ui.device.live;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
+import com.ibeyonde.cam.R;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
-import com.ibeyonde.cam.utils.Camera;
 import com.ibeyonde.cam.utils.IpUtils;
 import com.ibeyonde.cam.utils.NetUtils;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
-import java.net.SocketTimeoutException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class MjpegLive implements Runnable {
     private static final String TAG= MjpegLive.class.getCanonicalName();
 
     private Handler _handler;
+    private Resources _resources;
     private ImageView _cameraLive;
     public volatile boolean _isRunning = true;
     public volatile boolean _isPaused = false;
@@ -28,18 +30,22 @@ public class MjpegLive implements Runnable {
     String _client_uuid = null;
     String _device_uuid = null;
     String _username = null;
-    NetUtils _net = null;
+    static NetUtils _net = null;
+    public static int _peer_receive_errors = 0;
 
-    public MjpegLive(String device_uuid, Handler handler, ImageView cameraLive) {
+    public MjpegLive(String device_uuid, Handler handler, Resources resources, ImageView cameraLive) {
         this._client_uuid = LoginViewModel._phoneId;
         this._username = LoginViewModel._username;
         this._handler = handler;
+        this._resources = resources;
         this._cameraLive = cameraLive;
         this._device_uuid = device_uuid;
         Log.d(TAG, this._client_uuid + ", " + this._username + "," + this._device_uuid);
     }
 
     public InetSocketAddress getPeerAddress() throws IOException {
+        if(_net!=null)
+            _net.close();
         _net = new NetUtils(_username, _client_uuid);
         _net.register();
         DatagramPacket DpRcv = _net.getPeerAddress(_device_uuid);
@@ -61,7 +67,8 @@ public class MjpegLive implements Runnable {
     @Override
     public void run() {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        InetSocketAddress peer_address = null;
+        InetSocketAddress peer = null;
+
         while (_isRunning) {
             try {
                 if (_isPaused) {
@@ -72,33 +79,42 @@ public class MjpegLive implements Runnable {
                     }
                     continue;
                 }
-                if (_net._peer_receive_errors > 5 || peer_address == null) {
+                if (_peer_receive_errors > 5 || peer == null) {
                     try {
-                        peer_address = getPeerAddress();
+                        peer = getPeerAddress();
+                        _peer_receive_errors = 0;
                     } catch (IOException e) {
+                        e.printStackTrace();
+                        Bitmap bmp = BitmapFactory.decodeResource(_resources, R.drawable.error);
+                        _handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                _cameraLive.setImageBitmap(bmp);
+                            }
+                        });
                         Thread.sleep(1000);
-                        continue;
                     }
+                    continue;
                 }
 
                 byte[] rcv_img = null;
 
-                _net.sendCommandPeer(("DHINJ:" + _device_uuid + ":").getBytes(), peer_address);
+                _net.sendCommandPeer(("DHINJ:" + _device_uuid + ":").getBytes(), peer);
                 //_net.sendCommandBroker("HINI:" + _device_uuid + ":");
-                Thread.sleep(100);
 
-                DatagramPacket DpRcv = _net.recvCommandPeer(peer_address);
+                DatagramPacket DpRcv = _net.recvCommandPeer(peer);
                 String cmd_str = new String(DpRcv.getData());
                 if (cmd_str.startsWith("SIZE")) {
                     String uuid_size_str = cmd_str.substring("SIZE:".length());
                     String[] uuid_size = uuid_size_str.split("\\.");
                     int size = Integer.parseInt(uuid_size[1].trim());
                     String cur_uuid = uuid_size[0];
-                    rcv_img = _net.recvAllPeer(peer_address, _device_uuid, size);
+                    rcv_img = _net.recvAllPeer(peer, size);
                     Log.d(TAG, "Size = " + size + " uuid=" + cur_uuid + " bytes " + rcv_img.length);
+                    _peer_receive_errors = 0;
                 }
                 else {
-                    Log.d(TAG, cmd_str);
+                    //Log.d(TAG, cmd_str);
                 }
 
                 if (rcv_img == null) {
@@ -106,22 +122,22 @@ public class MjpegLive implements Runnable {
                 }
 
                 Bitmap bmp = BitmapFactory.decodeByteArray(rcv_img, 0, rcv_img.length, options);
-                _handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (_isRunning) {
+                if (bmp != null) {
+                    _handler.post(new Runnable() {
+                        @Override
+                        public void run() {
                             _cameraLive.setImageBitmap(bmp);
                         }
-                    }
-                });
+                    });
+                }
             } catch (IOException ex) {
-                Log.d(TAG,"ERROR :" + ex.getMessage());
-                _net._peer_receive_errors++;
+                Log.d(TAG,"ERROR IO :" + ex.getMessage());
+                _peer_receive_errors++;
             } catch (InterruptedException ex) {
-                Log.d(TAG,"ERROR :" + ex.getMessage());
+                Log.d(TAG,"ERROR INT :" + ex.getMessage());
             }
         }
-        System.out.println("--------" + NetUtils._peer_receive_errors);
+        System.out.println("--------" + _peer_receive_errors);
     }
 
 

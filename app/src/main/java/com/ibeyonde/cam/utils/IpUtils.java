@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 public class IpUtils {
     private final static Logger LOG = Logger.getLogger(IpUtils.class.getName());
 
-    public static final int CMDCHUNK=64;
+    public static final int CMDCHUNK=32;
     public static final int PORT_START=20000;
     public static final int PORT_END=65534;
-    public static final int IMGCHUNK=1450;
+    public static final int IMGCHUNK=1024;
     private final static char[] hexArray = "0123456789abcdef".toCharArray();
 
 

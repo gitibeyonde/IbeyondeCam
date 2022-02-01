@@ -16,6 +16,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.logging.Logger;
@@ -24,12 +25,10 @@ public class NetUtils {
     private static final String TAG= NetUtils.class.getCanonicalName();
 
     public static final int _broker_port=5020;
-    public static int _peer_receive_errors =0;
-    public static boolean peer_receive_initial=true;
     public static InetAddress _broker_address;
-    private DatagramSocket _sock;
+    private static DatagramSocket _sock;
     public static InetAddress  _my_address;
-    public static int  _my_port;
+    public static int  _my_port = getRandomUdpPort();
     public static String  _my_username;
     public static String  _my_uuid;
 
@@ -42,14 +41,12 @@ public class NetUtils {
         if (uuid==null) throw new IllegalStateException("Invalid uuid");
         _my_username = username;
         _my_uuid = uuid;
-        _my_port = getRandomUdpPort();
         _my_address = getLocalIp();
-        Log.d(TAG, "Ip=" + _my_address.getHostAddress() + " port=" + _my_port);
+        Log.d(TAG, "My Ip=" + _my_address.getHostAddress() + " port=" + _my_port);
         _broker_address = InetAddress.getByName("broker.ibeyonde.com");
-        _sock = new DatagramSocket();
+        _sock = new DatagramSocket(_my_port, _my_address);
         _sock.setReuseAddress(true);
         _sock.setSoTimeout(1000);
-        //_sock.setBroadcast(true);
     }
     public static int getRandomUdpPort() {
         return (int)((Math.random() * ((max_udp_port - min_udp_port) + 1)) + min_udp_port);
@@ -75,9 +72,11 @@ public class NetUtils {
         sendCommandBroker(cmd);
         return recvCommandBroker();
     }
-
+    public void close(){
+        if (_sock!=null)
+            _sock.close();
+    }
     public DatagramPacket getPeerAddress(String uuid) throws IOException {
-        _peer_receive_errors = 0;
         String cmd_str = new String("PADDR:" + uuid + ":");
         ByteBuffer cmd = ByteBuffer.allocate(cmd_str.length());
         cmd.put(cmd_str.getBytes());
@@ -94,31 +93,33 @@ public class NetUtils {
         DatagramPacket DpSend =   new DatagramPacket(cmd.array(), cmd.capacity(), _broker_address, _broker_port);
         _sock.send(DpSend);
     }
-
-    public synchronized DatagramPacket recvCommandBroker() throws IOException {
-        byte[] buf = new byte[IpUtils.CMDCHUNK];
-        DatagramPacket DpRcv = new DatagramPacket(buf, buf.length, _broker_address, _broker_port);
-        _sock.receive(DpRcv);
-        Log.d(TAG, "recvCommandBroker " + new String(DpRcv.getData()));
-        return DpRcv;
-    }
-
     public synchronized void sendCommandPeer(byte[] cmd, InetSocketAddress peer) throws IOException {
         Log.d(TAG, "sendCommandPeer " + new String(cmd) + "__@__" + peer.getHostString() + ":" + peer.getPort());
         DatagramPacket DpSend =   new DatagramPacket(cmd, cmd.length, peer.getAddress(), peer.getPort());
         _sock.send(DpSend);
     }
 
-    public synchronized DatagramPacket recvCommandPeer(InetSocketAddress peer_address) throws IOException {
-        DatagramPacket DpRcv = null;
+    public synchronized DatagramPacket recvCommandBroker() throws IOException {
         byte[] buf = new byte[IpUtils.CMDCHUNK];
-        DpRcv = new DatagramPacket(buf, buf.length, peer_address.getAddress(), peer_address.getPort());
+        Arrays.fill(buf, (byte) -1);
+        DatagramPacket DpRcv = new DatagramPacket(buf, buf.length, _broker_address, _broker_port);
         _sock.receive(DpRcv);
+        Log.d(TAG, "recvCommandBroker " + new String(DpRcv.getData()));
         return DpRcv;
     }
 
-    public synchronized byte[] recvAllPeer(InetSocketAddress peer, String my_uuid, int size) throws IOException {
+    public synchronized DatagramPacket recvCommandPeer(InetSocketAddress peer) throws IOException {
+        byte[] buf = new byte[IpUtils.CMDCHUNK];
+        Arrays.fill(buf, (byte) -1);
+        DatagramPacket DpRcv = new DatagramPacket(buf, buf.length, peer.getAddress(), peer.getPort());
+        _sock.receive(DpRcv);
+        Log.d(TAG, "recvCommandPeer " + new String(DpRcv.getData()));
+        return DpRcv;
+    }
+
+    public synchronized byte[] recvAllPeer(InetSocketAddress peer, int size) throws IOException {
         byte[] buf = new byte[size];
+        Arrays.fill(buf, (byte) -1);
         int remaining = size;
         DatagramPacket DpRcv = new DatagramPacket(buf, buf.length, peer.getAddress(), peer.getPort());
         _img_buf.clear();

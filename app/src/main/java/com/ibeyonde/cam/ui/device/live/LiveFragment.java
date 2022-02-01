@@ -58,6 +58,7 @@ public class LiveFragment extends Fragment {
         liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
             public void onChanged(@Nullable Boolean url_updated) {
                 if (url_updated){
+                    dlive.stop();
                     String url = liveViewModel._url;
                     Log.i(TAG, url_updated + " Live URL = " + url);
                     try {
@@ -72,19 +73,6 @@ public class LiveFragment extends Fragment {
                     binding.cameraLabel.setText(c._name);
                     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " Live ");
                 }
-                else {
-                    try {
-                        dlive = new MjpegLive(_cameraId, handler, binding.cameraLive);
-                        Thread t = new Thread(dlive);
-                        t.start();
-                    } catch (Exception e) {
-                        if (dlive != null) dlive.stop();
-                        Log.e(TAG, "UDP streaming failed");
-                    }
-                    Camera c = DeviceViewModel.getCamera(_cameraId);
-                    binding.cameraLabel.setText(c._name);
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " Live ");
-                }
             }
         });
     }
@@ -94,13 +82,24 @@ public class LiveFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentLiveBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        liveViewModel.getLiveUrl(getContext(), _cameraId);
+        //liveViewModel.getLiveUrl(getContext(), _cameraId);
         Log.i(TAG, "Live view created");
         return root;
     }
     @Override
     public void onStart() {
         super.onStart();
+        try {
+            dlive = new MjpegLive(_cameraId, handler, getResources(), binding.cameraLive);
+            Thread t = new Thread(dlive);
+            t.start();
+        } catch (Exception e) {
+            if (dlive != null) dlive.stop();
+            Log.e(TAG, "UDP streaming failed");
+        }
+        Camera c = DeviceViewModel.getCamera(_cameraId);
+        binding.cameraLabel.setText(c._name);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " Live ");
         Log.i(TAG, "on start ");
     }
     @Override
