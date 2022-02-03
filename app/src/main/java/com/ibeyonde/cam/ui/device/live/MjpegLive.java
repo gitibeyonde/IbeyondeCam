@@ -15,8 +15,6 @@ import com.ibeyonde.cam.utils.NetUtils;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 public class MjpegLive implements Runnable {
     private static final String TAG= MjpegLive.class.getCanonicalName();
@@ -31,7 +29,7 @@ public class MjpegLive implements Runnable {
     String _device_uuid = null;
     String _username = null;
     static NetUtils _net = null;
-    public static int _peer_receive_errors = 0;
+    int _peer_error = 0;
 
     public MjpegLive(String device_uuid, Handler handler, Resources resources, ImageView cameraLive) {
         this._client_uuid = LoginViewModel._phoneId;
@@ -79,10 +77,10 @@ public class MjpegLive implements Runnable {
                     }
                     continue;
                 }
-                if (_peer_receive_errors > 5 || peer == null) {
+                if (_peer_error > 5 || peer == null) {
                     try {
                         peer = getPeerAddress();
-                        _peer_receive_errors = 0;
+                        _peer_error = 0;
                     } catch (IOException e) {
                         e.printStackTrace();
                         Bitmap bmp = BitmapFactory.decodeResource(_resources, R.drawable.error);
@@ -111,10 +109,7 @@ public class MjpegLive implements Runnable {
                     String cur_uuid = uuid_size[0];
                     rcv_img = _net.recvAllPeer(peer, size);
                     Log.d(TAG, "Size = " + size + " uuid=" + cur_uuid + " bytes " + rcv_img.length);
-                    _peer_receive_errors = 0;
-                }
-                else {
-                    //Log.d(TAG, cmd_str);
+                    _peer_error = 0;
                 }
 
                 if (rcv_img == null) {
@@ -132,12 +127,12 @@ public class MjpegLive implements Runnable {
                 }
             } catch (IOException ex) {
                 Log.d(TAG,"ERROR IO :" + ex.getMessage());
-                _peer_receive_errors++;
+                _peer_error++;
             } catch (InterruptedException ex) {
                 Log.d(TAG,"ERROR INT :" + ex.getMessage());
             }
         }
-        System.out.println("--------" + _peer_receive_errors);
+        System.out.println("--------" + _peer_error);
     }
 
 

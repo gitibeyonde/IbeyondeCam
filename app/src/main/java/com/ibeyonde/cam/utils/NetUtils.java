@@ -46,7 +46,7 @@ public class NetUtils {
         _broker_address = InetAddress.getByName("broker.ibeyonde.com");
         _sock = new DatagramSocket(_my_port, _my_address);
         _sock.setReuseAddress(true);
-        _sock.setSoTimeout(1000);
+        _sock.setSoTimeout(500);
     }
     public static int getRandomUdpPort() {
         return (int)((Math.random() * ((max_udp_port - min_udp_port) + 1)) + min_udp_port);
