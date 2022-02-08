@@ -16,6 +16,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -28,7 +29,7 @@ public class NetUtils {
     public static InetAddress _broker_address;
     private static DatagramSocket _sock;
     public static InetAddress  _my_address;
-    public static int  _my_port = getRandomUdpPort();
+    public static int  _my_port;
     public static String  _my_username;
     public static String  _my_uuid;
 
@@ -42,27 +43,55 @@ public class NetUtils {
         _my_username = username;
         _my_uuid = uuid;
         _my_address = getLocalIp();
+        _my_port = getRandomUdpPort();
         Log.d(TAG, "My Ip=" + _my_address.getHostAddress() + " port=" + _my_port);
         _broker_address = InetAddress.getByName("broker.ibeyonde.com");
         _sock = new DatagramSocket(_my_port, _my_address);
-        _sock.setReuseAddress(true);
-        _sock.setSoTimeout(500);
+        //
+        // _sock.setReuseAddress(true);
+        _sock.setSoTimeout(400);
+        _sock.setTrafficClass(4);
     }
     public static int getRandomUdpPort() {
         return (int)((Math.random() * ((max_udp_port - min_udp_port) + 1)) + min_udp_port);
     }
     public static InetAddress getLocalIp() throws SocketException, UnknownHostException {
         Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+        ArrayList<InetAddress> validIps = new ArrayList<>();
+        InetAddress preferredIp = null;//
         for (NetworkInterface netint : Collections.list(nets)){
             Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
             for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                if (inetAddress.isSiteLocalAddress() && inetAddress instanceof Inet4Address) {
-                    Log.d(TAG, "InetAddress:" + inetAddress);
-                    return inetAddress;
+                Log.d(TAG, "InetAddress:" + inetAddress);
+                if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                    Log.d(TAG, "---:" + inetAddress);
+                    validIps.add(inetAddress);
                 }
             }
         }
-        return InetAddress.getLocalHost();
+        for (InetAddress inetAddress : validIps) {
+            if(inetAddress.isSiteLocalAddress()){
+                preferredIp = inetAddress;
+            }
+        }
+        if (preferredIp == null){
+            for (InetAddress inetAddress : validIps) {
+                if(inetAddress.isLinkLocalAddress()){
+                    preferredIp = inetAddress;
+                }
+            }
+        }
+        if (preferredIp == null){
+            for (InetAddress inetAddress : validIps) {
+                if(inetAddress.isAnyLocalAddress()){
+                    preferredIp = inetAddress;
+                }
+            }
+        }
+        if (preferredIp == null){
+            preferredIp = InetAddress.getLocalHost();
+        }
+        return preferredIp;
     }
     public DatagramPacket register() throws IOException {
         String cmd_str = new String("REGISTER:" + _my_uuid + ":");

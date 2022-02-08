@@ -111,6 +111,9 @@ public class MjpegLive implements Runnable {
                     Log.d(TAG, "Size = " + size + " uuid=" + cur_uuid + " bytes " + rcv_img.length);
                     _peer_error = 0;
                 }
+                else {
+                    _net.recvAllPeer(peer, 60000);
+                }
 
                 if (rcv_img == null) {
                     continue;

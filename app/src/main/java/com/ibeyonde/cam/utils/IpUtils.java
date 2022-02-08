@@ -44,7 +44,7 @@ public class IpUtils {
     }
 
     public static String bytesGetIp(byte[] bt) {
-        if (bt.length == 5) {
+        if (bt.length != 6) {
             LOG.warning("byteToIp bad byte array " + bt.length);
             return null;
         }
@@ -89,7 +89,6 @@ public class IpUtils {
         System.arraycopy(ipb, 0, result, 0, ipb.length);
         System.arraycopy(ptp, 0, result, ipb.length, ptp.length);
         return result;
-
     }
 
     public static InetSocketAddress getAddress(DatagramPacket dp) {
