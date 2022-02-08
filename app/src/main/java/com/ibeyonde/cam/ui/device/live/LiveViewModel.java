@@ -97,7 +97,7 @@ public class LiveViewModel extends ViewModel {
                             Log.i(TAG, "Local URL value set to " + _url);
                         }
                         else {
-                            //getUdpLiveUrl(ctx, uuid);
+                            getUdpLiveUrl(ctx, uuid);
                             _url_updated.postValue(false);
                         }
                     }
@@ -105,7 +105,7 @@ public class LiveViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Local Live Request failed ," + error.getMessage());
-                //getUdpLiveUrl(ctx, uuid);
+                getUdpLiveUrl(ctx, uuid);
                 _url_updated.postValue(false);
             }
         });
@@ -117,7 +117,6 @@ public class LiveViewModel extends ViewModel {
         queue.add(stringRequest);
     }
 
-    @Deprecated
     private void getUdpLiveUrl(Context ctx, String uuid){
         RequestQueue queue = Volley.newRequestQueue(ctx);
         String url ="https://ping.ibeyonde.com/api/iot.php?view=live&quality=HINI&uuid=" + uuid;

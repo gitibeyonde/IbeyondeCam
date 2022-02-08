@@ -57,7 +57,7 @@ public class LiveFragment extends Fragment {
 
         liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
             public void onChanged(@Nullable Boolean url_updated) {
-                if (url_updated){
+                if (url_updated && !dlive._isRunningWell){
                     dlive.stop();
                     String url = liveViewModel._url;
                     Log.i(TAG, url_updated + " Live URL = " + url);
@@ -82,7 +82,7 @@ public class LiveFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentLiveBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        //liveViewModel.getLiveUrl(getContext(), _cameraId);
+        liveViewModel.getLiveUrl(getContext(), _cameraId);
         Log.i(TAG, "Live view created");
         return root;
     }

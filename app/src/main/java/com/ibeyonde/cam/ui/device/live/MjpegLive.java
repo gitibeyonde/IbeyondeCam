@@ -24,6 +24,7 @@ public class MjpegLive implements Runnable {
     private ImageView _cameraLive;
     public volatile boolean _isRunning = true;
     public volatile boolean _isPaused = false;
+    public volatile boolean _isRunningWell = false;
 
     String _client_uuid = null;
     String _device_uuid = null;
@@ -110,6 +111,7 @@ public class MjpegLive implements Runnable {
                     rcv_img = _net.recvAllPeer(peer, size);
                     Log.d(TAG, "Size = " + size + " uuid=" + cur_uuid + " bytes " + rcv_img.length);
                     _peer_error = 0;
+                    _isRunningWell = true;
                 }
                 else {
                     _net.recvAllPeer(peer, 60000);
