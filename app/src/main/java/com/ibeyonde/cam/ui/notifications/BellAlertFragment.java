@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.ibeyonde.cam.databinding.FragmentBellAlertBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.device.live.LiveViewModel;
+import com.ibeyonde.cam.ui.device.live.MjpegLive;
 import com.ibeyonde.cam.ui.device.live.MjpegRunner;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.AlertDetails;
@@ -53,11 +55,8 @@ public class BellAlertFragment extends Fragment {
     private FragmentBellAlertBinding binding;
 
     private Handler handler;
-    private MjpegRunner rc;
-
-    public static BellAlertFragment newInstance() {
-        return new BellAlertFragment();
-    }
+    private MjpegRunner runner;
+    static MjpegLive dlive;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,20 +66,32 @@ public class BellAlertFragment extends Fragment {
         Log.d(TAG, "onCreate");
         liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
             public void onChanged(@Nullable Boolean url_updated) {
-                String url = liveViewModel._url;
-                Log.i(TAG, "Live URL = " + url);
-                try {
-                    rc = new MjpegRunner(handler, binding.cameraLive, new URL(url));
-                    Thread t = new Thread(rc);
-                    t.start();
-                } catch (Exception e) {
-                    if (rc != null) rc.stop();
-                    Log.i(TAG, "Error in starting live = ", e);
-                }
-                binding.progressBar.setVisibility(View.GONE);
+                if (url_updated && !dlive._isRunningWell) {
+                    binding.streamDirect.setTextColor(Color.TRANSPARENT);
+                    binding.streamLocal.setTextColor(Color.TRANSPARENT);
+                    binding.streamCloud.setTextColor(Color.TRANSPARENT);
+                    dlive.stop();
+                    String url = liveViewModel._url;
+                    if (url.length() > 30){
+                        binding.streamCloud.setTextColor(Color.GREEN);
+                    }
+                    else {
+                        binding.streamLocal.setTextColor(Color.GREEN);
+                    }
+                    Log.i(TAG, "Live URL = " + url);
+                    try {
+                        runner = new MjpegRunner(handler, binding.cameraLive, new URL(url));
+                        Thread t = new Thread(runner);
+                        t.start();
+                    } catch (Exception e) {
+                        if (runner != null) runner.stop();
+                        Log.i(TAG, "Error in starting live = ", e);
+                    }
+                    binding.progressBar.setVisibility(View.GONE);
 
-                Camera c = DeviceViewModel.getCamera(_cameraId);
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " @ " + _dateTime);
+                    Camera c = DeviceViewModel.getCamera(_cameraId);
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " @ " + _dateTime);
+                }
             }
         });
     }
@@ -180,23 +191,41 @@ public class BellAlertFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            binding.streamCloud.setTextColor(Color.TRANSPARENT);
+            binding.streamLocal.setTextColor(Color.TRANSPARENT);
+            binding.streamDirect.setTextColor(Color.GREEN);
+            dlive = new MjpegLive(_cameraId, handler, getResources(), binding.cameraLive);
+            Thread t = new Thread(dlive);
+            t.start();
+        } catch (Exception e) {
+            if (dlive != null) dlive.stop();
+            Log.e(TAG, "UDP streaming failed");
+        }
+        Camera c = DeviceViewModel.getCamera(_cameraId);
+        Log.i(TAG, "on start ");
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         Log.i(TAG, "on resume ");
-        if (rc != null)rc.resume();
+        if (runner != null) runner.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.i(TAG, "on pause ");
-        if (rc != null)rc.pause();
+        if (runner != null) runner.pause();
     }
 
     @Override
     public void onDestroyView() {
         Log.i(TAG, "on onDestroyView ");
-        if (rc != null)rc.stop();
+        if (runner != null) runner.stop();
         super.onDestroyView();
     }
 

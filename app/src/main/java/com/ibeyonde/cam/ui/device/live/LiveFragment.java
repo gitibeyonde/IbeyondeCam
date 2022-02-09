@@ -2,6 +2,7 @@ package com.ibeyonde.cam.ui.device.live;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -58,8 +59,17 @@ public class LiveFragment extends Fragment {
         liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
             public void onChanged(@Nullable Boolean url_updated) {
                 if (url_updated && !dlive._isRunningWell){
+                    binding.streamDirect.setTextColor(Color.TRANSPARENT);
+                    binding.streamLocal.setTextColor(Color.TRANSPARENT);
+                    binding.streamCloud.setTextColor(Color.TRANSPARENT);
                     dlive.stop();
                     String url = liveViewModel._url;
+                    if (url.length() > 30){
+                        binding.streamCloud.setTextColor(Color.GREEN);
+                    }
+                    else {
+                        binding.streamLocal.setTextColor(Color.GREEN);
+                    }
                     Log.i(TAG, url_updated + " Live URL = " + url);
                     try {
                         runner = new MjpegRunner(handler, binding.cameraLive, new URL(url));
@@ -90,6 +100,9 @@ public class LiveFragment extends Fragment {
     public void onStart() {
         super.onStart();
         try {
+            binding.streamCloud.setTextColor(Color.TRANSPARENT);
+            binding.streamLocal.setTextColor(Color.TRANSPARENT);
+            binding.streamDirect.setTextColor(Color.GREEN);
             dlive = new MjpegLive(_cameraId, handler, getResources(), binding.cameraLive);
             Thread t = new Thread(dlive);
             t.start();
@@ -125,4 +138,5 @@ public class LiveFragment extends Fragment {
         if (dlive != null)dlive.stop();
         super.onDestroyView();
     }
+
 }

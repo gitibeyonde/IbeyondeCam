@@ -46,7 +46,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@android:drawable/presence_invisible"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/histNav1"
@@ -56,7 +56,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@android:drawable/presence_invisible"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/histNav2"
@@ -66,7 +66,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@android:drawable/presence_invisible"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/histNav3"
@@ -76,7 +76,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@android:drawable/presence_invisible"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/histNav4"
@@ -86,7 +86,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@android:drawable/presence_invisible"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/histNav5"
@@ -96,7 +96,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@android:drawable/presence_invisible"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/histNav6"
@@ -106,7 +106,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@android:drawable/presence_invisible"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/histNav7"
@@ -116,7 +116,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@android:drawable/presence_invisible"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/histNav8"
@@ -126,7 +126,7 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@android:drawable/presence_invisible"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/histNav9"
@@ -135,7 +135,8 @@
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/presence_invisible" />
+            android:src="@android:drawable/presence_invisible"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck,ImageContrastCheck" />
     </LinearLayout>
 
     <ImageView
@@ -146,5 +147,41 @@
         android:adjustViewBounds="true"
         android:src="@drawable/loading"
         tools:ignore="TouchTargetSizeCheck" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/stream_local"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="--------"
+            android:textAlignment="center"
+            android:textColor="@color/gray"
+            tools:ignore="TextContrastCheck" />
+
+        <TextView
+            android:id="@+id/stream_direct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="- - - - -"
+            android:textAlignment="center"
+            android:textColor="@color/gray"
+            tools:ignore="TextContrastCheck" />
+
+        <TextView
+            android:id="@+id/stream_cloud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="-  -  -"
+            android:textAlignment="center"
+            android:textColor="@color/gray"
+            tools:ignore="TextContrastCheck" />
+    </LinearLayout>
 
 </LinearLayout>
