@@ -92,7 +92,7 @@ public class LiveFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentLiveBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        liveViewModel.getLiveUrl(getContext(), _cameraId);
+        //liveViewModel.getLiveUrl(getContext(), _cameraId);
         Log.i(TAG, "Live view created");
         return root;
     }

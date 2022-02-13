@@ -47,8 +47,6 @@ public class NetUtils {
         Log.d(TAG, "My Ip=" + _my_address.getHostAddress() + " port=" + _my_port);
         _broker_address = InetAddress.getByName("broker.ibeyonde.com");
         _sock = new DatagramSocket(_my_port, _my_address);
-        //
-        // _sock.setReuseAddress(true);
         _sock.setSoTimeout(400);
         _sock.setTrafficClass(4);
     }

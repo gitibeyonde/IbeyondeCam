@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:stream="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/live_fragment"
-    android:background="@color/light_grey"
     android:layout_width="match_parent"
-    android:layout_height="400dp"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey"
     android:orientation="vertical"
     tools:context=".ui.device.live.LiveFragment">
 
-    <TextView
-        android:id="@+id/cameraLabel"
-        style="@style/LabelStyle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Camera UUID" />
+        android:layout_height="1200dp"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
+
 
     <ImageView
         android:id="@+id/cameraLive"
@@ -22,6 +25,13 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:src="@drawable/loading" />
+
+    <TextView
+        android:id="@+id/cameraLabel"
+        style="@style/LabelStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Camera UUID" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,4 +70,5 @@
     </LinearLayout>
 
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>
