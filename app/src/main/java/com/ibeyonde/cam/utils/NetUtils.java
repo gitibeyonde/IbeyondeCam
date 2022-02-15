@@ -2,8 +2,6 @@ package com.ibeyonde.cam.utils;
 
 import android.util.Log;
 
-import com.ibeyonde.cam.ui.device.live.MjpegLive;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -12,7 +10,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 
 public class NetUtils {
     private static final String TAG= NetUtils.class.getCanonicalName();

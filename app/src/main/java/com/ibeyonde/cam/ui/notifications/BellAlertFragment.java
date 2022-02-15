@@ -25,8 +25,8 @@ import android.widget.Toast;
 import com.ibeyonde.cam.databinding.FragmentBellAlertBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.device.live.LiveViewModel;
-import com.ibeyonde.cam.ui.device.live.MjpegLive;
-import com.ibeyonde.cam.ui.device.live.MjpegRunner;
+import com.ibeyonde.cam.ui.device.live.DirectLive;
+import com.ibeyonde.cam.ui.device.live.MjpegCloud;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.utils.AlertDetails;
 import com.ibeyonde.cam.utils.Camera;
@@ -55,8 +55,8 @@ public class BellAlertFragment extends Fragment {
     private FragmentBellAlertBinding binding;
 
     private Handler handler;
-    private MjpegRunner runner;
-    static MjpegLive dlive;
+    private MjpegCloud runner;
+    static DirectLive dlive;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,9 +64,9 @@ public class BellAlertFragment extends Fragment {
         liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
 
         Log.d(TAG, "onCreate");
-        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Boolean>() {
-            public void onChanged(@Nullable Boolean url_updated) {
-                if (url_updated && !dlive._isRunningWell) {
+        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Integer>() {
+            public void onChanged(@Nullable Integer url_updated) {
+                if (url_updated > 0 && !dlive._isRunningWell) {
                     binding.streamDirect.setTextColor(Color.TRANSPARENT);
                     binding.streamLocal.setTextColor(Color.TRANSPARENT);
                     binding.streamCloud.setTextColor(Color.TRANSPARENT);
@@ -80,7 +80,7 @@ public class BellAlertFragment extends Fragment {
                     }
                     Log.i(TAG, "Live URL = " + url);
                     try {
-                        runner = new MjpegRunner(handler, binding.cameraLive, new URL(url));
+                        runner = new MjpegCloud(handler, binding.cameraLive, new URL(url));
                         Thread t = new Thread(runner);
                         t.start();
                     } catch (Exception e) {
@@ -197,7 +197,7 @@ public class BellAlertFragment extends Fragment {
             binding.streamCloud.setTextColor(Color.TRANSPARENT);
             binding.streamLocal.setTextColor(Color.TRANSPARENT);
             binding.streamDirect.setTextColor(Color.GREEN);
-            dlive = new MjpegLive(_cameraId, handler, getResources(), binding.cameraLive);
+            dlive = new DirectLive(_cameraId, handler, getResources(), binding.cameraLive);
             Thread t = new Thread(dlive);
             t.start();
         } catch (Exception e) {

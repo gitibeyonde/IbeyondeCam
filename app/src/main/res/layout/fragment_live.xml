@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="--------"
+            android:text="--------------"
             android:textAlignment="center"
             android:textColor="@color/gray"
             tools:ignore="TextContrastCheck" />
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="- - - - -"
+            android:text="- - - - - - - - -"
             android:textAlignment="center"
             android:textColor="@color/gray"
             tools:ignore="TextContrastCheck" />
@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="-  -  -"
+            android:text="-  -  -  -  -  -"
             android:textAlignment="center"
             android:textColor="@color/gray"
             tools:ignore="TextContrastCheck" />

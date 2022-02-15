@@ -30,7 +30,7 @@ import java.util.Map;
 public class LiveViewModel extends ViewModel {
     private static final String TAG= LiveViewModel.class.getCanonicalName();
 
-    public final MutableLiveData<Boolean> _url_updated = new MutableLiveData<>();
+    public final MutableLiveData<Integer> _url_updated = new MutableLiveData<>();
     public static String _url = null;
 
 
@@ -93,12 +93,12 @@ public class LiveViewModel extends ViewModel {
                     public void onResponse(String response) {
                         if (response.contains("Ibeyonde")) {
                             _url="http://" + c._localIp + "/stream";
-                            _url_updated.postValue(true);
+                            _url_updated.postValue(1);
                             Log.i(TAG, "Local URL value set to " + _url);
                         }
                         else {
                             getUdpLiveUrl(ctx, uuid);
-                            _url_updated.postValue(false);
+                            _url_updated.postValue(0);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -106,7 +106,7 @@ public class LiveViewModel extends ViewModel {
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Local Live Request failed ," + error.getMessage());
                 getUdpLiveUrl(ctx, uuid);
-                _url_updated.postValue(false);
+                _url_updated.postValue(0);
             }
         });
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
@@ -131,12 +131,13 @@ public class LiveViewModel extends ViewModel {
                         url = url.replaceAll("\\\\", "");
                         Log.i(TAG, "Remote URL value set to " + _url);
                         _url = url;
-                        _url_updated.postValue(true);
+                        _url_updated.postValue(2);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Live Request failed ," + error.getMessage());
+                _url_updated.postValue(0);
             }
         }){
 

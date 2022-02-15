@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetSocketAddress;
 
-public class MjpegLive implements Runnable {
-    private static final String TAG= MjpegLive.class.getCanonicalName();
+public class DirectLive implements Runnable {
+    private static final String TAG= DirectLive.class.getCanonicalName();
 
     private Handler _handler;
     private Resources _resources;
@@ -32,7 +32,7 @@ public class MjpegLive implements Runnable {
     static NetUtils _net = null;
     int _peer_error = 0;
 
-    public MjpegLive(String device_uuid, Handler handler, Resources resources, ImageView cameraLive) {
+    public DirectLive(String device_uuid, Handler handler, Resources resources, ImageView cameraLive) {
         this._client_uuid = LoginViewModel._phoneId;
         this._username = LoginViewModel._username;
         this._handler = handler;

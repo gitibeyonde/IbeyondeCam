@@ -1,8 +1,6 @@
 package com.ibeyonde.cam.ui.device.live;
 
 
-import static java.lang.Thread.yield;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -15,8 +13,8 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class MjpegRunner implements Runnable {
-    private static final String TAG= MjpegRunner.class.getCanonicalName();
+public class MjpegCloud implements Runnable {
+    private static final String TAG= MjpegCloud.class.getCanonicalName();
     private URL url;
     private Handler handler;
     private ImageView cameraLive;
@@ -25,7 +23,7 @@ public class MjpegRunner implements Runnable {
 
     private static final int SKIP_HEADER = "Content-Type: image/jpeg\nContent-Length: ".length();
 
-    public MjpegRunner( Handler handler, ImageView cameraLive, URL url)  {
+    public MjpegCloud(Handler handler, ImageView cameraLive, URL url)  {
         this.handler = handler;
         this.cameraLive = cameraLive;
         if (android.os.Build.VERSION.SDK_INT > 9)
