@@ -98,7 +98,6 @@ public class LiveViewModel extends ViewModel {
                         }
                         else {
                             getUdpLiveUrl(ctx, uuid);
-                            _url_updated.postValue(0);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -106,7 +105,6 @@ public class LiveViewModel extends ViewModel {
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Local Live Request failed ," + error.getMessage());
                 getUdpLiveUrl(ctx, uuid);
-                _url_updated.postValue(0);
             }
         });
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(

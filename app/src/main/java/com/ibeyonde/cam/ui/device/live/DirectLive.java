@@ -83,14 +83,6 @@ public class DirectLive implements Runnable {
                         peer = getPeerAddress();
                         _peer_error = 0;
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        Bitmap bmp = BitmapFactory.decodeResource(_resources, R.drawable.error);
-                        _handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                _cameraLive.setImageBitmap(bmp);
-                            }
-                        });
                         Thread.sleep(1000);
                     }
                     continue;

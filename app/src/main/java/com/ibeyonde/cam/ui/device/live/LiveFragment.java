@@ -46,6 +46,7 @@ public class LiveFragment extends Fragment {
         binding = FragmentLiveBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         Log.i(TAG, "Live view created");
+        liveViewModel.getLiveUrl(getContext(), _cameraId);
 
         t = new Timer();
         TimerTask tt = new TimerTask() {
@@ -54,14 +55,17 @@ public class LiveFragment extends Fragment {
                 if (_isLocal == true){
                     directLive.stop();
                     Log.d(TAG, "Timer Local running, stopping direct");
+                    if (t != null) t.cancel();
                 }
                 else if (_isDirect == true && _isCloud == false){
                     mjpegCloud.stop();
                     Log.d(TAG, "Timer Direct running, stopping runner");
+                    if (t != null) t.cancel();
                 }
                 else if (_isDirect == true && directLive._isRunningWell == true){
                     mjpegCloud.stop();
                     Log.d(TAG, "Timer Direct running, stopping runner");
+                    if (t != null) t.cancel();
                 }
                 else {
                     Log.d(TAG, "Timer cloud running");
@@ -75,11 +79,10 @@ public class LiveFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) { // only called once
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
+        Log.d(TAG, "Live view onCreate");
         liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
-        liveViewModel.getLiveUrl(getContext(), _cameraId);
 
         handler = new Handler(getContext().getMainLooper());
 
