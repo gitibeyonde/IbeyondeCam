@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -23,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.ibeyonde.cam.MainActivity;
 import com.ibeyonde.cam.databinding.FragmentDeviceSettingBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
@@ -184,9 +187,20 @@ public class DeviceSettingFragment extends Fragment {
                     upgrade.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            deviceSettingViewModel.command(getContext(), "upgrade", _cameraId);
-                            binding.upgradeAvailable.setText("Upgrading, please wait for a minute");
-                            upgrade.setVisibility(View.INVISIBLE);
+
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("Confimation")
+                                    .setMessage("Upgrade device ?")
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            deviceSettingViewModel.command(getContext(), "upgrade", _cameraId);
+                                            binding.upgradeAvailable.setText("Upgrading, please wait for a minute");
+                                            upgrade.setVisibility(View.INVISIBLE);
+                                            Toast.makeText(getActivity(), "Device will be offline for a minute.", Toast.LENGTH_LONG).show();
+                                        }})
+                                    .setNegativeButton(android.R.string.no, null).show();
                         }
                     });
                     upgrade.setVisibility(View.VISIBLE);
@@ -215,15 +229,35 @@ public class DeviceSettingFragment extends Fragment {
         restart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deviceSettingViewModel.command(getContext(), "restart", _cameraId);
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Confimation")
+                        .setMessage("Restart device ?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                deviceSettingViewModel.command(getContext(), "restart", _cameraId);
+                                Toast.makeText(getActivity(), "Device will be offline for a minute.", Toast.LENGTH_LONG).show();
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
             }
         });
 
         ImageButton reset = binding.resetButton;
-        restart.setOnClickListener(new View.OnClickListener() {
+        reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deviceSettingViewModel.command(getContext(), "reset", _cameraId);
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Confimation")
+                        .setMessage("Reset device ?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                deviceSettingViewModel.command(getContext(), "reset", _cameraId);
+                                Toast.makeText(getActivity(), "Device will go to bluetooth mode. All configuration will be lost.", Toast.LENGTH_LONG).show();
+                            }})
+                        .setNegativeButton(android.R.string.no, null).show();
             }
         });
         return root;
