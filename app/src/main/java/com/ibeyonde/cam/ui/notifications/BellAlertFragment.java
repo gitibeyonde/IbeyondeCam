@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -55,46 +56,13 @@ public class BellAlertFragment extends Fragment {
     private FragmentBellAlertBinding binding;
 
     private Handler handler;
-    private MjpegCloud runner;
-    static DirectLive dlive;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
-
-        Log.d(TAG, "onCreate");
-        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Integer>() {
-            public void onChanged(@Nullable Integer url_updated) {
-                if (url_updated > 0 && !dlive._isRunningWell) {
-                    binding.streamDirect.setTextColor(Color.TRANSPARENT);
-                    binding.streamLocal.setTextColor(Color.TRANSPARENT);
-                    binding.streamCloud.setTextColor(Color.TRANSPARENT);
-                    dlive.stop();
-                    String url = liveViewModel._url;
-                    if (url.length() > 30){
-                        binding.streamCloud.setTextColor(Color.GREEN);
-                    }
-                    else {
-                        binding.streamLocal.setTextColor(Color.GREEN);
-                    }
-                    Log.i(TAG, "Live URL = " + url);
-                    try {
-                        runner = new MjpegCloud(handler, binding.cameraLive, new URL(url));
-                        Thread t = new Thread(runner);
-                        t.start();
-                    } catch (Exception e) {
-                        if (runner != null) runner.stop();
-                        Log.i(TAG, "Error in starting live = ", e);
-                    }
-                    binding.progressBar.setVisibility(View.GONE);
-
-                    Camera c = DeviceViewModel.getCamera(_cameraId);
-                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " @ " + _dateTime);
-                }
-            }
-        });
-    }
+    private MjpegCloud mjpegCloud;
+    static DirectLive directLive;
+    boolean _isDirect = false;
+    boolean _isLocal = false;
+    boolean _isCloud = false;
+    Timer _hist_time;
+    Timer _live_check;
 
 
     @Override
@@ -105,7 +73,6 @@ public class BellAlertFragment extends Fragment {
         binding = FragmentBellAlertBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         handler = new Handler(getContext().getMainLooper());
-        Timer t = new Timer();
 
         //LOGIN
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
@@ -140,7 +107,7 @@ public class BellAlertFragment extends Fragment {
                 ImageButton tb = getActivity().findViewById(v.getId());
                 Bitmap bitmap = ((BitmapDrawable)tb.getDrawable()).getBitmap();
                 binding.historyImage.setImageBitmap(bitmap);
-                t.cancel();
+                _hist_time.cancel();
             }
         };
         ImageButton navButtons[] = { binding.histNav0, binding.histNav1, binding.histNav2, binding.histNav3, binding.histNav4, binding.histNav5,
@@ -165,13 +132,14 @@ public class BellAlertFragment extends Fragment {
                     }
                     Log.d(TAG, "Bell alert url loading " + ad.getCurrentURL());
 
+                    _hist_time = new Timer();
                     TimerTask imgRefresh = new TimerTask() {
                         @Override
                         public void run() {
                             new ImageLoadTask(ad.getCurrentURL(), binding.historyImage).execute();
                         }
                     };
-                    t.scheduleAtFixedRate(imgRefresh, 0, 1000);
+                    _hist_time.scheduleAtFixedRate(imgRefresh, 0, 1000);
 
 
                     for (int i = 0; i < 10; i++) {
@@ -186,25 +154,94 @@ public class BellAlertFragment extends Fragment {
             }
         });
 
+        _live_check = new Timer();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                if (_isLocal == true){
+                    directLive.stop();
+                    Log.d(TAG, "Timer Local running, stopping direct");
+                    if (_live_check != null) _live_check.cancel();
+                }
+                else if (_isDirect == true && _isCloud == false){
+                    mjpegCloud.stop();
+                    Log.d(TAG, "Timer Direct running, stopping runner");
+                    if (_live_check != null) _live_check.cancel();
+                }
+                else if (_isDirect == true && directLive._isRunningWell == true){
+                    mjpegCloud.stop();
+                    Log.d(TAG, "Timer Direct running, stopping runner");
+                    if (_live_check != null) _live_check.cancel();
+                }
+                else {
+                    Log.d(TAG, "Timer cloud running");
+                }
+                setStreamIndicator();
+            }
+        };
+        _live_check.scheduleAtFixedRate(tt, 2000, 5000);
+
         Log.i(TAG, "on create view ");
         return root;
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        liveViewModel = new ViewModelProvider(this).get(LiveViewModel.class);
+        Log.d(TAG, "onCreate");
+
+        liveViewModel._url_updated.observe(this.getActivity(), new Observer<Integer>() {
+            public void onChanged(@Nullable Integer stream_url) {
+                if (stream_url == 1){ // local url available
+                    directLive.stop();
+                    _isCloud = false;
+                    _isDirect = false;
+                    _isLocal = true;
+                    setStreamIndicator();
+                }
+                else if (stream_url == 2){ // cloud url
+                    _isCloud = true;
+                    _isDirect = true;
+                    _isLocal = false;
+                    setStreamIndicator();
+                }
+                else {
+                    return;
+                }
+                String url = liveViewModel._url;
+                Log.i(TAG, stream_url + " Live URL = " + url);
+                try {
+                    mjpegCloud = new MjpegCloud(handler, binding.cameraLive, new URL(url));
+                    Thread t = new Thread(mjpegCloud);
+                    t.start();
+                } catch (Exception e) {
+                    if (mjpegCloud != null) mjpegCloud.stop();
+                    Log.e(TAG, "Live URL streaming failed");
+                }
+
+                if (getActivity() != null) {
+                    Camera c = DeviceViewModel.getCamera(_cameraId);
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + "@" + _dateTime);
+                }
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        try {
-            binding.streamCloud.setTextColor(Color.TRANSPARENT);
-            binding.streamLocal.setTextColor(Color.TRANSPARENT);
-            binding.streamDirect.setTextColor(Color.GREEN);
-            dlive = new DirectLive(_cameraId, handler, getResources(), binding.cameraLive);
-            Thread t = new Thread(dlive);
-            t.start();
-        } catch (Exception e) {
-            if (dlive != null) dlive.stop();
-            Log.e(TAG, "UDP streaming failed");
+        if (!_isLocal && !_isCloud) {
+            try {
+                directLive = new DirectLive(_cameraId, handler, getResources(), binding.cameraLive);
+                Thread t = new Thread(directLive);
+                t.start();
+            } catch (Exception e) {
+                if (directLive != null) directLive.stop();
+                Log.e(TAG, "UDP streaming failed");
+            }
         }
-        Camera c = DeviceViewModel.getCamera(_cameraId);
         Log.i(TAG, "on start ");
     }
 
@@ -212,21 +249,44 @@ public class BellAlertFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.i(TAG, "on resume ");
-        if (runner != null) runner.resume();
+        if (mjpegCloud != null) mjpegCloud.resume();
+        if (directLive != null) directLive.resume();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.i(TAG, "on pause ");
-        if (runner != null) runner.pause();
+        if (mjpegCloud != null) mjpegCloud.pause();
+        if (directLive != null) directLive.pause();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
 
     @Override
     public void onDestroyView() {
         Log.i(TAG, "on onDestroyView ");
-        if (runner != null) runner.stop();
+        if (mjpegCloud != null) mjpegCloud.stop();
+        if (directLive != null) directLive.stop();
+        if (_live_check != null) _live_check.cancel();
         super.onDestroyView();
+    }
+
+    private void setStreamIndicator(){
+        if (binding == null)
+            return;
+        binding.streamCloud.setTextColor(Color.TRANSPARENT);
+        binding.streamLocal.setTextColor(Color.TRANSPARENT);
+        binding.streamDirect.setTextColor(Color.TRANSPARENT);
+        if (_isLocal){
+            binding.streamLocal.setTextColor(Color.GREEN);
+        }
+        else if (_isDirect){
+            binding.streamDirect.setTextColor(Color.GREEN);
+        }
+        else {
+            binding.streamCloud.setTextColor(Color.GREEN);
+        }
     }
 
 

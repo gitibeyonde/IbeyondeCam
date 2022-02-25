@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.ibeyonde.cam.MainActivity;
 import com.ibeyonde.cam.databinding.FragmentDeviceSettingBinding;
 import com.ibeyonde.cam.ui.device.lastalerts.DeviceViewModel;
+import com.ibeyonde.cam.ui.device.live.LiveViewModel;
 import com.ibeyonde.cam.ui.login.LoginViewModel;
 import com.ibeyonde.cam.ui.login.SplashActivity;
 import com.ibeyonde.cam.utils.Camera;
@@ -38,8 +39,6 @@ public class DeviceSettingFragment extends Fragment {
     FragmentDeviceSettingBinding binding;
     private DeviceSettingViewModel deviceSettingViewModel;
     public static String _cameraId;
-    public static String _veil;
-    Handler handler;
 
     public static DeviceSettingFragment newInstance() {
         return new DeviceSettingFragment();
@@ -82,6 +81,8 @@ public class DeviceSettingFragment extends Fragment {
         binding.camName.setEnabled(false);
         binding.timeZone.setAlpha(.5f);
         binding.timeZone.setEnabled(false);
+        binding.frameSize.setAlpha(.5f);
+        binding.frameSize.setEnabled(false);
 
         binding.vFlip.setAlpha(.5f);
         binding.vFlip.setEnabled(false);
@@ -93,7 +94,6 @@ public class DeviceSettingFragment extends Fragment {
             public void onChanged(Boolean h) {
                 Log.i(TAG, h.toString() + " Device Online = " + _cameraId);
                 Camera c = DeviceViewModel.getCamera(_cameraId);
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Settings ");
                 if(!h)return;
                 selectSpinnerItemByValue(binding.timeZone, deviceSettingViewModel._cam_nv.get("timezone"));
                 String cc = deviceSettingViewModel._cam_nv.get("cloud");
@@ -127,7 +127,7 @@ public class DeviceSettingFragment extends Fragment {
                 motionHistory.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "history", binding.motionHistory.isEnabled() ? "true" : "false");
+                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "history", binding.motionHistory.isChecked() ? "true" : "false");
                     }
                 });
 
@@ -144,8 +144,18 @@ public class DeviceSettingFragment extends Fragment {
                 sprTz.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        Log.d(TAG, sprTz.getSelectedItem().toString());
-                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "timezone", sprTz.getSelectedItem().toString());
+                        if (sprTz.getSelectedItem().toString().equals(deviceSettingViewModel._cam_nv.get("timezone")))return;
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Confirmation")
+                                .setMessage("Please confirm timezone change ?")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "timezone", sprTz.getSelectedItem().toString());
+                                        Toast.makeText(getActivity(), "Device will be offline for a minute.", Toast.LENGTH_LONG).show();
+                                    }})
+                                .setNegativeButton(android.R.string.no, null).show();
                     }
 
                     @Override
@@ -174,8 +184,18 @@ public class DeviceSettingFragment extends Fragment {
                 sprFs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        Log.d(TAG, sprFs.getSelectedItem().toString());
-                        deviceSettingViewModel.applyCamConfig(getContext(), _cameraId, "framesize", getFrameSize(sprFs.getSelectedItem().toString()) +"");
+                        if ( getFrameSize(sprFs.getSelectedItem().toString()) == Integer.parseInt(deviceSettingViewModel._cam_nv.get("framesize")))return;
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Confirmation")
+                                .setMessage("Please confirm framesize change ?")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        deviceSettingViewModel.applyCamConfig(getContext(), _cameraId, "framesize", getFrameSize(sprFs.getSelectedItem().toString()) +"");
+                                        Toast.makeText(getActivity(), "Device will be offline for a minute.", Toast.LENGTH_LONG).show();
+                                    }})
+                                .setNegativeButton(android.R.string.no, null).show();
                     }
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {}
@@ -189,8 +209,8 @@ public class DeviceSettingFragment extends Fragment {
                         public void onClick(View v) {
 
                             new AlertDialog.Builder(getContext())
-                                    .setTitle("Confimation")
-                                    .setMessage("Upgrade device ?")
+                                    .setTitle("Confirmation")
+                                    .setMessage("Confirm that you wish to upgrade device ?")
                                     .setIcon(android.R.drawable.ic_dialog_alert)
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
@@ -211,7 +231,8 @@ public class DeviceSettingFragment extends Fragment {
                     upgrade.setVisibility(View.INVISIBLE);
                     binding.upgradeAvailable.setVisibility(View.INVISIBLE);
                 }
-
+                if (getActivity() != null)
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name  + " Settings ");
             }
         });
 
@@ -230,8 +251,8 @@ public class DeviceSettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(getContext())
-                        .setTitle("Confimation")
-                        .setMessage("Restart device ?")
+                        .setTitle("Confirmation")
+                        .setMessage("Are you sure you want to restart device ?")
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
@@ -248,8 +269,8 @@ public class DeviceSettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new AlertDialog.Builder(getContext())
-                        .setTitle("Confimation")
-                        .setMessage("Reset device ?")
+                        .setTitle("Confirmation")
+                        .setMessage("Are you sure you want to reset device ?")
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
@@ -263,6 +284,11 @@ public class DeviceSettingFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
+    }
     public static void selectSpinnerItemByValue(Spinner spnr, String value) {
         ArrayAdapter adapter = (ArrayAdapter) spnr.getAdapter();
         for (int position = 0; position < adapter.getCount(); position++) {

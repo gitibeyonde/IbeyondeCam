@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:paddingStart="10dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/btName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         style="@style/UUIDStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Cam123dfg345"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:textAppearance="@style/LinkStyle" />
 
     <TextView
         android:id="@+id/btAddress"
+        style="@style/TimestampStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TimestampStyle"
         android:text="23:gp:78:90:78"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        android:textAppearance="@style/LinkStyle" />
 
 </LinearLayout>

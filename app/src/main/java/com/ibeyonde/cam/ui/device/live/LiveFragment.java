@@ -38,7 +38,7 @@ public class LiveFragment extends Fragment {
     boolean _isDirect = false;
     boolean _isLocal = false;
     boolean _isCloud = false;
-    Timer t;
+    Timer _live_check;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -48,24 +48,24 @@ public class LiveFragment extends Fragment {
         Log.i(TAG, "Live view created");
         liveViewModel.getLiveUrl(getContext(), _cameraId);
 
-        t = new Timer();
+        _live_check = new Timer();
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
                 if (_isLocal == true){
                     directLive.stop();
                     Log.d(TAG, "Timer Local running, stopping direct");
-                    if (t != null) t.cancel();
+                    if (_live_check != null) _live_check.cancel();
                 }
                 else if (_isDirect == true && _isCloud == false){
                     mjpegCloud.stop();
                     Log.d(TAG, "Timer Direct running, stopping runner");
-                    if (t != null) t.cancel();
+                    if (_live_check != null) _live_check.cancel();
                 }
                 else if (_isDirect == true && directLive._isRunningWell == true){
                     mjpegCloud.stop();
                     Log.d(TAG, "Timer Direct running, stopping runner");
-                    if (t != null) t.cancel();
+                    if (_live_check != null) _live_check.cancel();
                 }
                 else {
                     Log.d(TAG, "Timer cloud running");
@@ -73,7 +73,7 @@ public class LiveFragment extends Fragment {
                 setStreamIndicator();
             }
         };
-        t.scheduleAtFixedRate(tt, 2000, 5000);
+        _live_check.scheduleAtFixedRate(tt, 2000, 5000);
 
         return root;
     }
@@ -88,8 +88,8 @@ public class LiveFragment extends Fragment {
 
         liveViewModel._url_updated.observe(this.getActivity(), new Observer<Integer>() {
             public void onChanged(@Nullable Integer stream_url) {
-                if (stream_url == 1){ // local url available
-                    directLive.stop();
+                if (stream_url == 1){ // local url availabl(
+                    if (directLive != null) directLive.stop();
                     _isCloud = false;
                     _isDirect = false;
                     _isLocal = true;
@@ -107,6 +107,10 @@ public class LiveFragment extends Fragment {
                 String url = liveViewModel._url;
                 Log.i(TAG, stream_url + " Live URL = " + url);
                 try {
+                    if (mjpegCloud != null){
+                        mjpegCloud.pause();
+                        mjpegCloud.stop();
+                    }
                     mjpegCloud = new MjpegCloud(handler, binding.cameraLive, new URL(url));
                     Thread t = new Thread(mjpegCloud);
                     t.start();
@@ -114,9 +118,6 @@ public class LiveFragment extends Fragment {
                     if (mjpegCloud != null) mjpegCloud.stop();
                     Log.e(TAG, "Live URL streaming failed");
                 }
-                Camera c = DeviceViewModel.getCamera(_cameraId);
-                binding.cameraLabel.setText(c._name);
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " Live ");
             }
         });
     }
@@ -124,19 +125,22 @@ public class LiveFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        try {
-            directLive = new DirectLive(_cameraId, handler, getResources(), binding.cameraLive);
-            Thread t = new Thread(directLive);
-            t.start();
-        } catch (Exception e) {
-            if (directLive != null) directLive.stop();
-            Log.e(TAG, "UDP streaming failed");
+        if (!_isLocal && !_isCloud) {
+            try {
+                directLive = new DirectLive(_cameraId, handler, getResources(), binding.cameraLive);
+                Thread t = new Thread(directLive);
+                t.start();
+            } catch (Exception e) {
+                if (directLive != null) directLive.stop();
+                Log.e(TAG, "UDP streaming failed");
+            }
         }
         Camera c = DeviceViewModel.getCamera(_cameraId);
         binding.cameraLabel.setText(c._name);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(c._name + " Live ");
         Log.i(TAG, "on start ");
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -158,7 +162,7 @@ public class LiveFragment extends Fragment {
         Log.i(TAG, "on onDestroyView ");
         if (mjpegCloud != null) mjpegCloud.stop();
         if (directLive != null) directLive.stop();
-        if (t != null) t.cancel();
+        if (_live_check != null) _live_check.cancel();
         super.onDestroyView();
     }
 

@@ -153,27 +153,4 @@ public class LiveViewModel extends ViewModel {
         queue.add(stringRequest);
     }
 
-    public void command(Context ctx, String cmd, String uuid){
-        RequestQueue queue = Volley.newRequestQueue(ctx);
-        Camera c = DeviceViewModel.getCamera(uuid);
-        String localUrl ="http://" + c._localIp + "/cmd?name=" + cmd;
-
-        Log.i(TAG, localUrl);
-        StringRequest stringRequest = new StringRequest(StringRequest.Method.GET, localUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i(TAG, "command " + response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "command Request failed ," + error.getMessage());
-            }
-        });
-        queue.add(stringRequest);
-    }
-
-
-
 }

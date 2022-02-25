@@ -38,7 +38,7 @@
     <string name="loading_history">Loading camera history, please wait....</string>
     <string name="loading_notifications">Loading notifications, please wait....</string>
 
-    <string name="devices">Advertising Devices</string>
+    <string name="devices">Advertising Clevercams</string>
     <string name="title_activity_login2">LoginActivity2</string>
     <string name="channel_name">Bell Press</string>
     <string name="channel_description">Button press alerts from CleverCam Bell</string>

@@ -88,6 +88,8 @@ public class MjpegCloud implements Runnable {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = false;
         InputStream urlStream = null;
+        isRunning = true;
+        isPaused = false;
         Log.i(TAG, "Starting mjpeg>>>>>>>");
         while (isRunning) {
             if (isPaused) {

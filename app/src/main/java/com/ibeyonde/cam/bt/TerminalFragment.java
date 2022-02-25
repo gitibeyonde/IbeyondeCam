@@ -273,7 +273,6 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             receiveText.append(TextUtil.toHexString(data) + '\n');
         } else {
             String msg = new String(data);
-            Log.i(TAG, "receive " + msg );
             if(newline.equals(TextUtil.newline_crlf) && msg.length() > 0) {
                 // don't show CR as ^M if directly before LF
                 msg = msg.replace(TextUtil.newline_crlf, TextUtil.newline_lf);
@@ -284,32 +283,35 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                         edt.replace(edt.length() - 2, edt.length(), "");
                 }
                 pendingNewline = msg.charAt(msg.length() - 1) == '\r';
+
+                Log.i(TAG, "Receive >" + msg);
+
+                if (msg.contains("Initializing device...")){
+                    send(String.format("%s%%%s", LoginViewModel._username,LoginViewModel._pass));
+                }
+                else if (msg.contains("Networks found")){
+                    String nc = msg.substring(0, msg.indexOf("Networks found")).trim();
+                    networks = Integer.parseInt(nc);
+                }
+                else if (msg.contains("Scanning Wi-Fi")){
+                    bt_state = BTState.Scanning;
+                }
+                else if (msg.contains("enter the Number for")){
+                    bt_state = BTState.SelectWiFi;
+                }
+                else if (msg.contains("enter your Wi-Fi password")){
+                    bt_state = BTState.WiFiPassword;
+                }
+                else if (msg.contains("-Connected-")){
+                    bt_state = BTState.WiFiConnected;
+                }
+                else if (msg.contains("Bluetooth disconnecting")){
+                    bt_state = BTState.UserInited;
+                }
+                Log.i(TAG, bt_state.name());
             }
             sendText.setText("");
             receiveText.append(TextUtil.toCaretString(msg, newline.length() != 0));
-            if (msg.contains("Initializing device...")){
-                send(String.format("%s%%%s", LoginViewModel._username,LoginViewModel._pass));
-            }
-            else if (msg.contains("Networks found")){
-                String nc = msg.substring(0, msg.indexOf("Networks found")).trim();
-                networks = Integer.parseInt(nc);
-            }
-            else if (msg.contains("Scanning Wi-Fi")){
-                bt_state = BTState.Scanning;
-            }
-            else if (msg.contains("enter the Number for")){
-                bt_state = BTState.SelectWiFi;
-            }
-            else if (msg.contains("enter your Wi-Fi password")){
-                bt_state = BTState.WiFiPassword;
-            }
-            else if (msg.contains("-Connected-")){
-                bt_state = BTState.WiFiConnected;
-            }
-            else if (msg.contains("Bluetooth disconnecting")){
-                bt_state = BTState.UserInited;
-            }
-            Log.i(TAG, bt_state.name());
         }
     }
 
@@ -317,7 +319,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         SpannableStringBuilder spn = new SpannableStringBuilder(str + '\n');
         spn.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorStatusText)), 0, spn.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         receiveText.append(spn);
-        Log.i(TAG, spn.toString());
+        String msg = receiveText.getText().toString();
     }
 
     /*
