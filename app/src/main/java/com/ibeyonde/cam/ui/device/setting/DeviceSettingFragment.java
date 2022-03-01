@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -127,7 +129,35 @@ public class DeviceSettingFragment extends Fragment {
                 motionHistory.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "history", binding.motionHistory.isChecked() ? "true" : "false");
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Confirmation")
+                                .setMessage("This will erase all the motion history, do you want to go ahead ?")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        deviceSettingViewModel.applyDeviceConfig(getContext(), _cameraId, "history", binding.motionHistory.isChecked() ? "true" : "false");
+                                        Toast.makeText(getActivity(), "Requested server to remove all history.", Toast.LENGTH_LONG).show();
+                                    }})
+                                .setNegativeButton(android.R.string.no, null).show();
+                    }
+                });
+                motionHistory.setOnTouchListener(new View.OnTouchListener() {
+
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN: {
+                                v.getBackground().setColorFilter(0xe0f47521, PorterDuff.Mode.SRC_ATOP);
+                                v.invalidate();
+                                break;
+                            }
+                            case MotionEvent.ACTION_UP: {
+                                v.getBackground().clearColorFilter();
+                                v.invalidate();
+                                break;
+                            }
+                        }
+                        return false;
                     }
                 });
 
