@@ -291,7 +291,12 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                 }
                 else if (msg.contains("Networks found")){
                     String nc = msg.substring(0, msg.indexOf("Networks found")).trim();
-                    networks = Integer.parseInt(nc);
+                    try {
+                        networks = Integer.parseInt(nc);
+                    }
+                    catch (NumberFormatException e) {
+                        networks = 15;
+                    }
                 }
                 else if (msg.contains("Scanning Wi-Fi")){
                     bt_state = BTState.Scanning;
